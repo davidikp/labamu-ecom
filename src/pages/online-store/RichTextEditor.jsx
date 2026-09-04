@@ -507,7 +507,15 @@ const CellFocusHighlight = Extension.create({
  * `mediaLibrary`/`onUploadMedia` wire the Insert Image modal to the same
  * draft-level media store Section Builder uses, so uploads here are shared.
  */
-export default function RichTextEditor({ value, onChange, placeholder, mediaLibrary = [], onUploadMedia }) {
+export default function RichTextEditor({
+  value,
+  onChange,
+  placeholder,
+  mediaLibrary = [],
+  onUploadMedia,
+  simulateGenFail = false,
+  simulateUnavailable = false,
+}) {
   const { t } = useTranslation();
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
@@ -838,6 +846,8 @@ export default function RichTextEditor({ value, onChange, placeholder, mediaLibr
         hasExisting={hasExistingContent}
         onApply={handleGenerateApply}
         onClose={() => setGenerateOpen(false)}
+        simulateGenFail={simulateGenFail}
+        simulateUnavailable={simulateUnavailable}
       />
     </div>
   );

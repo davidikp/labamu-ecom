@@ -220,6 +220,12 @@ export default function PageEditor() {
   const [simulateSaveError, setSimulateSaveError] = useState(false);
   const [simulateLoadError, setSimulateLoadError] = useState(false);
   const [simulateNotFound, setSimulateNotFound] = useState(false);
+  // Shared with GenerateTextModal (both the Title field's and the Rich Text
+  // Editor's "Generate text" dialogs) so their AI-simulation toggles surface
+  // in this same Simulate panel instead of a separate floating checkbox row
+  // inside each modal.
+  const [simulateGenFail, setSimulateGenFail] = useState(false);
+  const [simulateUnavailable, setSimulateUnavailable] = useState(false);
 
   // Edit Search Engine Listing — only meaningful once a handle already
   // exists to redirect *from* (a brand-new page has no prior URL yet).
@@ -538,6 +544,18 @@ export default function PageEditor() {
       checked: simulateNotFound,
       onChange: setSimulateNotFound,
     },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.pageEditor.simulateGenerateFailed', 'Simulate generation failed'),
+      checked: simulateGenFail,
+      onChange: setSimulateGenFail,
+    },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.pageEditor.simulateAiUnavailable', 'Simulate AI unavailable'),
+      checked: simulateUnavailable,
+      onChange: setSimulateUnavailable,
+    },
   ];
 
   // Retries the (simulated) load — re-reads the draft from local storage.
@@ -674,6 +692,8 @@ export default function PageEditor() {
                 onChange={(html) => patchForm({ content: html })}
                 mediaLibrary={draft.mediaLibrary}
                 onUploadMedia={handleUploadMedia}
+                simulateGenFail={simulateGenFail}
+                simulateUnavailable={simulateUnavailable}
               />
             </div>
 
@@ -956,6 +976,8 @@ export default function PageEditor() {
         mode="title"
         onApply={(text) => setName(text)}
         onClose={() => setGenerateTitleOpen(false)}
+        simulateGenFail={simulateGenFail}
+        simulateUnavailable={simulateUnavailable}
       />
 
       <Popup

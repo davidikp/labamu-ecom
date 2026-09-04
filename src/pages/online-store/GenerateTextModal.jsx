@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Sparkles, RefreshCw } from 'lucide-react';
 import { Popup } from '../../ce-ui';
 import { useSnackbar } from '../../contexts/SnackbarContext';
 
@@ -34,21 +35,27 @@ function simulateGeneration(mode, prompt) {
  * shared `Popup`. `mode` controls the copy and the shape of the simulated
  * output; `hasExisting` surfaces the content-editor-only "replace or insert
  * alongside" edge case via Popup's secondary action slot.
+ *
+ * `simulateGenFail`/`simulateUnavailable` are controlled by the caller (the
+ * PageEditor's single Simulate panel) rather than owned here, so the AI
+ * simulation toggles surface alongside its other simulate options instead of
+ * a separate checkbox row inside this modal — the "type fail/unavailable in
+ * the prompt" convention above keeps working side by side either way.
  */
-export default function GenerateTextModal({ open, mode, hasExisting, onClose, onApply }) {
+export default function GenerateTextModal({
+  open,
+  mode,
+  hasExisting,
+  onClose,
+  onApply,
+  simulateGenFail = false,
+  simulateUnavailable = false,
+}) {
   const { t } = useTranslation();
   const { showSnackbar } = useSnackbar();
   const [prompt, setPrompt] = useState('');
   const [state, setState] = useState('idle'); // idle | loading | ok | error | unavailable
   const [result, setResult] = useState(null);
-
-  // Simulate triggers — deliberately NOT reset by reset()/handleClose(), so
-  // arming one stays in effect (sticky) across closing/reopening this modal,
-  // same as PageEditor/PagesManagement's own simulate toggles. Distinct from
-  // the "type fail/unavailable in the prompt" convention above — both keep
-  // working side by side.
-  const [simulateGenFail, setSimulateGenFail] = useState(false);
-  const [simulateUnavailable, setSimulateUnavailable] = useState(false);
 
   const reset = () => {
     setPrompt('');
@@ -114,7 +121,7 @@ export default function GenerateTextModal({ open, mode, hasExisting, onClose, on
           ? {
               label: canOfferBoth
                 ? t('sectionBuilder:onlineStore.pageEditor.generateReplace', 'Replace content')
-                : t('sectionBuilder:onlineStore.pageEditor.generateUse', 'Use this'),
+                : t('sectionBuilder:onlineStore.pageEditor.generateUse', 'Use this text'),
               onClick: () => applyText('replace'),
             }
           : {
@@ -136,9 +143,27 @@ export default function GenerateTextModal({ open, mode, hasExisting, onClose, on
           : undefined
       }
     >
-      <label className="mb-1.5 block text-xs font-medium text-lb-on-surface-2">
-        {t('sectionBuilder:onlineStore.pageEditor.generatePromptLabel', 'Describe what you want')}
-      </label>
+      <div className="mb-1.5 flex items-center justify-between">
+        <label className="block text-xs font-medium text-lb-on-surface-2">
+          {t('sectionBuilder:onlineStore.pageEditor.generatePromptLabel', 'Describe what you want')}
+        </label>
+        {/* Regenerate — only once a result exists, right where Insert
+            alongside/Replace would otherwise be the only way back to
+            generation. Re-runs with the same prompt still sitting in the
+            textarea below rather than clearing it, so there's nothing to
+            retype for another pass. */}
+        {showingResult && (
+          <button
+            type="button"
+            onClick={handleGenerate}
+            disabled={state === 'loading'}
+            className="flex items-center gap-1 text-xs font-medium text-[#8A3FFC] hover:underline disabled:opacity-50"
+          >
+            <RefreshCw size={12} />
+            {t('sectionBuilder:onlineStore.pageEditor.generateRegenerate', 'Regenerate')}
+          </button>
+        )}
+      </div>
       <textarea
         autoFocus
         rows={3}
@@ -152,33 +177,15 @@ export default function GenerateTextModal({ open, mode, hasExisting, onClose, on
         className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#006BFF]"
       />
 
-      {/* Simulate triggers — there's no real AI backend behind this modal, so
-          these buttons are the deliberate escape hatch for exercising the
-          generation-failed / AI-unavailable states on demand, alongside the
-          existing "type fail/unavailable" convention. Always visible (not
-          gated to dev builds), matching this app's other simulate features. */}
-      <div className="mt-3 flex flex-wrap items-center gap-3 text-xs">
-        <label className="flex items-center gap-1.5 text-gray-500">
-          <input
-            type="checkbox"
-            checked={simulateGenFail}
-            onChange={(e) => setSimulateGenFail(e.target.checked)}
-          />
-          {t('sectionBuilder:onlineStore.pageEditor.simulateGenerateFailed', 'Simulate generation failed')}
-        </label>
-        <label className="flex items-center gap-1.5 text-gray-500">
-          <input
-            type="checkbox"
-            checked={simulateUnavailable}
-            onChange={(e) => setSimulateUnavailable(e.target.checked)}
-          />
-          {t('sectionBuilder:onlineStore.pageEditor.simulateAiUnavailable', 'Simulate AI unavailable')}
-        </label>
-      </div>
-
       {showingResult && (
-        <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
-          {mode === 'title' ? result : <div dangerouslySetInnerHTML={{ __html: result }} />}
+        <div className="mt-3">
+          <span className="mb-1.5 flex items-center gap-1 text-xs font-medium text-gray-800">
+            <Sparkles size={12} />
+            {t('sectionBuilder:onlineStore.pageEditor.generateResultLabel', 'Labamu AI generated')}
+          </span>
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
+            {mode === 'title' ? result : <div dangerouslySetInnerHTML={{ __html: result }} />}
+          </div>
         </div>
       )}
     </Popup>
