@@ -1,0 +1,211 @@
+{
+    "header": {
+        "title": "Labamu Ecommerce",
+        "notifications": "Notifikasi",
+        "userProfile": "Profil Pengguna",
+        "viewStorefront": "Lihat Website",
+        "logout": "Keluar"
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "websites": "Website Studio",
+        "manageCatalog": "Kelola Katalog",
+        "catalog": "Katalog",
+        "package": "Paket",
+        "modifier": "Modifier",
+        "onlineStore": "Toko Online",
+        "websiteStudio": "Website Studio",
+        "siteBuilder": "Website Builder",
+        "pageList": "Daftar Halaman",
+        "theme": "Tema",
+        "pages": "Halaman",
+        "orders": "Pesanan",
+        "rfq": "Permintaan Penawaran",
+        "bookings": "Pemesanan",
+        "reviews": "Ulasan",
+        "deliverySettings": "Pengaturan Pengiriman",
+        "domainSetup": "Pengaturan Domain",
+        "customizeDomain": "Kustomisasi Domain",
+        "websiteTracking": "Pelacakan Website",
+        "roleManagement": "Manajemen Peran",
+        "settings": "Pengaturan",
+        "logout": "Keluar"
+    },
+    "gallery": {
+        "browse": "Telusuri Template"
+    },
+    "profile": {
+        "title": "Informasi Usaha",
+        "editBtn": "Ubah Data",
+        "saveBtn": "Simpan",
+        "cancelBtn": "Batal",
+        "saveSuccess": "Perubahan berhasil disimpan",
+        "saveError": "Gagal menyimpan data",
+        "savingBtn": "Menyimpan...",
+        "logoAlt": "Logo",
+        "dataUnavailable": "Data usaha belum tersedia.",
+        "membership": {
+            "basic": "Basic Member",
+            "pro": "Pro Member",
+            "learn": "Pelajari tentang Membership >"
+        },
+        "sections": {
+            "info": "Informasi Usaha",
+            "address": "Alamat Usaha"
+        },
+        "fields": {
+            "entity": "Badan Usaha",
+            "legalName": "Nama Badan Usaha",
+            "brandName": "Nama Usaha",
+            "whatsapp": "Nomor Whatsapp Perusahaan",
+            "phone": "Nomor Telepon Usaha",
+            "email": "Email Bisnis",
+            "npwpBusiness": "NPWP Usaha",
+            "npwpPersonal": "NPWP Pribadi",
+            "type": "Tipe Usaha",
+            "industry": "Industri Usaha",
+            "activity": "Aktivitas Bisnis",
+            "address": "Alamat Usaha",
+            "rtRw": "RT/RW",
+            "provinceState": "Provinsi / Negara Bagian",
+            "country": "Negara",
+            "province": "Provinsi",
+            "city": "Kota",
+            "district": "Kecamatan",
+            "village": "Kelurahan",
+            "zip": "Kode Pos"
+        },
+        "industries": {
+            "abattoir": "RPH (Rumah Potong Hewan)",
+            "agriculture": "Pertanian",
+            "agro_tourism": "Agro Wisata",
+            "automotive": "Otomotif",
+            "building_material": "Bahan Bangunan",
+            "computer": "Komputer",
+            "consulting": "Jasa Konsultan",
+            "education": "Edukasi",
+            "electronic": "Elektronik",
+            "event_organizer": "Penyelenggara Acara",
+            "farm": "Peternakan",
+            "fashion": "Fashion",
+            "fishery": "Perikanan",
+            "florist": "Penjual bunga",
+            "fnb": "Makanan & Minuman",
+            "groceries": "Sembako",
+            "handycraft": "Kerajinan Tangan",
+            "lifestyle": "Gaya Hidup",
+            "logistics": "Kargo / logistik",
+            "pharmacy": "Farmasi",
+            "photography": "Jasa Fotografi dan Videografi",
+            "precious_metal": "Logam Mulia",
+            "property": "Properti",
+            "printing": "Sablon, Percetakan & Billboard",
+            "technology": "Teknologi",
+            "telecommunications": "Telekomunikasi",
+            "tour_travel": "Tour & Travel",
+            "welding": "Jasa Pengelasan",
+            "manufacturing": "Manufaktur",
+            "retail_general": "Ritel / Toko",
+            "salon": "Salon / Kecantikan",
+            "software_it": "Software & TI",
+            "healthcare_service": "Layanan Kesehatan",
+            "real_estate_general": "Real Estate",
+            "construction_general": "Konstruksi",
+            "marketing": "Pemasaran & Periklanan",
+            "legal": "Layanan Hukum",
+            "nonprofit": "Non-Profit / NGO",
+            "other": "Lainnya"
+        },
+        "entities": {
+            "pt": "PT",
+            "cv": "CV",
+            "firm": "Firma",
+            "individual": "Perorangan"
+        },
+        "types": {
+            "product": "Produk",
+            "service": "Jasa",
+            "both": "Produk dan Jasa"
+        },
+        "activities": {
+            "online": "Online",
+            "offline": "Offline",
+            "both": "Online & Offline"
+        }
+    },
+    "welcome": {
+        "title": "Selamat Datang",
+        "messagePrefix": "Anda berhasil masuk ke ",
+        "messageStrong": "Labamu Ecommerce",
+        "messageSuffix": ". Dashboard lengkap akan segera hadir.",
+        "iconAlt": "Ikon Labamu"
+    },
+    "ecommerceMismatchBanner": {
+        "message": "Ecommerce Anda terhubung ke modul yang berbeda. Sinkronisasi data mungkin tidak mencerminkan titik akses Anda saat ini.",
+        "dismiss": "Tutup"
+    },
+    "catalog": {
+        "title": "Katalog",
+        "searchPlaceholder": "Cari",
+        "errorTitle": "Gagal memuat katalog",
+        "retry": "Coba Lagi",
+        "columns": {
+            "catalogName": "Nama Katalog",
+            "category": "Kategori",
+            "weight": "Berat",
+            "volume": "Volume",
+            "sellingPrice": "Harga Jual",
+            "websiteVisibility": "Visibilitas Website"
+        },
+        "emptyFiltered": "Hasil Pencarian Tidak Ditemukan",
+        "emptyFilteredSub": "Coba cari dengan kata kunci lain, ya?",
+        "emptyDefault": "Belum Ada Katalog",
+        "emptyDefaultSub": "Tidak dapat menemukan katalog apapun dari tokomu.",
+        "filter": {
+            "searchPlaceholder": "Cari",
+            "removeFilter": "Hapus Filter",
+            "noResults": "Tidak ada hasil ditemukan."
+        }
+    },
+    "modifier": {
+        "free": "Gratis",
+        "loadError": "Gagal memuat modifier",
+        "connectedCatalog": "Katalog Terhubung",
+        "connected": {
+            "title": "Modifier Terhubung",
+            "ruleRequired": "Min 1, Maks {{max}}",
+            "ruleOptional": "Opsional, Maks {{max}}",
+            "collapse": "tutup",
+            "expand": "buka",
+            "catalogDetailFallback": "Detail Katalog",
+            "emptyTitle": "Belum Ada Modifier Terhubung",
+            "emptyDescription": "Katalog ini belum memiliki modifier yang terhubung."
+        },
+        "list": {
+            "colName": "Nama Modifier",
+            "colOptions": "Opsi Modifier",
+            "emptyTitleSearch": "Hasil Pencarian Tidak Ditemukan",
+            "emptyTitleDefault": "Belum Ada Modifier",
+            "emptyDescSearch": "Coba cari dengan kata kunci lain, ya?",
+            "emptyDescDefault": "Kami belum menemukan modifier dari tokomu yang terhubung.",
+            "footerLoading": "Memuat...",
+            "footerNoResults": "Tidak ada hasil",
+            "footerRows": "dari {{total}} baris"
+        },
+        "detail": {
+            "close": "tutup",
+            "deactivateWarningTitle": "Layanan yang terkait dengan modifier ini akan menjadi tidak tersedia",
+            "deactivateWarningDesc": "Modifier ini harus dipilih minimal {{min}} item.",
+            "deactivateBtn": "Nonaktifkan Modifier",
+            "loadError": "Gagal memuat modifier",
+            "toggleFailed": "Gagal mengubah modifier",
+            "enabledMsg": "Modifier telah diaktifkan",
+            "disabledMsg": "Modifier telah dinonaktifkan",
+            "availabilityTitle": "Ketersediaan Modifier",
+            "availabilityDesc": "Klik toggle untuk mengatur ketersediaan",
+            "minActiveInfo": "Minimal {{min}} opsi harus aktif untuk mengaktifkan modifier ini.",
+            "notFound": "Modifier tidak ditemukan",
+            "noConnectedCatalog": "Belum ada katalog terhubung"
+        }
+    }
+}

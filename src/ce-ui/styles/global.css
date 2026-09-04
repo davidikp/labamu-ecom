@@ -1,0 +1,58 @@
+/* Labamu global styles — import once in your app root (e.g. layout.tsx / main.tsx).
+   Loads design tokens, then applies base document styles. */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-family: var(--lb-font);
+    font-weight: var(--lb-fw-regular);
+    color: var(--lb-on-surface);
+    background-color: var(--lb-bg);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: var(--lb-font);
+    color: inherit;
+  }
+
+  a {
+    color: var(--lb-on-surface-blue);
+    text-underline-offset: 2px;
+  }
+
+  a:hover {
+    color: var(--lb-brand-hover);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--lb-brand);
+    outline-offset: 2px;
+  }
+}

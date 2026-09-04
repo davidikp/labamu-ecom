@@ -1,0 +1,574 @@
+{
+  "header": {
+    "title": "Bangun situs web Anda",
+    "subtitle": "Pilih desain untuk memulai perjalanan online Anda"
+  },
+  "hero": {
+    "titlePrefix": "Pilih desain untuk",
+    "subtitle": "Pilih tampilan yang sesuai dengan visi Anda. Anda bisa menyesuaikan warna dan konten nanti.",
+    "filterLabel": "Direkomendasikan untuk",
+    "changeBtn": "Ubah"
+  },
+  "gallery": {
+    "recommended": "Rekomendasi",
+    "preview": "Pratinjau",
+    "edit": "Edit Template",
+    "templates": {
+      "barger": {
+        "title": "Barger Joint",
+        "desc": "Tema yang kuat dan berani, ideal untuk restoran dan gerai cepat saji kekinian."
+      },
+      "xinear": {
+        "title": "Xinear Pro",
+        "desc": "Tata letak modern yang elegan untuk brand lifestyle, ritel, dan pengalaman belanja yang terkurasi"
+      },
+      "houzez": {
+        "title": "Houzez",
+        "desc": "Tata letak yang bersih dan terstruktur untuk bisnis konstruksi, properti, dan layanan terkait hunian"
+      },
+      "napoli": {
+        "title": "Napoli",
+        "desc": "Tata letak hangat dan menawan yang dirancang untuk restoran tradisional."
+      },
+      "dekor": {
+        "title": "DEKOR",
+        "desc": "Desain minimalis premium yang dibuat khusus untuk toko furnitur dan butik interior."
+      },
+      "medic": {
+        "title": "Medic",
+        "desc": "Grid profesional dan terpercaya yang dioptimalkan untuk klinik medis dan kesehatan."
+      },
+      "photostoodio": {
+        "title": "Photo Stoodio",
+        "desc": "Fokus visual tinggi yang ideal untuk studio fotografi dan pembuat konten visual."
+      },
+      "local": {
+        "title": "Local Produce",
+        "desc": "Desain segar dari kebun yang sempurna untuk pasar hasil bumi lokal."
+      }
+    }
+  },
+  "template_houzez": {
+    "nav": {
+      "home": "Beranda",
+      "shop": "Toko",
+      "appointment": "Janji Temu",
+      "reviews": "Ulasan",
+      "contact": "Kontak",
+      "location": "Lokasi",
+      "quote": "Penawaran"
+    },
+    "hero": {
+      "title": "Wujudkan rumah impian Anda",
+      "subtitle": "Semua yang Anda butuhkan untuk membangun rumah, kami sediakan."
+    },
+    "categories": {
+      "house": "Konstruksi Rumah",
+      "glass": "Kaca Jendela",
+      "safety": "Alat Keselamatan",
+      "foundation": "Pondasi",
+      "paints": "Cat dan Lantai",
+      "roofing": "Atap",
+      "doors": "Pintu dan Jendela",
+      "excavation": "Penggalian"
+    },
+    "sections": {
+      "highRise": "Kebutuhan Gedung Tinggi",
+      "safetyTools": "Alat Keselamatan",
+      "seeAll": "Lihat Semua"
+    },
+    "appointment": {
+      "title": "Buat Janji Temu!",
+      "subtitle": "Mari bertemu dan berdiskusi lebih lanjut mengenai kebutuhan konstruksi Anda",
+      "button": "Buat Sekarang"
+    },
+    "products": {
+      "ladder": "Tangga Lipat KRISBOW Multi PRLRM1108 1.1m 4-Langkah",
+      "levelKit": "Paket Alat Level DEWALT Builders DW090PK 1 set",
+      "scaffoldMetal": "Perancah Portabel METALTECH 6-11/64 kaki Platform Baja L",
+      "scaffoldTower": "Perancah Menara WERNER 75 H, 41D335",
+      "rammer": "Alat Pemadat Hyundai HDCR 88H 1pc",
+      "ladderSteel": "Tangga Besi Beroda Cotterman - Kapasitas 450-Lb.",
+      "helmet": "Helm Keselamatan Konstruksi Hard Hat Biru Gelap",
+      "harness": "Tali Pengaman Full Body Lima Titik Konstruksi Pengait Ganda",
+      "gloves": "Sarung Tangan Safety 48-22-8951 CUT 5 Ukuran M",
+      "lifeline": "Tali Keselamatan Rebel Self-Retracting Kabel Stainless 30ft",
+      "glovesHeavy": "SARUNG TANGAN SAFETY KONG HEAVY DUTY HIGH VISIBILITY"
+    },
+    "cta": {
+      "title": "Buat Janji Temu!",
+      "subtitle": "Kunjungi showroom kami atau minta konsultasi profesional di lokasi Anda hari ini.",
+      "button": "Buat Sekarang"
+    },
+    "reviews": {
+      "title": "Apa Kata Mereka",
+      "form": {
+        "subtitle": "Tinggalkan pendapat Anda tentang layanan kami",
+        "nameLabel": "Nama",
+        "namePlaceholder": "Masukkan nama Anda",
+        "reviewLabel": "Ulasan",
+        "reviewPlaceholder": "Tulis ulasan Anda",
+        "ratingLabel": "Penilaian",
+        "submit": "Beri Nilai"
+      },
+      "items": [
+        {
+          "text": "“Bekerja dengan Houzez untuk semua properti saya. Tidak pernah sekalipun saya kecewa karena mereka luar biasa”"
+        },
+        {
+          "text": "“Bekerja dengan Houzez untuk semua properti saya. Tidak pernah sekalipun saya kecewa karena mereka luar biasa”"
+        },
+        {
+          "text": "“Bekerja dengan Houzez untuk semua properti saya. Tidak pernah sekalipun saya kecewa karena mereka luar biasa”"
+        }
+      ]
+    },
+    "waitlist": {
+      "title": "Daftar Tunggu",
+      "subtitle": "Tidak menemukan slot? Bergabunglah dengan daftar tunggu dan kami akan memberi tahu Anda jika ada jadwal yang lebih awal. Waktu Anda berharga bagi kami.",
+      "button": "Gabung Sekarang"
+    },
+    "contact": {
+      "title": "Hubungi Kami",
+      "subtitle": "Hubungi kami untuk pertanyaan bisnis atau kolaborasi lebih lanjut",
+      "form": {
+        "namePlaceholder": "Nama",
+        "emailPlaceholder": "Surel",
+        "phonePlaceholder": "Nomor Telepon",
+        "messagePlaceholder": "Pesan",
+        "submit": "Kirim Pesan"
+      }
+    },
+    "map": {
+      "title": "Kunjungi Showroom Kami!",
+      "subtitle": "Lihat hasil pengerjaan menakjubkan kami di sini.",
+      "address": "Alam Sutera, Jl. Jalur Sutera Boulevard No.45, Kunciran, Kec. Pinang, Kota Tangerang, Banten 15320"
+    },
+    "rfq": {
+      "title": "Minta Penawaran",
+      "subtitle": "Butuh estimasi biaya pembangunan Anda? Kumpulkan permintaan Anda dan kami akan memberi penawaran.",
+      "form": {
+        "namePlaceholder": "Nama",
+        "emailPlaceholder": "Surel",
+        "phonePlaceholder": "Nomor Telepon",
+        "messagePlaceholder": "Pesan atau Permintaan",
+        "submit": "Minta Penawaran"
+      },
+      "modal": {
+        "title": "Minta Penawaran",
+        "customerInfo": "Informasi Pelanggan",
+        "nameLabel": "Nama",
+        "namePlaceholder": "Nama lengkap Anda",
+        "emailLabel": "Surel",
+        "phoneLabel": "Telepon",
+        "phonePlaceholder": "Nomor telepon",
+        "addressLabel": "Alamat",
+        "addressPlaceholder": "Alamat Anda (opsional)",
+        "productsLabel": "Produk",
+        "addProduct": "Tambah Produk",
+        "noProducts": "Belum ada produk. Klik \"Tambah Produk\" untuk menentukan item.",
+        "addAnotherProduct": "Tambah produk lain",
+        "attachments": "Lampiran",
+        "attachmentsHint": "PDF, gambar, atau dokumen Word (maks. 5MB per file)",
+        "uploadFiles": "Klik untuk mengunggah file",
+        "additionalInfo": "Informasi Tambahan",
+        "notesLabel": "Catatan Pelanggan",
+        "notesPlaceholder": "Catatan atau persyaratan tambahan…",
+        "cancel": "Batal",
+        "submitting": "Mengirim…"
+      },
+      "addProduct": {
+        "title": "Tambah Produk ke Penawaran",
+        "noProducts": "Tidak ada produk terpublikasi yang tersedia.",
+        "productLabel": "Produk",
+        "qtyLabel": "Jumlah",
+        "notesLabel": "Catatan",
+        "notesPlaceholder": "Catatan tambahan untuk produk ini (opsional)",
+        "documentsLabel": "Dokumen",
+        "uploadDocuments": "Unggah dokumen",
+        "cancel": "Batal",
+        "add": "Tambah Produk"
+      }
+    },
+    "footer": {
+      "location": "Tangerang",
+      "address": "Alam Sutera, Jl. Jalur Sutera Boulevard No.45, Kunciran, Kec. Pinang, Kota Tangerang, Banten 15320",
+      "phone": "0858-3456-0890",
+      "email": "houzez@gmail.com",
+      "desc": "Membantu Anda membangun rumah impian sejak 1990.",
+      "categoryTitle": "Kategori",
+      "categories": [
+        "House Construction",
+        "Glass Pane",
+        "Safety Tools",
+        "Foundation",
+        "Paints and Flooring",
+        "Roofing",
+        "Doors and Windows",
+        "Excavation"
+      ],
+      "followUs": "Ikuti Kami"
+    },
+    "previewOnly": "Hanya Pratinjau Demo",
+    "cart": {
+      "pageTitle": "Keranjang",
+      "empty": "Keranjangmu kosong.",
+      "added": "Berhasil ditambahkan ke keranjang",
+      "pickupOnly": "Ambil Sendiri",
+      "remove": "Hapus dari keranjang"
+    },
+    "checkout": {
+      "customer": {
+        "title": "Informasi Pelanggan",
+        "reset": "Atur Ulang",
+        "edit": "Ubah",
+        "add": "Tambah informasi pelanggan",
+        "notesLabel": "Catatan",
+        "modalTitle": "Informasi Pelanggan",
+        "modalSubtitle": "Silakan masukkan nomor telepon Anda untuk memproses pesanan.",
+        "continue": "Lanjutkan",
+        "phoneRequired": "Kolom tidak boleh kosong",
+        "phoneAlreadyRegistered": "Nomor telepon ini sudah terdaftar",
+        "detailTitle": "Tambah Informasi Pelanggan",
+        "editTitle": "Ubah Informasi Pelanggan",
+        "detailSubtitle": "Pastikan informasi yang dimasukkan valid untuk pemrosesan pesanan. Perubahan apapun harus diajukan melalui penjual.",
+        "firstTimeNotice": "Sepertinya ini kunjungan pertama Anda di sini. Silakan berikan data Anda untuk melanjutkan pesanan.",
+        "field": {
+          "name": "Nama",
+          "namePlaceholder": "Masukkan Nama",
+          "phone": "Telepon",
+          "email": "Email",
+          "emailPlaceholder": "Masukkan Email",
+          "country": "Negara",
+          "countryPlaceholder": "Pilih Negara",
+          "province": "Provinsi",
+          "provincePlaceholder": "Pilih Provinsi",
+          "city": "Kota",
+          "cityPlaceholder": "Pilih Kota",
+          "district": "Kecamatan",
+          "districtPlaceholder": "Pilih Kecamatan",
+          "region": "Kelurahan",
+          "regionPlaceholder": "Pilih Kelurahan",
+          "zip": "Kode Pos",
+          "zipLoading": "Memuat...",
+          "zipPlaceholder": "Contoh: 12345",
+          "address": "Alamat",
+          "addressPlaceholder": "Contoh: Jalan Mawar No.1",
+          "pinpoint": "Titik Lokasi Alamat",
+          "pinpointPlaceholder": "Nama jalan, gedung, nomor rumah",
+          "notes": "Catatan",
+          "notesPlaceholder": "Contoh: Silakan tinggalkan paket di resepsionis"
+        },
+        "pinTitle": "Lokasi yang ditandai",
+        "pinInstructionTitle": "Tandai titik yang tepat",
+        "pinInstructionSubtitle": "Kami akan mengirim ke alamat pada peta. Mohon periksa titik lokasi dan sesuaikan jika perlu.",
+        "pinnedLabel": "Titik Alamat",
+        "fieldRequired": "Kolom tidak boleh kosong",
+        "saveForNext": "Simpan data untuk pesanan berikutnya",
+        "back": "Kembali",
+        "save": "Simpan",
+        "saveChanges": "Simpan Perubahan",
+        "required": "Tambahkan informasi pelanggan terlebih dahulu"
+      },
+      "shipping": {
+        "title": "Opsi Pengiriman",
+        "delivery": "Pengiriman",
+        "pickup": "Ambil Sendiri",
+        "courierNeedsCustomer": "Tambahkan informasi pelanggan untuk melihat opsi kurir.",
+        "outOfCoverage": "Alamat Anda berada di luar area pengiriman yang tersedia. Mohon gunakan alamat pengiriman lain.",
+        "pickupLocationLabel": "Ambil Pembelian di Toko",
+        "pickupLocationDefault": "Alamat toko belum diatur",
+        "pickupLocationError": "Tidak dapat memuat lokasi pengambilan",
+        "reloadLocation": "Muat Ulang Lokasi",
+        "staleNotice": "Biaya pengiriman harus dihitung ulang karena isi keranjang belanja Anda telah berubah. Hitung ulang sebelum melakukan pemesanan.",
+        "recalculate": "Hitung Ulang Biaya Pengiriman"
+      },
+      "notes": {
+        "title": "Catatan Pesanan",
+        "placeholder": "Tambahkan catatan untuk pesanan ini"
+      },
+      "summary": {
+        "title": "Ringkasan Pesanan",
+        "subtotal": "Subtotal",
+        "tax": "PPN (11%)",
+        "shipping": "Biaya Pengiriman",
+        "total": "Total Belanja"
+      },
+      "purchase": {
+        "button": "Bayar",
+        "success": "Pesanan berhasil dibuat (hanya demo — tidak ada pesanan sungguhan yang dibuat)."
+      }
+    }
+  },
+  "studio": {
+    "title": "Studio",
+    "steps": {
+      "features": "Fitur",
+      "configure": "Konfigurasi",
+      "styling": "Gaya",
+      "publish": "Publikasi"
+    },
+    "header": {
+      "breadcrumbTemplates": "Template",
+      "breadcrumbStudio": "Studio"
+    },
+    "features": {
+      "title": "Fitur & Tata Letak",
+      "subtitle": "Aktifkan dan atur fitur situs web Anda",
+      "addCustom": "+ Tambah Halaman Kustom",
+      "pageName": "Nama Halaman",
+      "shopOnlineTitle": "Toko",
+      "shopCatalogTitle": "Katalog",
+      "shopOnlineDesc": "Aktifkan belanja dan pemesanan online.",
+      "shopCatalogDesc": "Pamerkan produk atau layanan Anda.",
+      "onlineCheckout": "Pembayaran Online",
+      "contactDesc": "Memungkinkan pelanggan menghubungi Anda.",
+      "quoteDesc": "Minta penawaran untuk produk atau layanan.",
+      "appointmentDesc": "Buat janji temu langsung di situs web Anda.",
+      "locationDesc": "Tampilkan lokasi Anda dengan peta dan detail.",
+      "reviewsDesc": "Tampilkan testimoni dan ulasan pelanggan.",
+      "fontPreviewSample": "Contoh Teks Pratinjau Font"
+    },
+    "configure": {
+      "title": "Konfigurasi",
+      "subtitle": "Sesuaikan konten dan pengaturan setiap fitur",
+      "backToList": "← Kembali",
+      "panels": {
+        "business": "Informasi Bisnis",
+        "businessDesc": "Logo, hero, detail kontak & alamat",
+        "header": "Header & Hero",
+        "headerDesc": "Logo, teks hero, dan gambar banner",
+        "shop": "Toko / Katalog",
+        "shopDesc": "Tampilan produk dan pengaturan checkout",
+        "quote": "Permintaan Penawaran",
+        "quoteDesc": "Label formulir permintaan penawaran",
+        "appointment": "Janji Temu",
+        "appointmentDesc": "Formulir pemesanan dan penjadwalan",
+        "location": "Lokasi",
+        "locationDesc": "Peta, alamat, dan petunjuk arah",
+        "contact": "Hubungi Kami",
+        "contactDesc": "Label formulir kontak dan detail",
+        "reviews": "Ulasan",
+        "reviewsDesc": "Pengaturan testimoni pelanggan",
+        "footer": "Footer",
+        "footerDesc": "Konten footer dan tautan sosial",
+        "languages": "Bahasa",
+        "languagesDesc": "Konfigurasi bahasa situs web"
+      }
+    },
+    "basic": {
+      "title": "Informasi Dasar",
+      "subtitle": "Pengaturan global untuk situs web Anda",
+      "header": {
+        "title": "Pengaturan Header",
+        "logoLabel": "Logo Tampilan Situs Web",
+        "changeBtn": "Pilih logo lain",
+        "uploadBtn": "Unggah Logo"
+      },
+      "nav": {
+        "title": "Pengaturan Navigasi",
+        "subtitle": "Ubah label untuk tautan navigasi aktif Anda.",
+        "heroLabel": "Headline",
+        "heroSubtitle": "Subjudul",
+        "bannersLabel": "Gambar Slider Hero ({{count}}/3)",
+        "bannerItemLabel": "Gambar {{index}}"
+      },
+      "appearance": {
+        "title": "Identitas Visual",
+        "colors": {
+          "title": "Warna Tema",
+          "subtitle": "Pilih warna utama untuk situs web Anda."
+        },
+        "font": {
+          "title": "Gaya Huruf",
+          "subtitle": "Pilih tipografi untuk situs web Anda.",
+          "options": {
+            "modern": "Modern & Bersih",
+            "classic": "Klasik & Profesional",
+            "soft": "Lembut & Ramah",
+            "bold": "Tebal & Menyenangkan"
+          }
+        }
+      },
+      "languages": {
+        "title": "Bahasa Situs Web",
+        "subtitle": "Pilih bahasa untuk situs web Anda. Anda dapat menambahkan lebih banyak dan menerjemahkannya nanti."
+      }
+    },
+    "styling": {
+      "title": "Gaya",
+      "subtitle": "Sesuaikan tampilan dan nuansa situs web Anda"
+    },
+    "publish": {
+      "title": "Publikasi",
+      "subtitle": "Atur domain Anda dan mulai online",
+      "subdomain": {
+        "title": "Subdomain Labamu",
+        "subtitle": "Dapatkan subdomain gratis untuk situs web Anda",
+        "placeholder": "tokoanda",
+        "suffix": ".labamu.store",
+        "checkAvailability": "Cek Ketersediaan",
+        "available": "Domain ini tersedia!",
+        "unavailable": "Domain ini sudah digunakan. Coba yang lain."
+      },
+      "customDomain": {
+        "title": "Domain Kustom",
+        "subtitle": "Hubungkan nama domain Anda sendiri",
+        "placeholder": "www.domainanda.com",
+        "instructions": "Tambahkan catatan DNS berikut ke penyedia domain Anda:",
+        "recordType": "Tipe",
+        "recordName": "Nama",
+        "recordValue": "Nilai",
+        "connectDomain": "Hubungkan Domain"
+      },
+      "launchReady": "Situs web Anda siap dipublikasikan!",
+      "publishBtn": "Publikasikan Situs Web"
+    },
+    "actions": {
+      "save": "Simpan Perubahan",
+      "discard": "Batal",
+      "back": "Kembali",
+      "continue": "Lanjutkan",
+      "previous": "Sebelumnya",
+      "addLanguage": "+ Bahasa",
+      "addSlider": "+ Tambah Gambar Slider",
+      "translating": "Menerjemahkan...",
+      "autoTranslate": "Terjemahan Otomatis ke {{lang}}",
+      "autoTranslateFrom": "Terjemahkan otomatis dari {{lang}}"
+    },
+    "editor": {
+      "logo": "Logo",
+      "logoRequired": "Logo Tampilan Situs Web",
+      "logoUploadHint": "Klik atau seret untuk mengunggah logo Anda. PNG, JPG, atau JPEG · Maks 5 MB",
+      "hero": "Hero",
+      "heroDesc": "Bagian banner yang ditampilkan di bagian atas situs web Anda.",
+      "banner": "Banner",
+      "bannerUploadHint": "Klik atau seret untuk mengunggah banner Anda. PNG, JPG, atau JPEG · Maks 5 MB"
+    },
+    "common": {
+      "uploadImage": "Unggah Gambar",
+      "uploadHint": "PNG, JPG maks 5mb",
+      "email": "Email",
+      "phone": "Telepon"
+    },
+    "panelContent": {
+      "shared": {
+        "sectionTitle": "Judul Bagian",
+        "sectionSubtitle": "Subjudul Bagian",
+        "sectionDescriptionLabel": "Deskripsi Bagian"
+      },
+      "appointment": {
+        "titleLabel": "Judul Janji Temu",
+        "subtitleLabel": "Subjudul Janji Temu"
+      },
+      "business": {
+        "bannerItemLabel": "Banner {{index}}",
+        "footerTitle": "Footer",
+        "footerDesc": "Footer — tampil di bagian bawah situsmu",
+        "businessNameLabel": "Nama Usaha",
+        "businessNamePlaceholder": "cth. Toko Sejahtera",
+        "emailPlaceholder": "cth. nama@usaha.com",
+        "footerDescriptionLabel": "Deskripsi Footer"
+      },
+      "contact": {
+        "nameField": "Nama",
+        "messageField": "Pesan",
+        "alwaysRequired": "Selalu wajib diisi",
+        "generalTitle": "Umum",
+        "generalDesc": "pengaturan dasar bagian ini",
+        "headerImageLabel": "Gambar Header Bagian Kontak",
+        "requiredFieldsTitle": "Kolom Wajib Diisi",
+        "requiredFieldsDesc": "pilih kolom mana yang wajib diisi pengunjung",
+        "forwardTitle": "Teruskan Formulir Hubungi Kami",
+        "forwardDesc": "kirim pesan masuk ke email usahamu",
+        "businessEmailLabel": "Email Usaha",
+        "businessEmailPlaceholder": "cth. nama@usaha.com",
+        "confirmationMessageLabel": "Pesan Konfirmasi",
+        "confirmationMessagePlaceholder": "cth. Terima kasih telah menghubungi kami"
+      },
+      "location": {
+        "addressTitle": "Alamat Usaha",
+        "addressDesc": "alamat ini akan ditampilkan di situsmu",
+        "streetLabel": "Alamat Jalan",
+        "cityLabel": "Kota",
+        "provinceLabel": "Provinsi / Kecamatan",
+        "postalCodeLabel": "Kode Pos",
+        "countryLabel": "Negara"
+      },
+      "quote": {
+        "sectionTitle": "Bagian Permintaan Penawaran",
+        "sectionDesc": "biarkan pengunjung meminta penawaran harga",
+        "descPlaceholder": "Fill out the form below to get a customized quote for your project",
+        "bgImageLabel": "Gambar Latar",
+        "bgImageFallback": "If none is set, the default template image will be used."
+      },
+      "reviews": {
+        "titleLabel": "Judul Ulasan"
+      },
+      "shop": {
+        "sectionsTitle": "Bagian Halaman Utama",
+        "sectionsDesc": "atur urutan bagian di halaman utama situsmu",
+        "removeSection": "Hapus bagian",
+        "addSection": "Tambah bagian",
+        "emptyState": "Belum ada bagian, yuk tambahkan sekarang"
+      }
+    },
+    "editorComingSoon": "Editor Segera Hadir!",
+    "selectSection": "Pilih bagian yang ingin dikonfigurasi.",
+    "publishedMock": "Berhasil! Situs telah dipublikasikan (Mock)",
+    "sidebarToggle": {
+      "collapse": "Tutup Sidebar",
+      "expand": "Buka Sidebar"
+    },
+    "viewport": {
+      "desktop": "Desktop",
+      "mobile": "Seluler"
+    },
+    "customPage": {
+      "defaultTitle": "Halaman Kustom",
+      "defaultDesc": "Konten halaman kustom",
+      "defaultMenuLink": "Tautan kustom di menumu"
+    },
+    "previewModal": {
+      "title": "Pratinjau Gambar",
+      "subtitle": "Pastikan gambar terlihat penuh dan berada dalam area ya."
+    },
+    "domainConnectMock": "Koneksi domain telah dimulai (Mock)",
+    "search": {
+      "placeholder": "Cari...",
+      "noResults": "Tidak ada hasil"
+    },
+    "upload": {
+      "dragDrop": "Seret dan lepas atau klik untuk unggah gambar",
+      "acceptedFormats": "Format yang didukung: JPG, JPEG & PNG",
+      "maxSize": "(Maks 5MB)",
+      "uploadedSuffix": "Berhasil! {{label}} telah diunggah"
+    }
+  },
+  "shop": {
+    "sort": {
+      "newest": "Terbaru ke Terlama",
+      "oldest": "Terlama ke Terbaru",
+      "priceAsc": "Harga: Rendah ke Tinggi",
+      "priceDesc": "Harga: Tinggi ke Rendah"
+    },
+    "allCategories": "Semua Kategori",
+    "all": "Semua",
+    "priceFilter": {
+      "label": "Filter Harga",
+      "lowest": "Harga Terendah",
+      "highest": "Harga Tertinggi"
+    },
+    "addToCart": "tambah ke keranjang",
+    "noProductsFound": "Produk tidak ditemukan",
+    "countSummary": "{{from}}-{{to}} dari {{total}} produk",
+    "category": "Kategori",
+    "sortBy": "Urutkan berdasarkan",
+    "catalogNotAvailable": "Katalog tidak tersedia",
+    "catalogNotAvailableDesc": "Penjual ini belum memiliki produk yang terdaftar saat ini.",
+    "noProductsFoundPeriod": "Produk tidak ditemukan.",
+    "salutation": "Sapaan",
+    "selectSalutation": "Pilih sapaan",
+    "qty": "Jml:"
+  }
+}

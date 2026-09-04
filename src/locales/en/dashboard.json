@@ -1,0 +1,210 @@
+{
+    "header": {
+        "title": "Labamu Ecommerce",
+        "notifications": "Notifications",
+        "userProfile": "User Profile",
+        "viewStorefront": "View Website",
+        "logout": "Logout"
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "websites": "Website Studio",
+        "manageCatalog": "Manage Catalog",
+        "catalog": "Catalog",
+        "package": "Package",
+        "modifier": "Modifier",
+        "onlineStore": "Online Store",
+        "websiteStudio": "Website Studio",
+        "siteBuilder": "Website Builder",
+        "pageList": "Page List",
+        "theme": "Theme",
+        "pages": "Pages",
+        "orders": "Orders",
+        "rfq": "Request for Quotes",
+        "bookings": "Bookings",
+        "reviews": "Reviews",
+        "deliverySettings": "Delivery Settings",
+        "domainSetup": "Domain Setup",
+        "customizeDomain": "Customize Domain",
+        "websiteTracking": "Website Tracking",
+        "roleManagement": "Role Management",
+        "settings": "Settings",
+        "logout": "Logout"
+    },
+    "gallery": {
+        "browse": "Browse Templates"
+    },
+    "profile": {
+        "title": "Business Information",
+        "editBtn": "Edit Data",
+        "saveBtn": "Save",
+        "cancelBtn": "Cancel",
+        "saveSuccess": "Changes saved successfully",
+        "saveError": "Failed to update profile",
+        "logoAlt": "Logo",
+        "dataUnavailable": "Company data is unavailable.",
+        "membership": {
+            "basic": "Basic Member",
+            "pro": "Pro Member",
+            "learn": "Learn about Membership >"
+        },
+        "sections": {
+            "info": "Business Info",
+            "address": "Business Address"
+        },
+        "fields": {
+            "entity": "Business Entity",
+            "legalName": "Legal Entity Name",
+            "brandName": "Brand Name",
+            "whatsapp": "Business Whatsapp Number",
+            "phone": "Business Phone Number",
+            "email": "Business Email",
+            "npwpBusiness": "Business NPWP",
+            "npwpPersonal": "Personal NPWP",
+            "type": "Business Type",
+            "industry": "Business Industry",
+            "activity": "Business Activity",
+            "address": "Business Address",
+            "rtRw": "RT/RW",
+            "provinceState": "Province / State",
+            "country": "Country",
+            "province": "Province",
+            "city": "City",
+            "district": "District",
+            "village": "Village",
+            "zip": "Postal Code"
+        },
+        "industries": {
+            "abattoir": "Abattoir",
+            "agriculture": "Agriculture",
+            "agro_tourism": "Agro Tourism",
+            "automotive": "Automotive",
+            "building_material": "Building Material",
+            "computer": "Computer",
+            "consulting": "Consulting Service",
+            "education": "Education",
+            "electronic": "Electronic",
+            "event_organizer": "Event Organizer",
+            "farm": "Farm",
+            "fashion": "Fashion",
+            "fishery": "Fishery",
+            "florist": "Florist",
+            "fnb": "Food and beverage",
+            "groceries": "Groceries",
+            "handycraft": "Handycraft",
+            "lifestyle": "Lifestyle",
+            "logistics": "Logistics / Cargo",
+            "pharmacy": "Pharmacy",
+            "photography": "Photography and Videography Service",
+            "precious_metal": "Precious Metal",
+            "property": "Property",
+            "printing": "Screen Printing, Printing & Billboard",
+            "technology": "Technology",
+            "telecommunications": "Telecommunications",
+            "tour_travel": "Tour & Travel",
+            "welding": "Welding Service",
+            "manufacturing": "Manufacturing",
+            "retail_general": "Retail",
+            "salon": "Salon",
+            "software_it": "Software & IT",
+            "healthcare_service": "Healthcare",
+            "real_estate_general": "Real Estate",
+            "construction_general": "Construction",
+            "marketing": "Marketing & Advertising",
+            "legal": "Legal Services",
+            "nonprofit": "Non-Profit / NGO",
+            "other": "Other"
+        },
+        "entities": {
+            "pt": "LLC / Inc.",
+            "cv": "Limited Partnership (LP)",
+            "firm": "General Partnership",
+            "individual": "Sole Proprietorship"
+        },
+        "types": {
+            "product": "Product",
+            "service": "Service",
+            "both": "Product and Service"
+        },
+        "activities": {
+            "online": "Online",
+            "offline": "Offline",
+            "both": "Online & Offline"
+        }
+    },
+    "welcome": {
+        "title": "Welcome",
+        "messagePrefix": "You have successfully logged in to ",
+        "messageStrong": "Labamu Ecommerce",
+        "messageSuffix": ". The full dashboard will be coming soon.",
+        "iconAlt": "Labamu Icon"
+    },
+    "ecommerceMismatchBanner": {
+        "message": "Your Ecommerce is connected to a different module. Data syncing may not reflect your current access point.",
+        "dismiss": "Dismiss"
+    },
+    "catalog": {
+        "title": "Catalog",
+        "searchPlaceholder": "Search",
+        "errorTitle": "Failed to load catalog",
+        "retry": "Retry",
+        "columns": {
+            "catalogName": "Catalog Name",
+            "category": "Category",
+            "weight": "Weight",
+            "volume": "Volume",
+            "sellingPrice": "Selling Price",
+            "websiteVisibility": "Website Visibility"
+        },
+        "emptyFiltered": "No Search Results Found",
+        "emptyFilteredSub": "Try searching with a different term, okay?",
+        "emptyDefault": "No Catalog Yet",
+        "emptyDefaultSub": "We couldn't find any catalog from your store.",
+        "filter": {
+            "searchPlaceholder": "Search",
+            "removeFilter": "Remove Filter",
+            "noResults": "No results found."
+        }
+    },
+    "modifier": {
+        "free": "Free",
+        "loadError": "Failed to load modifiers",
+        "connectedCatalog": "Connected Catalog",
+        "connected": {
+            "title": "Connected Modifier",
+            "ruleRequired": "Min 1, Max {{max}}",
+            "ruleOptional": "Optional, Max {{max}}",
+            "collapse": "Collapse",
+            "expand": "Expand",
+            "catalogDetailFallback": "Catalog Detail",
+            "emptyTitle": "No Connected Modifiers",
+            "emptyDescription": "This catalog doesn't have any modifiers connected yet."
+        },
+        "list": {
+            "colName": "Modifier Name",
+            "colOptions": "Modifier Options",
+            "emptyTitleSearch": "No Search Results Found",
+            "emptyTitleDefault": "No Modifier Yet",
+            "emptyDescSearch": "Try searching with a different term, okay?",
+            "emptyDescDefault": "We couldn't find any modifier from your connected store.",
+            "footerLoading": "Loading…",
+            "footerNoResults": "No results",
+            "footerRows": "from {{total}} rows"
+        },
+        "detail": {
+            "close": "Close",
+            "deactivateWarningTitle": "Services connected to this modifier will become unavailable",
+            "deactivateWarningDesc": "This modifier must be selected at least {{min}}.",
+            "deactivateBtn": "Deactivate Modifier",
+            "loadError": "Failed to load modifier",
+            "toggleFailed": "Failed to update modifier",
+            "enabledMsg": "Modifier has been enabled",
+            "disabledMsg": "Modifier has been disabled",
+            "availabilityTitle": "Modifier Availability",
+            "availabilityDesc": "Click the toggle to set availability",
+            "minActiveInfo": "At least {{min}} options must be active to enable this modifier.",
+            "notFound": "Modifier not found",
+            "noConnectedCatalog": "No connected catalog"
+        }
+    }
+}

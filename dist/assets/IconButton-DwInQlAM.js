@@ -1,0 +1,1 @@
+import{n as e,t}from"./jsx-runtime-Cltr0gcK.js";import{F as n}from"./ce-ui-DUCnjig1.js";e();var r=t();function i({icon:e,onClick:t,variant:i=`ghost`,size:a=`sm`,disabled:o=!1,style:s={},...c}){return(0,r.jsx)(n,{icon:e,onClick:t,variant:i,size:a,disabled:o,style:s,...c})}export{i as t};

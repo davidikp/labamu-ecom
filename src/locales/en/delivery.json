@@ -1,0 +1,131 @@
+{
+  "title": "Delivery Settings",
+  "tabs": {
+    "deliveryInfo": "Delivery Info",
+    "courierService": "Courier Service"
+  },
+  "saveChanges": "Save Changes",
+  "saveSuccess": "Delivery settings saved successfully",
+  "purchasability": {
+    "title": "Purchasability",
+    "subtitle": "Configure how user can shop and order in your website.",
+    "pickup": {
+      "label": "Pickup",
+      "description": "Customers pickup orders from your location"
+    },
+    "delivery": {
+      "label": "Delivery",
+      "description": "You offer delivery to customer locations"
+    },
+    "selectAtLeastOne": "Select at least one option"
+  },
+  "pickupInfo": {
+    "title": "Pickup Info",
+    "subtitle": "Setup the contact and address for picking up",
+    "contactName": "Contact Name",
+    "contactNamePlaceholder": "Input Name",
+    "contactNumber": "Contact Number",
+    "country": "Country",
+    "countryPlaceholder": "Select Country",
+    "province": "Province",
+    "provincePlaceholder": "Select Province",
+    "city": "City",
+    "cityPlaceholder": "Select City",
+    "district": "District",
+    "districtPlaceholder": "Select District",
+    "region": "Region",
+    "regionPlaceholder": "Select Region",
+    "zip": "ZIP/Postal Code",
+    "zipPlaceholder": "Select ZIP/Postal Code",
+    "zipInputPlaceholder": "e.g. 12345",
+    "zipLoading": "Loading...",
+    "address": "Address",
+    "addressPlaceholder": "e.g. Jalan Mawar No.1",
+    "pinpointAddress": "Pinpoint Address",
+    "pinpointAddressPlaceholder": "Street name, building, house number",
+    "pinTitle": "Pin the right point",
+    "pinSubtitle": "We'll deliver to the map address. Please verify the point and adjust if necessary."
+  },
+  "courier": {
+    "lalamoveName": "Lalamove",
+    "lalamovePartnerPortalLoginAlt": "Lalamove Partner Portal login",
+    "lalamoveApiKeysPageAlt": "Lalamove API Keys page",
+    "instantDelivery": {
+      "label": "Instant Delivery",
+      "description": "Driver is dispatched as soon as possible."
+    },
+    "scheduledDelivery": {
+      "label": "Scheduled Delivery",
+      "description": "Book a pickup for a future date and time."
+    },
+    "status": {
+      "idle": "Not Connected",
+      "connecting": "Connecting",
+      "connected": "Connected",
+      "failed": "Failed"
+    },
+    "saveAndConnect": "Save & Connect",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "disconnect": "Disconnect",
+    "disconnectTitle": "Disconnect Delivery Integration?",
+    "disconnectDescription": "Your website will no longer offer this delivery service at checkout. You can reconnect it anytime.",
+    "disconnectCancel": "Cancel",
+    "disconnectConfirm": "Yes, Disconnect",
+    "disconnectBlockedTitle": "Can't Disconnect Delivery Integration",
+    "disconnectBlockedDescription": "This delivery service is currently used by one or more ongoing orders. Complete or cancel those orders before disconnecting the integration.",
+    "disconnectBlockedButton": "Yes, Understood",
+    "savedSuccess": "Lalamove service successfully saved",
+    "connectSuccess": "Lalamove service successfully connected",
+    "connectFailed": "Failed to connect Lalamove service",
+    "disconnectSuccess": "Lalamove service successfully disconnected",
+    "disconnectFailed": "Failed to disconnect Lalamove service",
+    "outOfCoverage": "Your address is outside the courier's coverage area. Please use a different delivery address.",
+    "connectMissingFields": "Please fill in both API Key and API Secret",
+    "productionNotice": "The integration only works with API credentials from the Production environment. Sandbox credentials aren't supported.",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Input API Key...",
+    "apiSecret": "API Secret",
+    "apiSecretPlaceholder": "Input API Secret...",
+    "howToConnect": "How to Connect API",
+    "prerequisites": {
+      "title": "Prerequisites",
+      "intro": "Before you begin, ensure you meet these operational requirements:",
+      "item1Before": "You must have a registered ",
+      "item1LinkText": "Lalamove Business Account",
+      "item1After": " (individual accounts cannot generate API keys).",
+      "item2": "Complete the business verification process required by your local region."
+    },
+    "stepByStep": {
+      "title": "Step-by-Step Guide",
+      "step1": {
+        "title": "Sign in to the Partner Portal",
+        "item1Before": "Open the ",
+        "item1LinkText": "Lalamove Partner Portal",
+        "item1After": ".",
+        "item2": "Select your target market/region from the dropdown menu.",
+        "item3": "Log in using your Lalamove Business account credentials."
+      },
+      "step2": {
+        "title": "Access the Developers Tab",
+        "item1": "Locate the navigation menu on the dashboard.",
+        "item2": "Click on the Developers or API Keys section."
+      },
+      "step3": {
+        "title": "Activate Live Keys (Production Environment)",
+        "item1": "Top up your Lalamove e-wallet with the minimum balance required in your market.",
+        "item2": "Switch your portal environment toggle from Sandbox to Production.",
+        "item3": "Generate your live production keys to start executing real-world shipments."
+      }
+    }
+  },
+  "map": {
+    "attribution": "© OpenStreetMap contributors"
+  },
+  "noCourierModal": {
+    "title": "No Delivery Service Connected",
+    "description": "Delivery is enabled, but no delivery service is connected. If you continue, the Delivery option will be turned off automatically. You can connect a delivery service and enable it again anytime.",
+    "cancel": "Cancel",
+    "continue": "Continue"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "placeholder": {
+    "input": "Enter {{field}}",
+    "dropdown": "Select {{field}}"
+  },
+  "dropdown": {
+    "search": "Search...",
+    "noResult": "No result found",
+    "select": "Select option"
+  },
+  "phone": {
+    "searchCountry": "Search country...",
+    "noCountry": "No country found",
+    "placeholder": "Phone Number"
+  },
+  "validation": {
+    "invalidPhone": "Invalid phone number format",
+    "invalidEmail": "Invalid email format",
+    "invalidNpwp": "Invalid NPWP format (XX.XXX.XXX.X-XXX.XXX)",
+    "required": "This field is required",
+    "maxLength": "Maximum {{max}} characters"
+  },
+  "action": {
+    "oke": "Okay",
+    "save": "Save"
+  },
+  "layout": {
+    "brandSuffix": "Ecommerce",
+    "byLabamu": "by Labamu",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar",
+    "userNamePlaceholder": "John Doe",
+    "userRolePlaceholder": "Admin",
+    "userMenuAriaLabel": "User menu",
+    "companyProfile": "Company Profile",
+    "langIndonesia": "Indonesia",
+    "langEnglish": "English"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong in the preview",
+    "description": "The preview engine encountered an error during reordering. Please try refreshing or continuing your edits.",
+    "retryButton": "Retry Preview"
+  },
+  "imageCropModal": {
+    "defaultTitle": "Preview Image",
+    "defaultSubtitle": "Make sure the image is fully visible and within the area."
+  }
+}

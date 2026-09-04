@@ -1,0 +1,31 @@
+{
+  "products": [
+    { "id": "p1", "name": "Classic Tote Bag", "price": 45.0, "compareAtPrice": null, "image": null, "vendor": "House Brand", "stock": 12 },
+    { "id": "p2", "name": "Minimal Leather Wallet", "price": 32.0, "compareAtPrice": 40.0, "image": null, "vendor": "House Brand", "stock": 0 },
+    { "id": "p3", "name": "Everyday Sneakers", "price": 68.0, "compareAtPrice": null, "image": null, "vendor": "House Brand", "stock": 5 },
+    { "id": "p4", "name": "Wool Scarf", "price": 24.0, "compareAtPrice": null, "image": null, "vendor": "House Brand", "stock": 20 },
+    { "id": "p5", "name": "Basic Tshirt with pattern", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/basic-tshirt-pattern.png", "vendor": "Tops", "stock": 18 },
+    { "id": "p6", "name": "Ruffle shirt pleatted", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/ruffle-shirt-pleatted.png", "vendor": "Tops", "stock": 14 },
+    { "id": "p7", "name": "Seoul Crop Top", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/seoul-crop-top.png", "vendor": "Tops", "stock": 9 },
+    { "id": "p8", "name": "Red Picnic Matt Top", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/red-picnic-matt-top.png", "vendor": "Tops", "stock": 11 },
+    { "id": "p9", "name": "Basic Tshirt with pattern", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/basic-tshirt-pattern.png", "vendor": "Tops", "stock": 18 },
+    { "id": "p10", "name": "Kulot Pants", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/kulot-pants.png", "vendor": "Bottoms", "stock": 16 },
+    { "id": "p11", "name": "Pleatted Pants", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/pleated-pants.png", "vendor": "Bottoms", "stock": 13 },
+    { "id": "p12", "name": "Summer Jeans Shorts", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/summer-jeans-shorts.png", "vendor": "Bottoms", "stock": 22 },
+    { "id": "p13", "name": "Colorful Pants", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/colorful-pants.png", "vendor": "Bottoms", "stock": 7 },
+    { "id": "p14", "name": "Zebra Print Leggings", "price": 28.0, "compareAtPrice": null, "image": "/assets/catalog/products/zebra-print-leggings.png", "vendor": "Bottoms", "stock": 10 }
+  ],
+  "collections": [
+    { "id": "c1", "name": "Best Sellers", "handle": "best-sellers", "image": null, "productIds": ["p1", "p3"] },
+    { "id": "c2", "name": "New Arrivals", "handle": "new-arrivals", "image": null, "productIds": ["p2", "p4"] },
+    { "id": "c3", "name": "Tops", "handle": "tops", "image": "/assets/catalog/categories/tops.png", "productIds": ["p5", "p6", "p7", "p8", "p9"] },
+    { "id": "c4", "name": "Bottoms", "handle": "bottoms", "image": "/assets/catalog/categories/bottoms.png", "productIds": ["p10", "p11", "p12", "p13", "p14"] },
+    { "id": "c5", "name": "Dresses", "handle": "dresses", "image": "/assets/catalog/categories/dresses.png", "productIds": [] },
+    { "id": "c6", "name": "Shoes", "handle": "shoes", "image": "/assets/catalog/categories/shoes.png", "productIds": [] },
+    { "id": "c7", "name": "Bags", "handle": "bags", "image": "/assets/catalog/categories/bags.png", "productIds": [] },
+    { "id": "c8", "name": "Perfumes", "handle": "perfumes", "image": "/assets/catalog/categories/perfumes.png", "productIds": [] }
+  ],
+  "customers": [
+    { "id": "cu1", "email": "demo.customer@example.com", "source": "newsletter" }
+  ]
+}
