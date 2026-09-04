@@ -1,1 +1,0 @@
-var e=`/assets/lalamove-logo-CkCbKrXq.png`;export{e as t};
