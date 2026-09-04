@@ -1,0 +1,85 @@
+215:          />
+468:            />
+479:              />
+510:                  />
+565:            </>
+596:        />
+743:        />
+798:                  <ChevronLeftIcon size={18} color="var(--neutral-on-surface-secondary)" />
+858:                  />
+893:              />
+952:                        />
+958:            </>
+1016:    </>
+1093:            <button type="button" onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1))} style={{ border: "none", background: "transparent", cursor: "pointer", padding: "4px" }}><ChevronLeftIcon size={20} /></button>
+1094:          ) : <div style={{ width: 28 }} />}
+1097:            <button type="button" onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1))} style={{ border: "none", background: "transparent", cursor: "pointer", padding: "4px" }}><ChevronRightIcon size={20} /></button>
+1098:          ) : <div style={{ width: 28 }} />}
+1179:        <CalendarIcon size={18} color="var(--neutral-on-surface-secondary)" />
+1204:              {idx === 0 && <div style={{ width: "1px", background: "var(--neutral-line-separator-2)", margin: "0 8px" }} />}
+1209:    </>
+1262:        />
+1270:        />
+1306:        />
+1339:        />
+1405:      />
+1450:      />
+1490:        <DocumentTypeBadge fileName={file?.name} type={file?.type} />
+1566:        />
+1643:        <AddIcon size={20} color="var(--neutral-on-surface-tertiary)" />
+1655:      />
+1712:                  />
+1748:                  <CloseIcon size={14} color="var(--status-red-primary)" />
+1817:          />
+1953:        />
+2002:        />
+3157:        />
+3258:      />
+3298:            />
+3408:                    />
+3436:                    />
+3446:                      />
+3519:                    </>
+3544:                />
+3559:                />
+3577:                />
+3603:                  />
+3627:                />
+3643:                  />
+3693:                />
+3702:                />
+3712:                />
+3728:                />
+3874:                                  />
+3879:                                  />
+4042:              />
+4093:                    />
+4124:                    />
+4136:                    />
+4145:                      />
+4156:                        />
+4177:              />
+4214:                />
+4228:                />
+4316:              />
+4459:                          />
+4521:                    />
+4543:                  />
+4562:                    />
+4586:                    />
+4626:                    />
+4717:                    />
+4757:                        />
+4763:                      />
+4784:                        />
+4808:                        />
+4848:                        />
+4941:                    />
+4990:                        />
+4996:                      />
+5016:                        />
+5040:                        />
+5080:                        />
+5227:          </>
+5252:              />
+5283:          </>

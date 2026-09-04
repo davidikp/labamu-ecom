@@ -1,0 +1,6 @@
+/* Component utilities — import this once in your app alongside labamu-token.css.
+   Only emits utility classes (no preflight/base), so it is safe to use
+   alongside the consuming project's own Tailwind CSS setup. */
+@import "tailwindcss/utilities.css";
+@config "../tailwind.config.ts";
+@source "./ui";

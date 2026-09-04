@@ -1,0 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Lato:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap");
+@import "tailwindcss";
+@import "./styles/tokens.css";
+@import "./styles/globals.css";
+@import "./styles/components.css";
+@import "./styles/utilities.css";

@@ -1,0 +1,36 @@
+/* Layout & Display */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* Typography */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* Spacing & Gaps using existing tokens */
+.gap-xx-sm { gap: var(--spacing-xx-sm); }
+.gap-x-sm { gap: var(--spacing-x-sm); }
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-big { gap: var(--spacing-big); }
+.gap-x-big { gap: var(--spacing-x-big); }
+.gap-xx-big { gap: var(--spacing-xx-big); }
+.gap-xxx-big { gap: var(--spacing-xxx-big); }
+.gap-lg { gap: var(--spacing-lg); }
+.gap-x-lg { gap: var(--spacing-x-lg); }
+.gap-xx-lg { gap: var(--spacing-xx-lg); }
+
+/* Margins & Padding Resets */
+.m-0 { margin: 0; }
+.p-0 { padding: 0; }

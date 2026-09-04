@@ -1,0 +1,418 @@
+{
+  "onlineStore": {
+    "pageEditor": {
+      "saveFailedBanner": "Gagal menyimpan halaman",
+      "loadErrorTitle": "Halaman ini tidak dapat dimuat",
+      "loadErrorDescription": "Terjadi kesalahan saat memuat halaman. Silakan coba lagi.",
+      "loadErrorReload": "Muat Ulang Halaman",
+      "notFoundTitle": "Halaman Tidak Ditemukan",
+      "notFoundDescription": "Halaman ini mungkin telah dihapus atau tidak lagi tersedia.",
+      "notFoundGoToList": "Buka Daftar Halaman",
+      "generateError": "Gagal menghasilkan konten",
+      "generateUnavailable": "Pembuatan konten AI saat ini tidak tersedia."
+    },
+    "pages": {
+      "bulkDeletePartialSuccess": "{{successCount}} dari {{totalCount}} halaman berhasil dihapus. Beberapa halaman tidak dapat dihapus. Silakan coba lagi",
+      "bulkDeleteSuccess": "{{count}} halaman berhasil dihapus",
+      "bulkDeleteFailed": "Gagal menghapus halaman",
+      "bulkVisibilityPartialSuccess": "Visibilitas telah diperbarui untuk {{successCount}} dari {{totalCount}} halaman. Silakan coba lagi untuk sisanya",
+      "bulkVisibilitySuccess": "Visibilitas untuk {{count}} halaman berhasil diperbarui",
+      "bulkVisibilityFailed": "Gagal memperbarui visibilitas halaman"
+    }
+  },
+  "editor": {
+    "common": {
+      "cancel": "Batal",
+      "delete": "Hapus",
+      "confirm": "Konfirmasi",
+      "close": "Tutup"
+    },
+    "previewLive": {
+      "invalidLink": "Tautan pratinjau ini tidak valid atau sudah kedaluwarsa."
+    },
+    "sectionBuilder": {
+      "actions": {
+        "reorderSections": "Ubah urutan bagian",
+        "addSection": "Tambah {{type}}",
+        "duplicateSection": "Duplikat {{type}}",
+        "deleteSection": "Hapus {{type}}",
+        "addPage": "Tambah halaman — {{name}}",
+        "renamePage": "Ubah nama halaman",
+        "deletePage": "Hapus halaman",
+        "reorderPages": "Urutkan ulang halaman",
+        "updatePageSeo": "Perbarui SEO halaman",
+        "togglePageNav": "Alihkan visibilitas navigasi halaman",
+        "themePreset": "Preset tema → {{name}}",
+        "show": "Tampilkan {{label}}",
+        "hide": "Sembunyikan {{label}}",
+        "fieldChange": "{{type}} → {{field}}",
+        "addBlock": "Tambah {{type}}",
+        "removeBlock": "Hapus blok",
+        "duplicateBlock": "Duplikat blok",
+        "reorderBlocks": "Susun ulang blok"
+      },
+      "discardConfirm": {
+        "title": "Buang semua perubahan yang belum dipublikasikan? Tokomu akan kembali ke versi terakhir yang dipublikasikan. Tindakan ini tidak bisa dibatalkan.",
+        "confirmLabel": "Buang"
+      },
+      "exitConfirm": {
+        "title": "Buang perubahan dan keluar? Anda memiliki perubahan yang belum dipublikasikan. Jika keluar sekarang, perubahan tersebut akan dibuang dan toko Anda akan kembali ke versi terakhir yang dipublikasikan.",
+        "confirmLabel": "Buang dan keluar"
+      },
+      "publishSuccess": {
+        "message": "Berhasil! Tokomu sudah tayang!",
+        "viewLiveStore": "Lihat toko live →"
+      }
+    },
+    "addSectionList": {
+      "addSection": "Tambah bagian",
+      "pageGettingLong": "Halamanmu semakin panjang. Terlalu banyak bagian bisa memperlambat tokomu.",
+      "dismiss": "Tutup",
+      "removeToAddMore": "Hapus satu bagian untuk menambah lagi (maks {{n}})"
+    },
+    "canvas": {
+      "unknownSectionType": "Jenis bagian tidak dikenali: {{type}}",
+      "hiddenLabel": "{{label}} disembunyikan",
+      "moveUp": "Pindah ke atas",
+      "moveDown": "Pindah ke bawah",
+      "duplicate": "Duplikat",
+      "deleteConfirm": {
+        "title": "Hapus bagian ini? Tindakan ini tidak bisa dibatalkan.",
+        "heading": "Hapus section?",
+        "message": "Tindakan ini tidak dapat dibatalkan."
+      },
+      "empty": "Belum ada bagian",
+      "insertSection": "Tambah section di sini"
+    },
+    "concurrentEditingBanner": {
+      "message": "{{editorName}} sedang mengedit toko ini. Mempublikasikan sekarang bisa menimpa perubahan mereka."
+    },
+    "draftRecoveryBanner": {
+      "momentsAgo": "baru saja",
+      "minutesAgo_other": "{{count}} menit yang lalu",
+      "hoursAgo_other": "{{count}} jam yang lalu",
+      "restoredFrom": "Draf dipulihkan dari {{time}}.",
+      "keepDraft": "Simpan draf",
+      "discardAndLoad": "Buang dan muat versi terakhir yang dipublikasikan"
+    },
+    "mediaLibraryPanel": {
+      "unsupportedFileType": "Jenis file tidak didukung — gunakan JPG, PNG, WebP, atau SVG.",
+      "fileTooLarge": "Ukuran file terlalu besar — maks 10MB. Coba kompres gambarmu.",
+      "heading": "Pustaka media",
+      "chooseImage": "Pilih gambar",
+      "searchPlaceholder": "Cari berdasarkan nama file",
+      "emptyState": "Belum ada gambar. Yuk, unggah gambar pertamamu di atas.",
+      "noSearchResults": "Tidak ada gambar yang cocok dengan '{{query}}'. Coba nama lain.",
+      "deleteAnyway": "Tetap Hapus",
+      "usedInWarning": "Gambar ini digunakan di {{sections}}. Menghapusnya akan meninggalkan gambar rusak di tokomu — lanjutkan?",
+      "deleteConfirmTitle": "Hapus {{filename}}? Tindakan ini tidak bisa dibatalkan."
+    },
+    "pagesPanel": {
+      "addPage": "+ Tambah halaman",
+      "pageNameLabel": "Nama halaman",
+      "pageNamePlaceholder": "Tentang Kami",
+      "slugLabel": "Slug URL",
+      "slugInUse": "Slug ini sudah digunakan.",
+      "create": "Buat",
+      "seoHeading": "SEO",
+      "metaTitleLabel": "Judul Meta",
+      "metaDescriptionLabel": "Deskripsi Meta",
+      "metaDescriptionPlaceholder": "Jelaskan halaman ini dalam 1-2 kalimat",
+      "rename": "Ubah nama",
+      "showNav": "Tampilkan",
+      "hideNav": "Sembunyikan",
+      "deleteConfirmTitle": "Hapus {{name}}? Pengunjung yang membuka URL ini akan melihat halaman 404. Tindakan ini tidak bisa dibatalkan.",
+      "heading": "Halaman",
+      "pageCount": "{{n}} halaman",
+      "systemPages": "Halaman sistem",
+      "customPages": "Halaman kustom",
+      "noCustomPages": "Belum ada halaman kustom. Buat satu di bawah ini.",
+      "deleteConfirmHeading": "Hapus halaman?",
+      "managementSubtitle": "Tambah, ganti nama, urutkan ulang, atau sembunyikan halaman di website Anda. Klik sebuah halaman untuk mengedit kontennya."
+    },
+    "publishDrawer": {
+      "heading": "Sebelum kamu publikasikan",
+      "warning": "Tokomu mungkin tidak berfungsi dengan baik bagi pembeli.",
+      "publishAnyway": "Tetap Publikasikan"
+    },
+    "sectionListItem": {
+      "dragAriaLabel": "seret untuk mengubah urutan"
+    },
+    "settingsPanel": {
+      "emptyHeading": "Pilih bagian untuk diedit",
+      "emptySubtext": "Klik bagian mana saja di kanvas atau sidebar untuk membuka pengaturannya",
+      "removeSection": "Hapus section",
+      "backToSection": "Kembali ke section"
+    },
+    "sidebar": {
+      "header": "Header",
+      "footer": "Footer",
+      "hiddenSuffix": "(disembunyikan)",
+      "show": "Tampilkan",
+      "hide": "Sembunyikan",
+      "sectionsTab": "Bagian",
+      "pagesTab": "Halaman",
+      "sectionCount": "{{n}}/{{max}} bagian",
+      "mediaLibraryAriaLabel": "pustaka media",
+      "themeSettingsAriaLabel": "pengaturan tema",
+      "globalHeading": "Global",
+      "emptySections": "Tambahkan bagian pertamamu di bawah ini",
+      "sectionsHeadingCompact": "Bagian",
+      "addSection": "Tambah section"
+    },
+    "themePanel": {
+      "apply": "Terapkan",
+      "addToCartSample": "Tambah ke keranjang",
+      "heading": "Tema",
+      "presets": "Preset",
+      "sample": "Contoh",
+      "applyPresetConfirmTitle": "Terapkan {{name}}? Ini akan mengganti font dan warna Anda saat ini. Konten section Anda tidak akan berubah."
+    },
+    "topBar": {
+      "exit": "Keluar",
+      "title": "Storefront Builder",
+      "unsavedChanges": "Anda punya perubahan yang belum disimpan",
+      "undo": "Urungkan",
+      "redo": "Ulangi",
+      "preview": "Pratinjau",
+      "publish": "Publikasikan",
+      "moreOptions": "Opsi lainnya",
+      "discardChanges": "Buang perubahan"
+    },
+    "viewportToggle": {
+      "desktop": "Desktop",
+      "mobile": "Seluler",
+      "tablet": "Tablet",
+      "largeDesktop": "Desktop besar",
+      "fit": "Sesuaikan layar",
+      "ariaLabel": "Viewport"
+    },
+    "sectionPicker": {
+      "searchPlaceholder": "Cari section",
+      "noResults": "Section tidak ditemukan",
+      "addThisSection": "Tambah section ini"
+    },
+    "blockList": {
+      "heading": "Blok",
+      "add": "Tambah blok",
+      "addNamed": "Tambah {{name}}",
+      "maxReached": "Maksimum tercapai",
+      "edit": "Edit blok",
+      "remove": "Hapus blok"
+    }
+  },
+  "fields": {
+    "contrastBadge": {
+      "good": "Kontras Baik",
+      "low": "Kontras Rendah"
+    },
+    "fontPickerField": {
+      "sampleText": "Toko Saya — contoh teks pratinjau font"
+    },
+    "imageField": {
+      "unsupportedFileType": "Jenis file tidak didukung — gunakan JPG, PNG, WebP, atau SVG.",
+      "fileTooLarge": "Ukuran file terlalu besar — maks 10MB",
+      "imageDeleted": "Gambar telah dihapus — silakan unggah gambar baru",
+      "chooseFromLibrary": "Pilih dari pustaka"
+    },
+    "repeaterField": {
+      "itemLabel": "Item {{n}}",
+      "removeItem": "Hapus item",
+      "maxItemsReached": "Maksimal {{n}} item telah tercapai",
+      "addItem": "Tambah item",
+      "dragToReorder": "Seret untuk mengubah urutan"
+    }
+  },
+  "sections": {
+    "common": {
+      "noImage": "Tidak ada gambar",
+      "link": "Tautan"
+    },
+    "announcementBar": {
+      "defaultMessage": "Gratis ongkir untuk pembelian di atas Rp750.000"
+    },
+    "brandValues": {
+      "defaultHeading": "Kenapa Belanja di Sini",
+      "emptyState": "Tambahkan nilai brand pertamamu di bawah ini",
+      "defaultValueLabel": "Nilai",
+      "blockLabel": "Nilai",
+      "addBlock": "Tambah nilai",
+      "descriptionPlaceholder": "Tambahkan deskripsi…"
+    },
+    "collectionList": {
+      "defaultHeading": "Belanja per Kategori"
+    },
+    "categoryGrid": {
+      "defaultHeading": "Belanja per Kategori",
+      "emptyState": "Anda belum menambahkan kategori."
+    },
+    "contactForm": {
+      "defaultHeading": "Hubungi Kami",
+      "namePlaceholder": "Namamu",
+      "emailPlaceholder": "Emailmu",
+      "phonePlaceholder": "Telepon",
+      "subjectPlaceholder": "Subjek",
+      "messagePlaceholder": "Pesanmu",
+      "sendButton": "Kirim",
+      "subtextPlaceholder": "Tambahkan teks pendukung…"
+    },
+    "dividerSpacer": {
+      "label": "Spasi ({{height}}px)"
+    },
+    "faqAccordion": {
+      "defaultQuestion": "Pertanyaan",
+      "defaultAnswer": "Jawaban ada di sini.",
+      "defaultHeading": "Pertanyaan yang Sering Diajukan",
+      "emptyState": "Tambahkan FAQ pertamamu di bawah ini",
+      "blockLabel": "FAQ",
+      "addBlock": "Tambah item FAQ"
+    },
+    "featuredProducts": {
+      "soldOut": "Stok Habis",
+      "defaultHeading": "Produk Unggulan",
+      "viewAll": "Lihat Semua Produk"
+    },
+    "footer": {
+      "linksHeading": "Tautan",
+      "copyright": "© {{year}} Toko Saya. Hak cipta dilindungi.",
+      "socialPlaceholder": "IG FB TikTok"
+    },
+    "header": {
+      "defaultNavShop": "Belanja",
+      "defaultNavAbout": "Tentang",
+      "defaultStoreName": "Toko Saya",
+      "moreLinks": "Lainnya",
+      "menu": "Menu"
+    },
+    "heroBanner": {
+      "defaultHeading": "Selamat Datang di Toko Kami",
+      "defaultButtonText": "Belanja Sekarang",
+      "subtextPlaceholder": "Tambahkan teks pendukung…"
+    },
+    "imageWithText": {
+      "defaultHeading": "Tentang Kisah Kami",
+      "bodyPlaceholder": "Tambahkan teks isi…",
+      "defaultButtonText": "Selengkapnya",
+      "eyebrowPlaceholder": "Label kecil"
+    },
+    "newsletterSignup": {
+      "defaultHeading": "Berlangganan Newsletter Kami",
+      "emailPlaceholder": "emailmu@contoh.com",
+      "subscribeButton": "Berlangganan",
+      "disclaimer": "Bebas spam. Berhenti berlangganan kapan saja.",
+      "subtextPlaceholder": "Tambahkan teks pendukung…"
+    },
+    "richText": {
+      "emptyState": "Tambahkan konten ke bagian ini."
+    },
+    "testimonials": {
+      "defaultHeading": "Kata Pelanggan Kami",
+      "emptyState": "Tambahkan kutipan pertamamu di bawah ini",
+      "defaultQuote": "Pengalaman yang luar biasa!",
+      "defaultAuthor": "Pelanggan yang puas",
+      "blockLabel": "Testimoni",
+      "addBlock": "Tambah testimoni"
+    },
+    "videoBanner": {
+      "defaultHeading": "Momen sinematik brand Anda",
+      "defaultButtonText": "Belanja Sekarang",
+      "subtextPlaceholder": "Tambahkan teks pendukung…"
+    },
+    "productCarousel": {
+      "defaultHeading": "Anda mungkin juga suka"
+    },
+    "productSpotlight": {
+      "defaultDescription": "Lihat lebih dekat produk ini.",
+      "defaultVariant": "Default",
+      "soldOut": "Habis terjual",
+      "defaultButtonText": "Tambah ke keranjang"
+    },
+    "teamAbout": {
+      "defaultHeading": "Kenali tim kami",
+      "defaultName": "Anggota tim",
+      "emptyState": "Tambahkan anggota tim pertama Anda di bawah ini",
+      "subtextPlaceholder": "Tambahkan teks pendukung…",
+      "blockLabel": "Anggota tim",
+      "addBlock": "Tambah anggota tim",
+      "rolePlaceholder": "Tambahkan peran…",
+      "bioPlaceholder": "Tambahkan bio…",
+      "socialLinkPlaceholder": "Tambahkan tautan sosial…"
+    },
+    "starRatingBar": {
+      "defaultLinkLabel": "Baca ulasan",
+      "reviewsCountPlaceholder": "2.400+",
+      "taglinePlaceholder": "Tambahkan tagline…"
+    },
+    "pressLogos": {
+      "defaultHeading": "Pernah tampil di",
+      "emptyState": "Tambahkan logo pertama Anda di bawah ini",
+      "blockLabel": "Logo",
+      "addBlock": "Tambah logo"
+    },
+    "countdownTimer": {
+      "defaultHeading": "Promo berakhir dalam",
+      "defaultExpiredMessage": "Promo telah berakhir",
+      "defaultButtonText": "Belanja sekarang",
+      "days": "Hari",
+      "hours": "Jam",
+      "minutes": "Menit",
+      "seconds": "Detik",
+      "subtextPlaceholder": "Tambahkan teks pendukung…"
+    },
+    "promotionalBanner": {
+      "defaultMessage": "Gratis ongkir untuk pembelian di atas Rp500.000",
+      "defaultButtonText": "Belanja Sekarang",
+      "headingPlaceholder": "Tambahkan judul…"
+    },
+    "imageGallery": {
+      "emptyState": "Tambahkan minimal 2 gambar untuk menampilkan galeri",
+      "headingPlaceholder": "Tambahkan judul…",
+      "blockLabel": "Gambar",
+      "addBlock": "Tambah gambar"
+    },
+    "beforeAfterSlider": {
+      "defaultBeforeLabel": "Sebelum",
+      "defaultAfterLabel": "Sesudah",
+      "captionPlaceholder": "Tambahkan keterangan…"
+    },
+    "mapEmbed": {
+      "defaultHeading": "Temukan kami",
+      "mapAriaLabel": "Peta lokasi toko",
+      "noAddress": "Tambahkan alamat Anda untuk menampilkannya di peta",
+      "addressPlaceholder": "Tambahkan alamat Anda…",
+      "phonePlaceholder": "Tambahkan nomor telepon…",
+      "storeHoursPlaceholder": "Tambahkan jam buka…"
+    }
+  },
+  "templates": {
+    "gallery": {
+      "heading": "Tema",
+      "subtitle": "Pilih titik awal untuk website Anda. Anda tetap bisa menyesuaikan font, warna, dan konten kapan saja.",
+      "activeLabel": "Sedang aktif",
+      "editSite": "Edit website Anda",
+      "switchTo": "Gunakan tema ini",
+      "seePreview": "Lihat pratinjau",
+      "backToThemes": "Kembali ke tema",
+      "previewNotFound": "Tema ini tidak ditemukan.",
+      "switchChoiceTitle": "Ganti ke {{name}}?",
+      "switchChoiceDescription": "Pilih cara Anda ingin menerapkan tema ini.",
+      "switchChoiceKeepContent": "Pertahankan konten saya",
+      "switchChoiceKeepContentDescription": "Perbarui warna, font, dan gaya header/footer. Halaman dan section Anda tetap seperti semula.",
+      "switchChoiceStartFresh": "Mulai baru dengan tema ini",
+      "switchChoiceStartFreshDescription": "Ganti halaman, header, footer, dan media Anda dengan default tema ini.",
+      "switchConfirmAction": "Ganti tema"
+    },
+    "clothing": {
+      "label": "Fashion",
+      "description": "Gaya editorial untuk brand pakaian dan aksesori."
+    },
+    "fnb": {
+      "label": "Makanan & Minuman",
+      "description": "Gaya hangat yang menggugah selera untuk restoran dan kafe."
+    },
+    "manufacture": {
+      "label": "Manufaktur",
+      "description": "Gaya bersih dan industrial untuk manufaktur dan pemasok B2B."
+    }
+  }
+}

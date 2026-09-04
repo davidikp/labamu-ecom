@@ -1,0 +1,109 @@
+/* ════════════════════════════════════════════════════════════
+   TOKEN REFERENCE (this file: labamu-token.css)
+   ════════════════════════════════════════════════════════════
+   --lb-font              Lato font family
+   --lb-fw-regular        400
+   --lb-fw-semibold       600
+   --lb-fw-bold           700
+
+   --lb-bg                Page background
+   --lb-surface           White surface
+   --lb-surface-grey      Light grey (disabled bg, search bg)
+   --lb-surface-grey-dark Darker grey
+   --lb-on-surface        Primary text
+   --lb-on-surface-2      Secondary text
+   --lb-on-surface-3      Tertiary / placeholder text
+   --lb-on-surface-rev    White text on dark bg
+   --lb-on-surface-blue   Link color
+   --lb-line-1            Light separator
+   --lb-line-2            Medium separator
+
+   --lb-brand             Brand blue
+   --lb-brand-on          Text on brand bg (white)
+   --lb-brand-light       Brand container lighter (hover secondary bg)
+   --lb-brand-dark        Brand container darker (selected chip bg)
+   --lb-brand-hover       Brand hover / pressed state
+
+   --lb-green / --lb-green-bg / --lb-green-text
+   --lb-yellow / --lb-yellow-bg / --lb-yellow-text
+   --lb-orange / --lb-orange-bg / --lb-orange-text
+   --lb-red / --lb-red-bg / --lb-red-text
+   --lb-grey / --lb-grey-bg / --lb-grey-text
+
+   --lb-r-btn             12px (large buttons, modals)
+   --lb-r-card            12px (cards)
+   --lb-r-input           10px (text fields, dropdowns)
+   --lb-r-sm              8px (small buttons, chips, icon btns)
+   --lb-r-xs              4px (badges)
+   --lb-r-pill            100px (chips, toggles, badges)
+
+   --lb-shadow            Box shadow
+
+   Tailwind usage pattern:
+     bg-lb-brand   text-lb-on-surface   border-lb-line-1
+     rounded-lb-btn   font-lb
+     font-lb-bold   shadow-lb
+   Map these variables in tailwind.config (theme.extend) or @theme in Tailwind v4.
+   ════════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
+
+:root {
+  /* Typography */
+  --lb-font: "Lato", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --lb-fw-regular: 400;
+  --lb-fw-semibold: 600;
+  --lb-fw-bold: 700;
+
+  /* Surfaces & text */
+  --lb-bg: #f7f8fa;
+  --lb-surface: #ffffff;
+  --lb-surface-grey: #f3f4f6;
+  --lb-surface-grey-dark: #e8eaed;
+  --lb-on-surface: #282828;
+  --lb-on-surface-2: #5c5c5c;
+  --lb-on-surface-3: #9ca3af;
+  --lb-on-surface-rev: #ffffff;
+  --lb-on-surface-blue: #0066cc;
+  --lb-line-1: #ededed;
+  --lb-line-2: #d1d5db;
+
+  /* Brand */
+  --lb-brand: #006BFF;
+  --lb-brand-on: #ffffff;
+  --lb-brand-light: #F3F7FE;
+  --lb-brand-dark: #E6F0FF;
+  --lb-brand-hover: #005DE0;
+
+  /* Semantic */
+  --lb-green: #16a34a;
+  --lb-green-bg: #dcfce7;
+  --lb-green-text: #166534;
+
+  --lb-yellow: #ca8a04;
+  --lb-yellow-bg: #fef9c3;
+  --lb-yellow-text: #854d0e;
+
+  --lb-orange: #ea580c;
+  --lb-orange-bg: #ffedd5;
+  --lb-orange-text: #9a3412;
+
+  --lb-red: #dc2626;
+  --lb-red-bg: #fee2e2;
+  --lb-red-text: #991b1b;
+
+  --lb-grey: #737373;
+  --lb-grey-bg: #f3f4f6;
+  --lb-grey-text: #525252;
+
+  /* Radii */
+  --lb-r-btn: 12px;
+  --lb-r-card: 12px;
+  --lb-r-input: 10px;
+  --lb-r-sm: 8px;
+  --lb-r-xs: 4px;
+  --lb-r-pill: 100px;
+
+  /* Elevation */
+  --lb-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}

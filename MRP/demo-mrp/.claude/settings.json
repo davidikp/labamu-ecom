@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -)",
+      "Bash(awk 'NR<=689 && /^const |^function /{print NR\": \"$0}' /Users/davidikp/Documents/MRP/demo-mrp/src/App.jsx)",
+      "Bash(git checkout *)",
+      "Bash(git clean *)",
+      "Bash(grep -n \"postedToStock,\\\\s*$\" /Users/davidikp/Documents/MRP/demo-mrp/src/modules/work-order/pages/WorkOrderDetailPage.jsx)",
+      "Bash(npx esbuild *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(echo \"App exit: $?\")",
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(echo \"exit $?\")",
+      "Bash(node /tmp/smoke.mjs)",
+      "Bash(npx vite-node *)",
+      "Bash(node --experimental-vm-modules ./smoke.mjs)",
+      "Bash(grep -rniE \"add.{0,3}category|category name\" /Users/davidikp/Documents/MRP/demo-mrp/src)"
+    ]
+  }
+}

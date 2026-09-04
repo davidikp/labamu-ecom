@@ -1,0 +1,425 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "version": "1.0.0",
+  "description": "Storefront theme settings schema. Controls global design tokens that cascade to every section. Section color fields reference palette slots from this schema as preset swatches.",
+  "paletteSlots": {
+    "description": "Named color roles that sections reference for swatches. Merchants set these hex values here; the builder injects them as swatches in every section color picker.",
+    "slots": [
+      "background",
+      "surface",
+      "primary",
+      "primary_text",
+      "accent",
+      "accent_text",
+      "text_primary",
+      "text_secondary",
+      "border",
+      "success",
+      "error"
+    ]
+  },
+  "groups": {
+    "typography": {
+      "label": "Typography",
+      "description": "Font choices for headings and body text. Applied globally — affects every section.",
+      "fields": {
+        "heading_font": {
+          "type": "font_picker",
+          "label": "Heading font",
+          "default": "Inter",
+          "helpText": "Used for all section headings, hero titles, and product names.",
+          "options": [
+            { "value": "Inter", "label": "Inter", "category": "sans-serif" },
+            { "value": "Playfair Display", "label": "Playfair Display", "category": "serif" },
+            { "value": "DM Sans", "label": "DM Sans", "category": "sans-serif" },
+            { "value": "Lora", "label": "Lora", "category": "serif" },
+            { "value": "Montserrat", "label": "Montserrat", "category": "sans-serif" },
+            { "value": "Cormorant Garamond", "label": "Cormorant Garamond", "category": "serif" },
+            { "value": "Nunito", "label": "Nunito", "category": "sans-serif" },
+            { "value": "Libre Baskerville", "label": "Libre Baskerville", "category": "serif" },
+            { "value": "Space Grotesk", "label": "Space Grotesk", "category": "sans-serif" },
+            { "value": "EB Garamond", "label": "EB Garamond", "category": "serif" }
+          ]
+        },
+        "body_font": {
+          "type": "font_picker",
+          "label": "Body font",
+          "default": "Inter",
+          "helpText": "Used for paragraphs, descriptions, nav links, and button labels.",
+          "options": [
+            { "value": "Inter", "label": "Inter", "category": "sans-serif" },
+            { "value": "DM Sans", "label": "DM Sans", "category": "sans-serif" },
+            { "value": "Lora", "label": "Lora", "category": "serif" },
+            { "value": "Nunito", "label": "Nunito", "category": "sans-serif" },
+            { "value": "Source Serif 4", "label": "Source Serif 4", "category": "serif" },
+            { "value": "Hind", "label": "Hind", "category": "sans-serif" },
+            { "value": "Merriweather", "label": "Merriweather", "category": "serif" },
+            { "value": "IBM Plex Sans", "label": "IBM Plex Sans", "category": "sans-serif" }
+          ]
+        },
+        "heading_size": {
+          "type": "select",
+          "label": "Heading size scale",
+          "default": "medium",
+          "helpText": "Scales all heading sizes up or down proportionally.",
+          "options": [
+            { "value": "small", "label": "Small — compact and understated" },
+            { "value": "medium", "label": "Medium — balanced (recommended)" },
+            { "value": "large", "label": "Large — bold and expressive" }
+          ]
+        },
+        "body_size": {
+          "type": "select",
+          "label": "Body text size",
+          "default": "medium",
+          "options": [
+            { "value": "small", "label": "Small (14px)" },
+            { "value": "medium", "label": "Medium (16px)" },
+            { "value": "large", "label": "Large (18px)" }
+          ]
+        },
+        "letter_spacing": {
+          "type": "select",
+          "label": "Heading letter spacing",
+          "default": "normal",
+          "options": [
+            { "value": "tight", "label": "Tight (−0.02em)" },
+            { "value": "normal", "label": "Normal (0)" },
+            { "value": "wide", "label": "Wide (+0.05em)" },
+            { "value": "wider", "label": "Wider (+0.12em — works well with uppercase)" }
+          ]
+        },
+        "heading_transform": {
+          "type": "select",
+          "label": "Heading case",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "As typed" },
+            { "value": "uppercase", "label": "ALL CAPS" },
+            { "value": "capitalize", "label": "Title Case" }
+          ]
+        }
+      }
+    },
+
+    "colors": {
+      "label": "Colors",
+      "description": "Core color palette. These values populate the preset swatches in every section's color pickers.",
+      "fields": {
+        "background": {
+          "type": "color",
+          "label": "Page background",
+          "paletteSlot": "background",
+          "default": "#ffffff",
+          "helpText": "The base color behind all sections."
+        },
+        "surface": {
+          "type": "color",
+          "label": "Surface / card background",
+          "paletteSlot": "surface",
+          "default": "#f9f9f9",
+          "helpText": "Used for product cards, testimonial cards, and raised containers."
+        },
+        "primary": {
+          "type": "color",
+          "label": "Primary color",
+          "paletteSlot": "primary",
+          "default": "#1a1a1a",
+          "helpText": "Main brand color — used for header, footer, and primary buttons."
+        },
+        "primary_text": {
+          "type": "color",
+          "label": "Text on primary",
+          "paletteSlot": "primary_text",
+          "default": "#ffffff",
+          "helpText": "Text color used on top of the primary color (e.g. button labels, header links).",
+          "contrastCheck": { "against": "primary", "minRatio": 4.5 }
+        },
+        "accent": {
+          "type": "color",
+          "label": "Accent / highlight color",
+          "paletteSlot": "accent",
+          "default": "#d85a30",
+          "helpText": "Used for sale badges, hover states, and secondary highlights."
+        },
+        "accent_text": {
+          "type": "color",
+          "label": "Text on accent",
+          "paletteSlot": "accent_text",
+          "default": "#ffffff",
+          "helpText": "Text color used on top of the accent color.",
+          "contrastCheck": { "against": "accent", "minRatio": 4.5 }
+        },
+        "text_primary": {
+          "type": "color",
+          "label": "Body text",
+          "paletteSlot": "text_primary",
+          "default": "#1a1a1a",
+          "helpText": "Main text color for headings, descriptions, and body copy."
+        },
+        "text_secondary": {
+          "type": "color",
+          "label": "Secondary text",
+          "paletteSlot": "text_secondary",
+          "default": "#666666",
+          "helpText": "Used for prices, metadata, and supporting copy."
+        },
+        "border": {
+          "type": "color",
+          "label": "Border color",
+          "paletteSlot": "border",
+          "default": "#e5e5e5",
+          "helpText": "Dividers, card outlines, and input borders."
+        }
+      }
+    },
+
+    "buttons": {
+      "label": "Buttons",
+      "description": "Controls the global style for all call-to-action buttons across the storefront.",
+      "fields": {
+        "corner_radius": {
+          "type": "range",
+          "label": "Corner roundness",
+          "default": 4,
+          "min": 0,
+          "max": 32,
+          "step": 2,
+          "unit": "px",
+          "helpText": "0 = sharp square corners. 32+ = fully rounded pill shape.",
+          "presets": [
+            { "value": 0, "label": "Square" },
+            { "value": 4, "label": "Slight" },
+            { "value": 8, "label": "Rounded" },
+            { "value": 24, "label": "Pill" }
+          ]
+        },
+        "padding_horizontal": {
+          "type": "range",
+          "label": "Button horizontal padding",
+          "default": 20,
+          "min": 12,
+          "max": 40,
+          "step": 4,
+          "unit": "px"
+        },
+        "padding_vertical": {
+          "type": "range",
+          "label": "Button vertical padding",
+          "default": 10,
+          "min": 6,
+          "max": 20,
+          "step": 2,
+          "unit": "px"
+        },
+        "font_weight": {
+          "type": "select",
+          "label": "Button label weight",
+          "default": "500",
+          "options": [
+            { "value": "400", "label": "Regular" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semibold" },
+            { "value": "700", "label": "Bold" }
+          ]
+        },
+        "letter_spacing": {
+          "type": "select",
+          "label": "Button letter spacing",
+          "default": "normal",
+          "options": [
+            { "value": "normal", "label": "Normal" },
+            { "value": "wide", "label": "Wide (+0.08em)" },
+            { "value": "wider", "label": "Wider (+0.15em)" }
+          ]
+        },
+        "text_transform": {
+          "type": "select",
+          "label": "Button label case",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "As typed" },
+            { "value": "uppercase", "label": "ALL CAPS" }
+          ]
+        },
+        "border_width": {
+          "type": "range",
+          "label": "Button border width",
+          "default": 0,
+          "min": 0,
+          "max": 3,
+          "step": 1,
+          "unit": "px",
+          "helpText": "Set to 1-2px and clear the background for an outline-style button."
+        },
+        "hover_effect": {
+          "type": "select",
+          "label": "Hover effect",
+          "default": "darken",
+          "options": [
+            { "value": "darken", "label": "Darken background" },
+            { "value": "lighten", "label": "Lighten background" },
+            { "value": "outline", "label": "Switch to outline" },
+            { "value": "lift", "label": "Lift (subtle shadow)" },
+            { "value": "none", "label": "None" }
+          ]
+        }
+      }
+    },
+
+    "layout": {
+      "label": "Layout and spacing",
+      "description": "Controls the overall page structure — how wide content is and how sections breathe.",
+      "fields": {
+        "container_width": {
+          "type": "select",
+          "label": "Max content width",
+          "default": "1200",
+          "helpText": "The maximum width of the content area inside sections.",
+          "options": [
+            { "value": "1024", "label": "Narrow (1024px)" },
+            { "value": "1200", "label": "Standard (1200px — recommended)" },
+            { "value": "1400", "label": "Wide (1400px)" },
+            { "value": "full", "label": "Full bleed (no max width)" }
+          ]
+        },
+        "section_spacing": {
+          "type": "select",
+          "label": "Spacing between sections",
+          "default": "medium",
+          "helpText": "Controls the vertical gap between each section on the page.",
+          "options": [
+            { "value": "small", "label": "Compact (32px)" },
+            { "value": "medium", "label": "Balanced (64px — recommended)" },
+            { "value": "large", "label": "Airy (96px)" }
+          ]
+        },
+        "section_padding": {
+          "type": "select",
+          "label": "Padding inside sections",
+          "default": "medium",
+          "helpText": "Controls the internal top/bottom padding within each section.",
+          "options": [
+            { "value": "small", "label": "Compact (32px top/bottom)" },
+            { "value": "medium", "label": "Balanced (64px top/bottom)" },
+            { "value": "large", "label": "Spacious (96px top/bottom)" }
+          ]
+        },
+        "image_corners": {
+          "type": "range",
+          "label": "Image corner radius",
+          "default": 0,
+          "min": 0,
+          "max": 24,
+          "step": 2,
+          "unit": "px",
+          "helpText": "Applied to product images, hero images, and image-with-text sections."
+        },
+        "card_corners": {
+          "type": "range",
+          "label": "Card corner radius",
+          "default": 4,
+          "min": 0,
+          "max": 20,
+          "step": 2,
+          "unit": "px",
+          "helpText": "Applied to product cards, testimonial cards, and content tiles."
+        },
+        "card_shadow": {
+          "type": "select",
+          "label": "Card shadow",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "None — flat" },
+            { "value": "subtle", "label": "Subtle" },
+            { "value": "medium", "label": "Medium" }
+          ]
+        }
+      }
+    },
+
+    "product_cards": {
+      "label": "Product cards",
+      "description": "Controls how product cards look across the storefront — search results, collections, and featured grids.",
+      "fields": {
+        "image_ratio": {
+          "type": "select",
+          "label": "Product image ratio",
+          "default": "square",
+          "helpText": "All product images crop to this ratio for visual consistency.",
+          "options": [
+            { "value": "square", "label": "Square (1:1)" },
+            { "value": "portrait", "label": "Portrait (3:4)" },
+            { "value": "landscape", "label": "Landscape (4:3)" },
+            { "value": "natural", "label": "Natural (no crop)" }
+          ]
+        },
+        "show_second_image_on_hover": {
+          "type": "boolean",
+          "label": "Show alternate image on hover",
+          "default": true,
+          "helpText": "If a product has a second image, reveal it on hover."
+        },
+        "show_quick_add": {
+          "type": "boolean",
+          "label": "Show quick-add button on hover",
+          "default": false,
+          "helpText": "Shows an 'Add to cart' button when hovering a product card."
+        },
+        "show_vendor": {
+          "type": "boolean",
+          "label": "Show vendor / brand name",
+          "default": false
+        },
+        "show_rating": {
+          "type": "boolean",
+          "label": "Show star rating",
+          "default": false,
+          "helpText": "Requires a reviews integration to be connected."
+        },
+        "sale_badge_style": {
+          "type": "select",
+          "label": "Sale badge style",
+          "default": "percent",
+          "options": [
+            { "value": "percent", "label": "Percentage off (e.g. -20%)" },
+            { "value": "label", "label": "Label only (SALE)" },
+            { "value": "none", "label": "No badge" }
+          ]
+        },
+        "sale_badge_color": {
+          "type": "color",
+          "label": "Sale badge color",
+          "default": "#d85a30",
+          "helpText": "Background color of the sale badge. Uses accent color by default."
+        }
+      }
+    },
+
+    "favicon_and_meta": {
+      "label": "Favicon and browser tab",
+      "description": "What shoppers see in their browser tab and when sharing the store link.",
+      "fields": {
+        "favicon": {
+          "type": "image",
+          "label": "Favicon",
+          "default": null,
+          "helpText": "Square image, 32×32px or 64×64px. PNG or ICO format."
+        },
+        "meta_title_suffix": {
+          "type": "text",
+          "label": "Page title suffix",
+          "default": "| My Store",
+          "maxLength": 40,
+          "helpText": "Appended to each page title in the browser tab. E.g. 'Roses | Bloom & Co.'"
+        },
+        "social_share_image": {
+          "type": "image",
+          "label": "Social share image",
+          "default": null,
+          "helpText": "Shown when the store URL is shared on social media. Recommended: 1200x630px."
+        }
+      }
+    }
+  }
+}

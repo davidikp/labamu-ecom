@@ -1,0 +1,48 @@
+{
+  "placeholder": {
+    "input": "Masukkan {{field}}",
+    "dropdown": "Pilih {{field}}"
+  },
+  "dropdown": {
+    "search": "Cari...",
+    "noResult": "Tidak ada hasil",
+    "select": "Pilih opsi"
+  },
+  "phone": {
+    "searchCountry": "Cari negara...",
+    "noCountry": "Negara tidak ditemukan",
+    "placeholder": "Nomor Telepon"
+  },
+  "validation": {
+    "invalidPhone": "Format nomor telepon tidak valid",
+    "invalidEmail": "Format email tidak valid",
+    "invalidNpwp": "Format NPWP tidak valid (XX.XXX.XXX.X-XXX.XXX)",
+    "required": "Kolom ini wajib diisi",
+    "maxLength": "Maksimal {{max}} karakter"
+  },
+  "action": {
+    "oke": "Oke",
+    "save": "Simpan"
+  },
+  "layout": {
+    "brandSuffix": "E-commerce",
+    "byLabamu": "oleh Labamu",
+    "expandSidebar": "buka sidebar",
+    "collapseSidebar": "tutup sidebar",
+    "userNamePlaceholder": "Budi Santoso",
+    "userRolePlaceholder": "Admin",
+    "userMenuAriaLabel": "menu pengguna",
+    "companyProfile": "Profil Usaha",
+    "langIndonesia": "Indonesia",
+    "langEnglish": "Inggris"
+  },
+  "errorBoundary": {
+    "title": "Ada yang tidak beres pada pratinjau",
+    "description": "Terjadi kesalahan pada mesin pratinjau saat mengubah urutan. Coba muat ulang atau lanjutkan editanmu.",
+    "retryButton": "Coba Pratinjau Lagi"
+  },
+  "imageCropModal": {
+    "defaultTitle": "Pratinjau Gambar",
+    "defaultSubtitle": "Pastikan gambar terlihat penuh dan berada dalam area ya."
+  }
+}

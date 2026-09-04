@@ -1,0 +1,574 @@
+{
+  "header": {
+    "title": "Build your website",
+    "subtitle": "Pick a design to start your online journey"
+  },
+  "hero": {
+    "titlePrefix": "Pick a design for",
+    "subtitle": "Choose a look that matches your vision. You can customize colors and content later.",
+    "filterLabel": "Recommended for",
+    "changeBtn": "Change"
+  },
+  "gallery": {
+    "recommended": "Recommended",
+    "preview": "Preview",
+    "edit": "Edit Template",
+    "templates": {
+      "barger": {
+        "title": "Barger Joint",
+        "desc": "Bold and punchy theme ideal for trendy restaurants and fast food outlets."
+      },
+      "xinear": {
+        "title": "Xinear Pro",
+        "desc": "A refined, modern layout built for lifestyle brands, retail, and curated shopping experiences"
+      },
+      "houzez": {
+        "title": "Houzez",
+        "desc": "A clean, structured layout ideal for construction, property, and home-focused businesses"
+      },
+      "napoli": {
+        "title": "Napoli",
+        "desc": "Warm and inviting layout tailored for traditional restaurants and fine-dining."
+      },
+      "dekor": {
+        "title": "DEKOR",
+        "desc": "Premium minimalist design crafted for furniture stores and interior design boutiques."
+      },
+      "medic": {
+        "title": "Medic",
+        "desc": "Professional and clinical grid optimized for medical clinics and healthcare providers."
+      },
+      "photostoodio": {
+        "title": "Photo Stoodio",
+        "desc": "Highly visual focus ideal for photography studios and creative visual content makers."
+      },
+      "local": {
+        "title": "Local Produce",
+        "desc": "Fresh farm-to-table design perfect for organic suppliers and local farmers markets."
+      }
+    }
+  },
+  "template_houzez": {
+    "nav": {
+      "home": "Home",
+      "shop": "Shop",
+      "appointment": "Appointment",
+      "reviews": "Reviews",
+      "contact": "Contact",
+      "location": "Location",
+      "quote": "Quote"
+    },
+    "hero": {
+      "title": "Create your ideal home with us",
+      "subtitle": "Everything you need to build your home, we provide."
+    },
+    "categories": {
+      "house": "House Construction",
+      "glass": "Glass Pane",
+      "safety": "Safety Tools",
+      "foundation": "Foundation",
+      "paints": "Paints and Flooring",
+      "roofing": "Roofing",
+      "doors": "Doors and Windows",
+      "excavation": "Excavation"
+    },
+    "sections": {
+      "highRise": "High-Rise Needs",
+      "safetyTools": "Safety Tools",
+      "seeAll": "See All"
+    },
+    "appointment": {
+      "title": "Book an Appointment!",
+      "subtitle": "Let’s meet and discuss further on your construction needs",
+      "button": "Book Now"
+    },
+    "products": {
+      "ladder": "KRISBOW Ladder Rolling Multi PRLRM1108 1.1m 4...",
+      "levelKit": "DEWALT Builders Level Kit DW090PK 1set",
+      "scaffoldMetal": "METALTECH Portable Scaffold 6-11/64 ft.L Steel...",
+      "scaffoldTower": "WERNER Scaffold Tower 75 H, 41D335",
+      "rammer": "Hyundai Tamping Rammers HDCR 88H 1pc",
+      "ladderSteel": "Cotterman Rolling Steel Ladder - 450-Lb. Capacit...",
+      "helmet": "Safety Helmet Construction Helmet Darl...",
+      "harness": "Safety Full Body Harness Five Point Construction D...",
+      "gloves": "48-22-8951 CUT 5 Dipped Safety Gloves Size M - 00...",
+      "lifeline": "Rebel Self Retracting Lifeline - Stainless Cable...",
+      "glovesHeavy": "SARUNG TANGAN SAFETY KONG HEAVY DUTY HIGH..."
+    },
+    "cta": {
+      "title": "Book an Appointment!",
+      "subtitle": "Visit our showroom or request a professional consultation at your site today.",
+      "button": "Book Now"
+    },
+    "reviews": {
+      "title": "What They Say",
+      "form": {
+        "subtitle": "Leave us your thoughts on how do you like our service",
+        "nameLabel": "Name",
+        "namePlaceholder": "Input your name",
+        "reviewLabel": "Review",
+        "reviewPlaceholder": "Write your review",
+        "ratingLabel": "Rating",
+        "submit": "Give Rating"
+      },
+      "items": [
+        {
+          "text": "“Worked with Houzez on all my property. Never once I were disappointed because they are bomb”"
+        },
+        {
+          "text": "“Worked with Houzez on all my property. Never once I were disappointed because they are bomb”"
+        },
+        {
+          "text": "“Worked with Houzez on all my property. Never once I were disappointed because they are bomb”"
+        }
+      ]
+    },
+    "waitlist": {
+      "title": "Join Waitlist",
+      "subtitle": "Can't Find a Slot? Join the waitlist and we'll notify you if an earlier appointment becomes available. Your time matters to us.",
+      "button": "Join Now"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "subtitle": "Contact us For further business inquiries or collaborations",
+      "form": {
+        "namePlaceholder": "Name",
+        "emailPlaceholder": "Email",
+        "phonePlaceholder": "Phone Number",
+        "messagePlaceholder": "Message",
+        "submit": "Send Message"
+      }
+    },
+    "map": {
+      "title": "Visit Our Showroom!",
+      "subtitle": "Come see our great craftmanship here.",
+      "address": "Alam Sutera, Jl. Jalur Sutera Boulevard No.45, Kunciran, Kec. Pinang, Kota Tangerang, Banten 15320"
+    },
+    "rfq": {
+      "title": "Request a Quote",
+      "subtitle": "Need an estimation of cost of you build? Drop us your request and we'll reach you with a quote.",
+      "form": {
+        "namePlaceholder": "Name",
+        "emailPlaceholder": "Email",
+        "phonePlaceholder": "Phone Number",
+        "messagePlaceholder": "Message or Request",
+        "submit": "Request a Quote"
+      },
+      "modal": {
+        "title": "Request a Quote",
+        "customerInfo": "Customer Information",
+        "nameLabel": "Name",
+        "namePlaceholder": "Your full name",
+        "emailLabel": "Email",
+        "phoneLabel": "Phone",
+        "phonePlaceholder": "Phone number",
+        "addressLabel": "Address",
+        "addressPlaceholder": "Your address (optional)",
+        "productsLabel": "Products",
+        "addProduct": "Add Product",
+        "noProducts": "No products added yet. Click \"Add Product\" to specify items.",
+        "addAnotherProduct": "Add another product",
+        "attachments": "Attachments",
+        "attachmentsHint": "PDF, image, or Word documents (max 5MB each)",
+        "uploadFiles": "Click to upload files",
+        "additionalInfo": "Additional Information",
+        "notesLabel": "Customer Notes",
+        "notesPlaceholder": "Any additional notes or requirements…",
+        "cancel": "Cancel",
+        "submitting": "Submitting…"
+      },
+      "addProduct": {
+        "title": "Add Product to RFQ",
+        "noProducts": "No published products available to add.",
+        "productLabel": "Product",
+        "qtyLabel": "Quantity",
+        "notesLabel": "Notes",
+        "notesPlaceholder": "Additional notes for this product (optional)",
+        "documentsLabel": "Documents",
+        "uploadDocuments": "Upload documents",
+        "cancel": "Cancel",
+        "add": "Add Product"
+      }
+    },
+    "footer": {
+      "location": "Tangerang",
+      "address": "Alam Sutera, Jl. Jalur Sutera Boulevard No.45, Kunciran, Kec. Pinang, Kota Tangerang, Banten 15320",
+      "phone": "0858-3456-0890",
+      "email": "houzez@gmail.com",
+      "desc": "Helping you build your dream home since 1990.",
+      "categoryTitle": "Category",
+      "categories": [
+        "House Construction",
+        "Glass Pane",
+        "Safety Tools",
+        "Foundation",
+        "Paints and Flooring",
+        "Roofing",
+        "Doors and Windows",
+        "Excavation"
+      ],
+      "followUs": "Follow Us"
+    },
+    "previewOnly": "Demo Preview Only",
+    "cart": {
+      "pageTitle": "Cart",
+      "empty": "Your cart is empty.",
+      "added": "Added to cart",
+      "pickupOnly": "Pickup Only",
+      "remove": "Remove from cart"
+    },
+    "checkout": {
+      "customer": {
+        "title": "Customer Information",
+        "reset": "Reset",
+        "edit": "Edit",
+        "add": "Add Customer Information",
+        "notesLabel": "Notes",
+        "modalTitle": "Customer Information",
+        "modalSubtitle": "Please enter your phone number to process the order",
+        "continue": "Continue",
+        "phoneRequired": "Please enter your phone number",
+        "phoneAlreadyRegistered": "This phone number is already registered",
+        "detailTitle": "Add Customer Information",
+        "editTitle": "Edit Customer Information",
+        "detailSubtitle": "Make sure the information entered is valid for order processing.",
+        "firstTimeNotice": "It looks like this is your first time here. Please provide your name to continue your order",
+        "field": {
+          "name": "Name",
+          "namePlaceholder": "Input Name",
+          "phone": "Phone",
+          "email": "Email",
+          "emailPlaceholder": "Input Email",
+          "country": "Country",
+          "countryPlaceholder": "Select Country",
+          "province": "Province",
+          "provincePlaceholder": "Select Province",
+          "city": "City",
+          "cityPlaceholder": "Select City",
+          "district": "District",
+          "districtPlaceholder": "Select District",
+          "region": "Region",
+          "regionPlaceholder": "Select Region",
+          "zip": "ZIP/Postal Code",
+          "zipLoading": "Loading...",
+          "zipPlaceholder": "e.g. 12345",
+          "address": "Address",
+          "addressPlaceholder": "e.g. Jalan Mawar No.1",
+          "pinpoint": "Pinpoint Address",
+          "pinpointPlaceholder": "Street name, building, house number",
+          "notes": "Notes",
+          "notesPlaceholder": "e.g. Drop at receptionist"
+        },
+        "pinTitle": "Pinned location",
+        "pinInstructionTitle": "Pin the right point",
+        "pinInstructionSubtitle": "We'll deliver to the map address. Please verify the point and adjust if necessary.",
+        "pinnedLabel": "Pinpoint Address",
+        "fieldRequired": "Field cannot be empty",
+        "saveForNext": "Save data for the next order",
+        "back": "Back",
+        "save": "Save",
+        "saveChanges": "Save Changes",
+        "required": "Please add customer information first"
+      },
+      "shipping": {
+        "title": "Shipping Options",
+        "delivery": "Delivery",
+        "pickup": "Pick Up",
+        "courierNeedsCustomer": "Add customer information to see courier options.",
+        "outOfCoverage": "Your address is outside the merchant's delivery area. Please use a different delivery address.",
+        "pickupLocationLabel": "Pick Up Purchase in Store",
+        "pickupLocationDefault": "Store address not set",
+        "pickupLocationError": "Unable to load pickup location",
+        "reloadLocation": "Reload Location",
+        "staleNotice": "The shipping cost must be recalculated because your cart has changed. Recalculate it before placing your order.",
+        "recalculate": "Recalculate Shipping Cost"
+      },
+      "notes": {
+        "title": "Order Notes",
+        "placeholder": "Add a note for this order"
+      },
+      "summary": {
+        "title": "Order Summary",
+        "subtotal": "Subtotal",
+        "tax": "Tax (11%)",
+        "shipping": "Shipping Cost",
+        "total": "Total Shopping"
+      },
+      "purchase": {
+        "button": "Purchase",
+        "success": "Order placed (demo only — no real order was created)."
+      }
+    }
+  },
+  "studio": {
+    "title": "Studio",
+    "steps": {
+      "features": "Features",
+      "configure": "Configure",
+      "styling": "Styling",
+      "publish": "Publish"
+    },
+    "header": {
+      "breadcrumbTemplates": "Templates",
+      "breadcrumbStudio": "Studio"
+    },
+    "features": {
+      "title": "Features & Layout",
+      "subtitle": "Enable and arrange your website features",
+      "addCustom": "+ Add Custom Page",
+      "pageName": "Page Name",
+      "shopOnlineTitle": "Shop",
+      "shopCatalogTitle": "Catalog",
+      "shopOnlineDesc": "Enable online shopping and ordering.",
+      "shopCatalogDesc": "Showcase your products or services.",
+      "onlineCheckout": "Online Checkout",
+      "contactDesc": "Allow customers to contact you directly.",
+      "quoteDesc": "Request quotes for products or services.",
+      "appointmentDesc": "Book appointments directly on your website.",
+      "locationDesc": "Show your location with a map and details.",
+      "reviewsDesc": "Display customer testimonials and reviews.",
+      "fontPreviewSample": "The quick brown fox"
+    },
+    "configure": {
+      "title": "Configure",
+      "subtitle": "Customize each feature's content and settings",
+      "backToList": "← Back",
+      "panels": {
+        "business": "Business Information",
+        "businessDesc": "Logo, hero, contact details & address",
+        "header": "Header & Hero",
+        "headerDesc": "Logo, hero text, and banner images",
+        "shop": "Shop / Catalog",
+        "shopDesc": "Product display and checkout settings",
+        "quote": "Request Quote",
+        "quoteDesc": "Quote request form labels",
+        "appointment": "Appointment",
+        "appointmentDesc": "Booking form and scheduling",
+        "location": "Location",
+        "locationDesc": "Map, address, and directions",
+        "contact": "Contact Us",
+        "contactDesc": "Contact form labels and details",
+        "reviews": "Reviews",
+        "reviewsDesc": "Customer testimonial settings",
+        "footer": "Footer",
+        "footerDesc": "Footer content and social links",
+        "languages": "Languages",
+        "languagesDesc": "Website language configuration"
+      }
+    },
+    "basic": {
+      "title": "Basic Information",
+      "subtitle": "Global settings for your website",
+      "header": {
+        "title": "Header Settings",
+        "logoLabel": "Website Display Logo",
+        "changeBtn": "Choose another logo",
+        "uploadBtn": "Upload Logo"
+      },
+      "nav": {
+        "title": "Navigation Settings",
+        "subtitle": "Change the labels for your active navigation links.",
+        "heroLabel": "Headline",
+        "heroSubtitle": "Subtitle",
+        "bannersLabel": "Hero Slider Images ({{count}}/3)",
+        "bannerItemLabel": "Image {{index}}"
+      },
+      "appearance": {
+        "title": "Visual Identity",
+        "colors": {
+          "title": "Theme Colors",
+          "subtitle": "Select the primary color for your website."
+        },
+        "font": {
+          "title": "Font Style",
+          "subtitle": "Select the typography for your website.",
+          "options": {
+            "modern": "Modern & Clean",
+            "classic": "Classic & Professional",
+            "soft": "Soft & Friendly",
+            "bold": "Bold & Playful"
+          }
+        }
+      },
+      "languages": {
+        "title": "Website Languages",
+        "subtitle": "Choose the languages for your website. You can add more and translate them later."
+      }
+    },
+    "styling": {
+      "title": "Styling",
+      "subtitle": "Customize the look and feel of your website"
+    },
+    "publish": {
+      "title": "Publish",
+      "subtitle": "Set up your domain and go live",
+      "subdomain": {
+        "title": "Labamu Subdomain",
+        "subtitle": "Get a free subdomain for your website",
+        "placeholder": "yourstore",
+        "suffix": ".labamu.store",
+        "checkAvailability": "Check Availability",
+        "available": "This domain is available!",
+        "unavailable": "This domain is taken. Try another one."
+      },
+      "customDomain": {
+        "title": "Custom Domain",
+        "subtitle": "Connect your own domain name",
+        "placeholder": "www.yourdomain.com",
+        "instructions": "Add the following DNS records to your domain provider:",
+        "recordType": "Type",
+        "recordName": "Name",
+        "recordValue": "Value",
+        "connectDomain": "Connect Domain"
+      },
+      "launchReady": "Your website is ready to publish!",
+      "publishBtn": "Publish Website"
+    },
+    "actions": {
+      "save": "Save Changes",
+      "discard": "Discard",
+      "back": "Back",
+      "continue": "Continue",
+      "previous": "Previous",
+      "addLanguage": "+ Language",
+      "addSlider": "+ Add Slider Image",
+      "translating": "Translating...",
+      "autoTranslate": "Auto-Translate to {{lang}}",
+      "autoTranslateFrom": "Auto-translate from {{lang}}"
+    },
+    "editor": {
+      "logo": "Logo",
+      "logoRequired": "Website Display Logo",
+      "logoUploadHint": "Click or drag to upload your logo. PNG, JPG, or JPEG · Max 5 MB",
+      "hero": "Hero",
+      "heroDesc": "Banner section shown at the top of your website.",
+      "banner": "Banner",
+      "bannerUploadHint": "Click or drag to upload your banner. PNG, JPG, or JPEG · Max 5 MB"
+    },
+    "common": {
+      "uploadImage": "Upload Image",
+      "uploadHint": "PNG, JPG max 5mb",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "panelContent": {
+      "shared": {
+        "sectionTitle": "Section Title",
+        "sectionSubtitle": "Section Subtitle",
+        "sectionDescriptionLabel": "Section Description"
+      },
+      "appointment": {
+        "titleLabel": "Appointment Title",
+        "subtitleLabel": "Appointment Subtitle"
+      },
+      "business": {
+        "bannerItemLabel": "Banner {{index}}",
+        "footerTitle": "Footer",
+        "footerDesc": "Contact details and description displayed at the bottom of your website.",
+        "businessNameLabel": "Business Name",
+        "businessNamePlaceholder": "Your business name",
+        "emailPlaceholder": "email@yourbusiness.com",
+        "footerDescriptionLabel": "Footer Description"
+      },
+      "contact": {
+        "nameField": "Name",
+        "messageField": "Message",
+        "alwaysRequired": "Always required",
+        "generalTitle": "General",
+        "generalDesc": "Configure how user see this section.",
+        "headerImageLabel": "Contact Section Header Image",
+        "requiredFieldsTitle": "Required Fields",
+        "requiredFieldsDesc": "Select which fields customers must fill in to submit a message",
+        "forwardTitle": "Forward Contact Us Form",
+        "forwardDesc": "Contact form submission will be sent to these email or leave it empty if you don't want the email to be forwarded.",
+        "businessEmailLabel": "Business Email",
+        "businessEmailPlaceholder": "Input Business Email",
+        "confirmationMessageLabel": "Confirmation Message",
+        "confirmationMessagePlaceholder": "Input Confirmation Message"
+      },
+      "location": {
+        "addressTitle": "Business Address",
+        "addressDesc": "Shown on the map and in your website footer.",
+        "streetLabel": "Street Address",
+        "cityLabel": "City",
+        "provinceLabel": "Province / State",
+        "postalCodeLabel": "Postal Code",
+        "countryLabel": "Country"
+      },
+      "quote": {
+        "sectionTitle": "Quote Request Section",
+        "sectionDesc": "Configure how user see this section.",
+        "descPlaceholder": "Fill out the form below to get a customized quote for your project",
+        "bgImageLabel": "Background Image",
+        "bgImageFallback": "If none is set, the default template image will be used."
+      },
+      "reviews": {
+        "titleLabel": "Reviews Title"
+      },
+      "shop": {
+        "sectionsTitle": "Homepage Sections",
+        "sectionsDesc": "Select up to 2 categories to feature as product groups on the homepage.",
+        "removeSection": "Remove section",
+        "addSection": "Add section",
+        "emptyState": "No categories with published products. Publish products in your catalog to feature them here."
+      }
+    },
+    "editorComingSoon": "Editor Coming Soon!",
+    "selectSection": "Select a section to configure.",
+    "publishedMock": "Website published! (Mock)",
+    "sidebarToggle": {
+      "collapse": "Collapse Sidebar",
+      "expand": "Expand Sidebar"
+    },
+    "viewport": {
+      "desktop": "Desktop",
+      "mobile": "Mobile"
+    },
+    "customPage": {
+      "defaultTitle": "Custom Page",
+      "defaultDesc": "Custom page content",
+      "defaultMenuLink": "Custom link on your menu"
+    },
+    "previewModal": {
+      "title": "Preview Image",
+      "subtitle": "Make sure the image is fully visible and within the area."
+    },
+    "domainConnectMock": "Domain connection initiated (mock)",
+    "search": {
+      "placeholder": "Search...",
+      "noResults": "No results"
+    },
+    "upload": {
+      "dragDrop": "Drag and drop or click to upload image",
+      "acceptedFormats": "Accepted formats: JPG, JPEG & PNG",
+      "maxSize": "(Max 5MB)",
+      "uploadedSuffix": "{{label}} uploaded"
+    }
+  },
+  "shop": {
+    "sort": {
+      "newest": "Newest to Oldest",
+      "oldest": "Oldest to Newest",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low"
+    },
+    "allCategories": "All Categories",
+    "all": "All",
+    "priceFilter": {
+      "label": "Price Filter",
+      "lowest": "Lowest Price",
+      "highest": "Highest Price"
+    },
+    "addToCart": "Add to cart",
+    "noProductsFound": "No products found",
+    "countSummary": "{{from}}-{{to}} from {{total}} products",
+    "category": "Category",
+    "sortBy": "Sort by",
+    "catalogNotAvailable": "Catalog not available",
+    "catalogNotAvailableDesc": "This seller doesn't have any products listed at the moment.",
+    "noProductsFoundPeriod": "No products found.",
+    "salutation": "Salutation",
+    "selectSalutation": "Select salutation",
+    "qty": "Qty:"
+  }
+}

@@ -1,0 +1,293 @@
+/* ce-ui (ce_libraries_web_ui) design system: variables + compiled component utilities.
+   Imported before app rules so its Tailwind base layer stays at the top. */
+@import "./ce-ui/styles/labamu-token.css";
+@import "./ce-ui/styles/library-components.css";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ═══════════════════════════════════════════════════════════
+   LABAMU DESIGN SYSTEM — [TOKENS]
+   Source: labamu-prototype-library-SKILL.md v6.0
+   Rules: NEVER hardcode hex values. NEVER add new variables.
+         ALWAYS use ONLY the classes defined in this file.
+   ═══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background: var(--neutral-background);
+  -webkit-font-smoothing: antialiased;
+}
+
+:root {
+  /* ─── TYPOGRAPHY ──────────────────────────────────────── */
+  --font-family:         'Lato', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold:    700;
+
+  /* ─── Neutral/Background ──────────────────────────────── */
+  --neutral-background:         #f5f5f7;
+  --neutral-background-primary: var(--neutral-background);
+
+  /* ─── Neutral/Surface ─────────────────────────────────── */
+  --neutral-surface-primary:      #ffffff;
+  --neutral-surface-grey-lighter: #f4f4f4;
+  --neutral-surface-grey-darker:  #e9e9e9;
+  --neutral-surface-reverse:      #7e7e7e;
+
+  /* ─── Neutral/OnSurface ───────────────────────────────── */
+  --neutral-on-surface-primary:   #282828;
+  --neutral-on-surface-secondary: #7e7e7e;
+  --neutral-on-surface-tertiary:  #a9a9a9;
+  --neutral-on-surface-reverse:   #ffffff;
+  --neutral-on-surface-blue:      #006bff;
+
+  /* ─── Neutral/Line ────────────────────────────────────── */
+  --neutral-line-separator-1: #e9e9e9;
+  --neutral-line-separator-2: #d4d4d4;
+  --neutral-line-outline:     #e9e9e9;
+  --neutral-line-scroller:    #e9e9e9;
+
+  /* ─── Feature/Brand ───────────────────────────────────── */
+  --feature-brand-primary:           #006bff;
+  --feature-brand-on-primary:        #ffffff;
+  --feature-brand-container-lighter: #f3f7fe;
+  --feature-brand-container-darker:  #e6f0ff;
+  --feature-brand-on-container:      #005de0;
+
+  /* ─── Feature/Cashier ─────────────────────────────────── */
+  --feature-cashier-primary:      #26c3bb;
+  --feature-cashier-container:    #e9f9f8;
+  --feature-cashier-on-container: #22aaa4;
+
+  /* ─── Feature/Invoice ─────────────────────────────────── */
+  --feature-invoice-primary:      #ff9100;
+  --feature-invoice-on-primary:   #ffffff;
+  --feature-invoice-container:    #fff4e6;
+  --feature-invoice-on-container: #e07f00;
+
+  /* ─── Feature/Product ─────────────────────────────────── */
+  --feature-product-primary:      #782aae;
+  --feature-product-on-primary:   #ffffff;
+  --feature-product-container:    #f2eaf7;
+  --feature-product-on-container: #652494;
+
+  /* ─── Feature/Customer ────────────────────────────────── */
+  --feature-customer-primary:      #54a73f;
+  --feature-customer-on-primary:   #ffffff;
+  --feature-customer-container:    #eef6ec;
+  --feature-customer-on-container: #52a33e;
+
+  /* ─── Feature/Ledger ──────────────────────────────────── */
+  --feature-ledger-primary:      #cccb04;
+  --feature-ledger-on-primary:   #ffffff;
+  --feature-ledger-container:    #fafae6;
+  --feature-ledger-on-container: #b4b404;
+
+  /* ─── Feature/PPOB ────────────────────────────────────── */
+  --feature-ppob-primary:      #3f44a7;
+  --feature-ppob-on-primary:   #ffffff;
+  --feature-ppob-container:    #ececf6;
+  --feature-ppob-on-container: #3e43a3;
+
+  /* ─── Membership/Basic ────────────────────────────────── */
+  --membership-basic-main:      #006bff;
+  --membership-basic-container: #e6f0ff;
+
+  /* ─── Membership/Premium ──────────────────────────────── */
+  --membership-premium-main:      #c3992b;
+  --membership-premium-container: #f9f5ea;
+
+  /* ─── Membership/Pro ──────────────────────────────────── */
+  --membership-pro-main:      #3f44a7;
+  --membership-pro-container: #ececf6;
+
+  /* ─── Status/Grey ─────────────────────────────────────── */
+  --status-grey-primary:      #a9a9a9;
+  --status-grey-on-primary:   #ffffff;
+  --status-grey-container:    #e9e9e9;
+  --status-grey-on-container: #535353;
+
+  /* ─── Status/Green ────────────────────────────────────── */
+  --status-green-primary:      #54a73f;
+  --status-green-on-primary:   #ffffff;
+  --status-green-container:    #eef6ec;
+  --status-green-on-container: #52a33e;
+
+  /* ─── Status/Yellow ───────────────────────────────────── */
+  --status-yellow-primary:      #f2ce17;
+  --status-yellow-container:    #fefae8;
+  --status-yellow-on-container: #e0b20c;
+
+  /* ─── Status/Orange ───────────────────────────────────── */
+  --status-orange-primary:      #ff9100;
+  --status-orange-on-primary:   #ffffff;
+  --status-orange-container:    #fff4e6;
+  --status-orange-on-container: #e07f00;
+
+  /* ─── Status/Red ──────────────────────────────────────── */
+  --status-red-primary:      #d0021b;
+  --status-red-on-primary:   #ffffff;
+  --status-red-container:    #fae6e8;
+  --status-red-on-container: #d0021b;
+
+  /* ─── Radius ──────────────────────────────────────────── */
+  --radius-button: 12px;
+  --radius-card:   12px;
+  --radius-input:  10px;
+  --radius-small:  8px;
+  --radius-xxs:    4px;
+
+  /* ─── Shadows — floating elements only ───────────────── */
+  --elevation-sm:            0px 4px 12px 0px rgba(0,0,0,0.12);
+  --elevation-btn-hover:     0 2px 8px rgba(0,107,255,0.28);
+  --elevation-sticky-header: 0px 1px 2px 0px rgba(0,0,0,0.05);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   [03] CTAButton
+   ═══════════════════════════════════════════════════════════ */
+.lb-cta {
+  display: inline-flex; align-items: center; gap: 2px;
+  background: transparent; border: none; cursor: pointer;
+  font-family: var(--font-family); padding: 8px 0; outline: none;
+  color: var(--neutral-on-surface-blue);
+  transition: color 0.15s ease;
+}
+.lb-cta:hover:not(:disabled)  { color: var(--feature-brand-on-container); }
+.lb-cta:disabled               { color: var(--neutral-on-surface-tertiary); cursor: not-allowed; }
+.lb-cta-sm { font-size: 12px; font-weight: var(--font-weight-regular); line-height: 18px; letter-spacing: 0.0825px; }
+.lb-cta-md { font-size: 14px; font-weight: var(--font-weight-bold);    line-height: 20px; letter-spacing: 0.0962px; }
+
+.lb-cta-destructive {
+  background: transparent; border: none; cursor: pointer; padding: 0; outline: none;
+  font-family: var(--font-family); font-size: 14px; font-weight: var(--font-weight-bold);
+  color: var(--status-red-primary);
+  transition: text-decoration 0.1s;
+}
+.lb-cta-destructive:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════
+   [04] Toggle
+   ═══════════════════════════════════════════════════════════ */
+.lb-toggle {
+  position: relative; display: inline-block; border: none; padding: 0;
+  cursor: pointer; outline: none; border-radius: 100px; flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+.lb-toggle:disabled { cursor: not-allowed; }
+
+.lb-toggle-off          { background: var(--neutral-background-primary); }
+.lb-toggle-on           { background: var(--feature-brand-primary); }
+.lb-toggle-disabled-off { background: var(--neutral-surface-grey-lighter); }
+.lb-toggle-disabled-on  { background: var(--neutral-line-outline); }
+
+.lb-toggle-big { width: 51px; height: 32px; }
+.lb-toggle-sm  { width: 40px; height: 24px; }
+
+.lb-toggle-knob {
+  position: absolute; top: 3px;
+  background: var(--neutral-surface-primary);
+  border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
+}
+.lb-toggle-big .lb-toggle-knob { width: 26px; height: 26px; }
+.lb-toggle-sm  .lb-toggle-knob { width: 18px; height: 18px; }
+
+.lb-toggle-off .lb-toggle-knob,
+.lb-toggle-disabled-off .lb-toggle-knob              { transform: translateX(3px); }
+.lb-toggle-big.lb-toggle-on .lb-toggle-knob,
+.lb-toggle-big.lb-toggle-disabled-on .lb-toggle-knob { transform: translateX(22px); }
+.lb-toggle-sm.lb-toggle-on .lb-toggle-knob,
+.lb-toggle-sm.lb-toggle-disabled-on .lb-toggle-knob  { transform: translateX(19px); }
+
+/* ═══════════════════════════════════════════════════════════
+   [05] Checkbox
+   ═══════════════════════════════════════════════════════════ */
+.lb-checkbox {
+  width: 24px; height: 24px; flex-shrink: 0; border-radius: var(--radius-xxs);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; outline: none; transition: all 0.15s ease;
+}
+.lb-checkbox-unchecked     { border: 1px solid var(--neutral-line-separator-2);  background: var(--neutral-surface-primary); }
+.lb-checkbox-checked       { border: 1px solid var(--feature-brand-primary);     background: var(--feature-brand-primary); }
+.lb-checkbox-indeterminate { border: 1px solid var(--feature-brand-primary);     background: var(--feature-brand-primary); }
+.lb-checkbox-disabled      { border: 1px solid var(--neutral-line-outline);      background: var(--neutral-surface-grey-lighter); cursor: not-allowed; }
+
+.lb-checkbox-label {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  font-family: var(--font-family); font-size: 14px; line-height: 20px;
+  letter-spacing: 0.0962px; color: var(--neutral-on-surface-primary);
+}
+
+/* ─── Labamu Custom Scrollbar (Global) ─── */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #D1D5DB;
+  border-radius: 100px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+  min-height: 40px;
+}
+
+.labamu-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #D1D5DB transparent;
+}
+
+.labamu-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.labamu-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.labamu-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #D1D5DB;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.labamu-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #9CA3AF;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION BUILDER — on-canvas inline editing
+   ═══════════════════════════════════════════════════════════ */
+
+/* Editable text nodes in the builder canvas. Outline only appears on
+   hover/focus so the canvas still reads as the real storefront. */
+.sb-editable {
+  outline: none;
+  cursor: text;
+  border-radius: 3px;
+  transition: box-shadow 0.12s ease, background-color 0.12s ease;
+  /* Keep inline-edited text inside its container: wrap normally, and break
+     long unbroken strings (e.g. "aaaa…") instead of overflowing the width. */
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.sb-editable:hover {
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+}
+.sb-editable:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.9);
+  background-color: rgba(59, 130, 246, 0.04);
+}
+.sb-editable:empty::before {
+  content: attr(data-sb-placeholder);
+  opacity: 0.5;
+}

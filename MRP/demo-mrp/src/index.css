@@ -1,0 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Lato:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap");
+/* ce-ui (ce_libraries_web_ui) design system: variables + compiled component utilities.
+   Imported before app rules so their nested font @import stays at the top. */
+@import "./ce-ui/styles/labamu-token.css";
+@import "./ce-ui/styles/library-components.css";
+@import "tailwindcss";
+@import "./styles/tokens.css";
+@import "./styles/globals.css";
+@import "./styles/components.css";
+@import "./styles/utilities.css";

@@ -1,0 +1,2 @@
+// Templates index
+export {};

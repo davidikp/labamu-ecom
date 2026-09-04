@@ -1,0 +1,45 @@
+
+> mpr-handover@0.1.0 build
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+[plugin:vite:esbuild] [plugin vite:esbuild] src/modules/purchase-order/pages/PurchaseOrderCreatePage.jsx: Duplicate key "width" in object literal
+189|              width: "80vw",
+190|              maxWidth: "1600px",
+191|              width: "max-content",
+   |              ^
+192|              padding: "8px 12px",
+193|              borderRadius: "8px",
+
+[plugin:vite:esbuild] [plugin vite:esbuild] src/modules/administration/pages/UserManagementPage.jsx: Duplicate key "width" in object literal
+50 |              width: "80vw",
+51 |              maxWidth: "1600px",
+52 |              width: "max-content",
+   |              ^
+53 |              padding: "8px 12px",
+54 |              borderRadius: "8px",
+
+✓ 1556 modules transformed.
+x Build failed in 1.51s
+error during build:
+src/modules/purchase-order/components/detail/modals/PoDocumentModals.jsx (5:2): "DropdownSelect" is not exported by "src/modules/purchase-order/components/detail/shared/PoDetailSharedComponents.jsx", imported by "src/modules/purchase-order/components/detail/modals/PoDocumentModals.jsx".
+file: /Users/davidikp/Documents/backup-antigravity/src/modules/purchase-order/components/detail/modals/PoDocumentModals.jsx:5:2
+
+3: import {
+4:   Button,
+5:   DropdownSelect,
+     ^
+6:   UploadDropzone,
+7:   InputField,
+
+    at getRollupError (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/parseAst.js:406:41)
+    at error (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/parseAst.js:402:42)
+    at Module.error (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/node-entry.js:17390:16)
+    at Module.traceVariable (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/node-entry.js:17823:29)
+    at ModuleScope.findVariable (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/node-entry.js:15413:39)
+    at ReturnValueScope.findVariable (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/node-entry.js:5682:38)
+    at FunctionBodyScope.findVariable (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/node-entry.js:5682:38)
+    at Identifier.bind (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/node-entry.js:5449:40)
+    at CallExpression.bind (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/node-entry.js:2827:28)
+    at CallExpression.bind (file:///Users/davidikp/Documents/backup-antigravity/node_modules/rollup/dist/es/shared/node-entry.js:12522:15)

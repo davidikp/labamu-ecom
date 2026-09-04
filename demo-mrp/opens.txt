@@ -1,0 +1,169 @@
+170:    <div
+181:        <div
+204:          <div
+227:    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+236:      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+262:  <div
+271:      <div
+320:  <div
+431:        <div style={{ position: "relative", flexShrink: 0 }}>
+473:              <div
+480:              <div
+497:                <div
+512:                <div style={{ maxHeight: "320px", overflowY: "auto" }}>
+514:                    <div
+747:        <div
+769:              <div
+800:                <div style={{ display: "flex", gap: "48px", alignItems: "center" }}>
+862:              <div
+872:                  <div
+887:              <div
+895:              <div
+941:                        <div 
+960:            <div style={{ padding: "8px" }}>
+961:              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+987:            <div style={{ padding: "8px" }}>
+988:              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+1090:      <div style={{ flex: 1, minWidth: "280px" }}>
+1091:        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", padding: "0 4px" }}>
+1094:          ) : <div style={{ width: 28 }} />}
+1098:          ) : <div style={{ width: 28 }} />}
+1100:        <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "0", textAlign: "center", fontSize: "13px", color: "var(--neutral-on-surface-tertiary)", marginBottom: "8px" }}>
+1101:          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => <div key={d} style={{ paddingBottom: "8px" }}>{d}</div>)}
+1103:        <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "0" }}>
+1183:        <div
+1204:              {idx === 0 && <div style={{ width: "1px", background: "var(--neutral-line-separator-2)", margin: "0 8px" }} />}
+1238:    <div style={{ position: "relative", width: "100%" }}>
+1309:        <div
+1463:  <div
+1474:    <div
+1482:      <div
+1515:      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+1516:        <div
+1524:          <div
+1632:      <div
+1660:    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+1670:      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+1675:            <div
+1691:              <div
+1800:    <div
+1809:        <div
+1976:  <div
+1987:    <div
+1994:      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+1995:        <div
+2014:      {rightAction ? <div>{rightAction}</div> : null}
+2021:  <div
+3136:    <div
+3146:      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+3147:        <div
+3173:    <div
+3181:      <div style={{ display: "flex", alignItems: "flex-start", gap: "4px" }}>
+3263:    <div
+3273:      <div
+3284:        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+3285:          <div
+3310:          <div
+3336:        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+3337:          <div style={pageSectionStyle}>
+3352:            <div
+3360:              <div style={rowWrapStyle}>
+3366:                <div style={{ position: "relative" }}>
+3367:                  <div style={{ position: "relative" }}>
+3409:                    <div
+3440:                      <div
+3447:                      <div
+3463:                            <div
+3494:                          <div
+3536:              <div style={rowWrapStyle}>
+3547:              <div style={rowWrapStyle}>
+3562:              <div style={rowWrapStyle}>
+3582:          <div style={pageSectionStyle}>
+3584:            <div
+3592:              <div style={rowWrapStyle}>
+3598:                <div>
+3618:              <div style={rowWrapStyle}>
+3629:              <div style={rowWrapStyle}>
+3635:                <div>
+3661:          <div style={pageSectionStyle}>
+3672:            <div
+3680:              <div style={rowWrapStyle}>
+3695:              <div style={rowWrapStyle}>
+3704:              <div style={rowWrapStyle}>
+3714:              <div style={rowWrapStyle}>
+3733:          <div style={pageSectionStyle}>
+3745:            <div
+3753:              <div
+3761:                <div style={{ overflowX: "auto", width: "100%" }}>
+3762:                  <div
+3770:                    <div
+3811:                          <div
+3829:                            <div style={{ paddingLeft: "16px" }}>
+3846:                            <div
+3849:                              <div
+3883:                            <div style={{ minWidth: 0 }}>
+3899:                            <div style={{ minWidth: 0 }}>
+3914:                            <div style={{ minWidth: 0 }}>
+3958:                            <div
+3999:                      <div
+4028:          <div
+4045:            <div
+4053:              <div
+4067:              <div
+4075:                <div
+4085:                  <div style={{ width: "170px", flexShrink: 0 }}>
+4101:              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+4103:                  <div
+4173:              <div
+4179:              <div
+4195:          <div style={pageSectionStyle}>
+4197:            <div
+4205:              <div style={rowWrapStyle}>
+4216:              <div style={rowWrapStyle}>
+4235:      <div
+4259:        <div style={{ display: "flex", gap: "12px" }}>
+4272:        <div
+4286:          <div
+4301:            <div
+4331:            <div
+4341:              <div
+4348:                <div
+4370:                <div
+4435:                      <div
+4452:                          <div
+4462:                      <div
+4494:                <div
+4501:                  <div style={{ gridColumn: "1 / -1" }}>
+4504:                  <div style={{ gridColumn: "1 / -1" }}>
+4544:                  <div>
+4574:                  <div style={{ gridColumn: "1 / -1" }}>
+4588:                  <div
+4596:                    <div
+4640:                <div
+4647:                  <div
+4654:                    <div
+4711:                        <div style={{ display: "flex", alignItems: "center", gap: "6px", overflow: "hidden" }}>
+4740:                    <div
+4747:                      <div style={{ gridColumn: "1 / -1" }}>
+4752:                      <div style={{ gridColumn: "1 / -1" }}>
+4764:                      <div>
+4796:                      <div style={{ gridColumn: "1 / -1" }}>
+4810:                      <div
+4818:                        <div
+4864:                <div
+4871:                  <div
+4878:                    <div
+4935:                        <div style={{ display: "flex", alignItems: "center", gap: "6px", overflow: "hidden" }}>
+4975:                    <div
+4982:                      <div style={{ gridColumn: "1 / -1" }}>
+4985:                      <div style={{ gridColumn: "1 / -1" }}>
+4997:                      <div>
+5028:                      <div style={{ gridColumn: "1 / -1" }}>
+5042:                      <div
+5050:                        <div
+5108:            <div style={{ display: "flex", gap: "12px", flexShrink: 0 }}>
+5134:        <div
+5148:          <div
+5231:          <div style={{ marginTop: "16px" }}>
+5293:          <div style={{ display: "flex", flexDirection: "column", gap: "24px", padding: "8px 0" }}>
+5297:            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
