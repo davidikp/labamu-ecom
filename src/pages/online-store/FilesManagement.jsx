@@ -456,12 +456,6 @@ export default function FilesManagement() {
       },
     },
     {
-      key: 'size',
-      header: t('sectionBuilder:onlineStore.files.columnFileSize', 'File Size'),
-      sortable: true,
-      render: (_value, row) => formatBytes(row.size),
-    },
-    {
       key: 'actions',
       width: 180,
       header: t('sectionBuilder:onlineStore.files.columnActions', 'Actions'),
