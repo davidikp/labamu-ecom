@@ -178,13 +178,45 @@ function migrateSection(section) {
   return { ...section, data, blocks };
 }
 
+// (5) Content > Menus (US-Content.1) — drafts saved before `state.menus`
+// existed get the same two default menus createInitialState() now seeds for
+// brand-new stores. When the header/footer sections being migrated already
+// carry inline `nav_links`, those become each default menu's starting
+// `items` instead of leaving it empty, so a merchant upgrading an existing
+// site doesn't lose their nav on the first load post-upgrade. Guarded on
+// `state.menus` being entirely absent, so it only ever runs once per
+// draft — any later merchant edit via UPDATE_MENU_ITEMS (including emptying
+// a menu back out to `[]`) is never clobbered by a re-run.
+function navLinksToMenuItems(navLinks) {
+  return (navLinks ?? []).map((link, index) => ({
+    // Stable, deterministic id (not crypto.randomUUID()) so re-running this
+    // migration against the same input — impossible per the guard above,
+    // but kept safe regardless — would reproduce the same ids rather than
+    // minting new ones every load.
+    id: link.id ?? `menu-item-${index}`,
+    label: link.label ?? '',
+    url: link.url ?? '/',
+  }));
+}
+
+function migrateMenus(state) {
+  if (state.menus) return state;
+  return {
+    ...state,
+    menus: {
+      'main-menu': { id: 'main-menu', name: 'Main menu', items: navLinksToMenuItems(state.header?.data?.nav_links) },
+      'footer-menu': { id: 'footer-menu', name: 'Footer menu', items: navLinksToMenuItems(state.footer?.data?.nav_links) },
+    },
+  };
+}
+
 export function migrateState(state) {
   if (!state || !Array.isArray(state.pages)) return state;
-  return {
+  return migrateMenus({
     ...state,
     pages: state.pages.map((page) => ({
       ...page,
       sections: (page.sections ?? []).map(migrateSection),
     })),
-  };
+  });
 }

@@ -37,7 +37,7 @@ export default function ResponsiveFieldWrapper({ viewport, value, onChange, chil
 
   return (
     <div>
-      <div className="mb-1.5 flex items-center justify-end gap-0.5">
+      <div className="lb-mb-label flex items-center justify-end gap-0.5">
         {BREAKPOINT_ORDER.map((bp) => {
           const Icon = ICONS[bp];
           const hasOverride = isResponsive && bp in value;

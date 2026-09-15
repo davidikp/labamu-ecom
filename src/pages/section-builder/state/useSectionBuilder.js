@@ -4,7 +4,7 @@ import { withHistory, initHistory, UNDO, REDO, RESET } from './withHistory';
 import { createFieldCoalescer } from './fieldCoalescer';
 import { loadDraft, saveDraft, loadPublished, savePublished } from './storage';
 import { hasUnpublishedChanges } from './draftComparison';
-import { defaultTheme, createDefaultPages, createDefaultGlobals } from './defaultTheme';
+import { defaultTheme, createDefaultPages, createDefaultGlobals, mergeRequiredSystemPages, requiredSystemPages } from './defaultTheme';
 
 const TRANSIENT_ACTION_TYPES = new Set([
   ACTIONS.SELECT,
@@ -37,7 +37,15 @@ export function createFreshState(storeId) {
  * instance per <SectionBuilder>.
  */
 export function useSectionBuilder(storeId) {
-  const restored = useMemo(() => loadDraft(storeId), [storeId]);
+  const restored = useMemo(() => {
+    const draft = loadDraft(storeId);
+    if (!draft) return draft;
+    // Hydration for sites saved before the Shop/Product-Detail system pages
+    // existed (or that predate the `systemType` field entirely) — adds any
+    // missing required system pages non-destructively, never touching a
+    // merchant's own pages. Idempotent, so this is safe to run on every load.
+    return { ...draft, pages: mergeRequiredSystemPages(draft.pages, requiredSystemPages()) };
+  }, [storeId]);
   const [published, setPublished] = useState(() => loadPublished(storeId));
 
   const [history, dispatch] = useReducer(

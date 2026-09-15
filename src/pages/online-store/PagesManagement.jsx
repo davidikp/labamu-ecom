@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MoreHorizontal, Trash2, Plus } from 'lucide-react';
 import { Table, StatusBadge, MainBtn, Popup, DateTimeField } from '../../ce-ui';
-import { loadDraft } from '../section-builder/state/storage';
-import { createFreshState } from '../section-builder/state/useSectionBuilder';
+import { loadOrSeedDemoDraft } from '../section-builder/state/demoBootstrap';
 import { runDraftAction } from '../section-builder/state/runDraftAction';
 import { ACTIONS } from '../section-builder/state/builderReducer';
 import ConfirmDialog from '../section-builder/ui/ConfirmDialog';
 import { visibilityBucket, pageUrlFor } from '../section-builder/sections/pageHelpers';
+import { POLICY_SYSTEM_TYPES } from '../section-builder/state/defaultTheme';
 import { formatRelativeTime } from './timeUtils';
 import SimulateTrigger from './SimulateTrigger';
 import CopyUrlButton from './CopyUrlButton';
@@ -60,7 +60,7 @@ export default function PagesManagement() {
   const { showSnackbar } = useSnackbar();
   const { companyData } = useCompany();
   const storeDomain = storeDomainFor(companyData);
-  const [draft, setDraft] = useState(() => loadDraft(STORE_ID) ?? createFreshState(STORE_ID));
+  const [draft, setDraft] = useState(() => loadOrSeedDemoDraft(STORE_ID));
 
   const [visibilityFilter, setVisibilityFilter] = useState('all');
   const [search, setSearch] = useState('');
@@ -97,7 +97,7 @@ export default function PagesManagement() {
   // Retries the (simulated) load — re-reads the draft from local storage.
   // Doesn't touch `simulateLoadError` itself, so while that toggle is still
   // armed this deliberately keeps landing back on the same error state.
-  const handleReloadPages = () => setDraft(loadDraft(STORE_ID) ?? createFreshState(STORE_ID));
+  const handleReloadPages = () => setDraft(loadOrSeedDemoDraft(STORE_ID));
 
   const pages = useMemo(() => draft.pages ?? [], [draft.pages]);
 
@@ -238,33 +238,30 @@ export default function PagesManagement() {
       key: 'name',
       header: t('sectionBuilder:onlineStore.pages.columnTitle', 'Title'),
       sortable: true,
-      render: (value) => <span style={{ fontWeight: 700, color: '#282828' }}>{value}</span>,
+      // No explicit width — the only column left unconstrained, so it
+      // absorbs whatever space the other (now all fixed/narrow) columns
+      // don't need instead of just wrapping tight to its own content.
+      render: (value, row) => (
+        <div>
+          <div style={{ fontWeight: 700, color: '#282828' }}>{value}</div>
+          {/* Written-policy pages (Settings > Policies) are also editable
+              from here — call that out so it's clear name/slug are locked
+              and the "real" home for these is Settings > Policies. Plain
+              secondary text under the name (not a badge) since this is
+              informational, not a status the row can be filtered/acted on
+              by the way Visibility's badge is. */}
+          {POLICY_SYSTEM_TYPES.includes(row.systemType) && (
+            <div style={{ fontSize: '12px', color: '#9CA3AF' }}>
+              {t('sectionBuilder:onlineStore.pages.policyBadge', 'Policy')}
+            </div>
+          )}
+        </div>
+      ),
     },
     {
       key: 'visibility',
       header: t('sectionBuilder:onlineStore.pages.columnVisibility', 'Visibility'),
       render: (_value, row) => visibilityBadge(row, t),
-    },
-    {
-      key: 'url',
-      header: t('sectionBuilder:onlineStore.pages.columnUrl', 'URL'),
-      render: (_value, row) => {
-        const fullUrl = row.slug ? pageUrlFor(row, storeDomain) : null;
-        return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-            <span
-              title={fullUrl ?? undefined}
-              style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '13px', color: '#6B7280' }}
-            >
-              {/* Displayed without the protocol (matches Shopify's own
-                  "storename.myshopify.com/handle" convention) — the copy
-                  button still copies the full https:// URL. */}
-              {fullUrl ? fullUrl.replace(/^https:\/\//, '') : '—'}
-            </span>
-            {fullUrl && <CopyUrlButton url={fullUrl} size={14} />}
-          </div>
-        );
-      },
     },
     {
       key: 'sections',
@@ -281,6 +278,21 @@ export default function PagesManagement() {
       header: t('sectionBuilder:onlineStore.pages.columnUpdated', 'Updated'),
       width: 128,
       render: (value) => (value ? formatRelativeTime(value) : '—'),
+    },
+    {
+      key: 'url',
+      // Header left blank — a lone icon button doesn't need a repeated
+      // "URL" label, matching how kebab/action-only columns elsewhere
+      // usually go unlabeled. The URL value itself is no longer shown as
+      // text at all — just the button, which copies the full https:// URL
+      // straight to the clipboard.
+      header: '',
+      width: 56,
+      align: 'center',
+      render: (_value, row) => {
+        const fullUrl = row.slug ? pageUrlFor(row, storeDomain) : null;
+        return fullUrl ? <CopyUrlButton url={fullUrl} size={14} /> : null;
+      },
     },
   ];
 
@@ -371,8 +383,11 @@ export default function PagesManagement() {
   }
 
   return (
-    <div style={{ background: '#F4F4F4', minHeight: 'calc(100vh - 56px)', fontFamily: "'Lato', sans-serif" }}>
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', width: '100%' }}>
+    // Fixed to the viewport (minus the app header) rather than growing with
+    // content, same convention as CatalogProducts.jsx's own list screen —
+    // only the table's own body should scroll, not the whole page.
+    <div style={{ background: '#F4F4F4', height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: "'Lato', sans-serif" }}>
+      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', width: '100%', flex: 1, minHeight: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexShrink: 0 }}>
           <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 700, color: '#282828' }}>
             {t('sectionBuilder:editor.pagesPanel.heading')}
@@ -386,7 +401,13 @@ export default function PagesManagement() {
           />
         </div>
 
-        <div className="pages-table-wrapper" style={{ background: '#FFFFFF', borderRadius: '12px', border: '1px solid #E9E9E9', position: 'relative' }}>
+        <div
+          className="pages-table-wrapper"
+          style={{
+            background: '#FFFFFF', borderRadius: '12px', border: '1px solid #E9E9E9', position: 'relative',
+            display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1, minHeight: 0,
+          }}
+        >
           <Table
             columns={columns}
             data={pagedPages}

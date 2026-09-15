@@ -26,6 +26,7 @@ const CATALOG_HANDLE_OPTIONS = [
 export const DEFAULT_COLLECTIONS_BY_STYLE = {
   cards: ['best-sellers', 'new-arrivals'],
   circular: ['tops', 'bottoms', 'dresses', 'shoes', 'bags', 'perfumes'],
+  pills: ['best-sellers', 'new-arrivals'],
 };
 
 export function defaultCollectionItems(handles) {
@@ -39,7 +40,14 @@ export const schema = {
   ...HEADING_SIZE_FIELD,
   display_style: {
     type: 'select', label: 'Display style', default: 'cards', group: 'layout',
-    options: [{ value: 'cards', label: 'Cards' }, { value: 'circular', label: 'Circular icons' }],
+    options: [
+      { value: 'cards', label: 'Cards' }, { value: 'circular', label: 'Circular icons' },
+      // A single rounded-full capsule bar of text-only labels, no images —
+      // Barger's Figma category strip (node 96:114743). A peer display
+      // style (like 'cards'/'circular'), not a per-theme hack — any theme
+      // wanting a compact text-pill category nav can opt into it.
+      { value: 'pills', label: 'Pill bar' },
+    ],
     defaultCollectionsByStyle: DEFAULT_COLLECTIONS_BY_STYLE,
   },
   // Each item picks its own source — a real catalog collection, or fully
@@ -72,6 +80,11 @@ export const schema = {
   // in the settings panel doing nothing, out of sync with the canvas.
   columns_desktop: {
     type: 'select', label: 'Columns on desktop', default: '3', group: 'layout',
+    dependsOn: { field: 'display_style', equals: 'cards' },
+    options: [{ value: '2', label: '2' }, { value: '3', label: '3' }, { value: '4', label: '4' }],
+  },
+  columns_tablet: {
+    type: 'select', label: 'Columns on tablet', default: '3', group: 'tablet',
     dependsOn: { field: 'display_style', equals: 'cards' },
     options: [{ value: '2', label: '2' }, { value: '3', label: '3' }, { value: '4', label: '4' }],
   },

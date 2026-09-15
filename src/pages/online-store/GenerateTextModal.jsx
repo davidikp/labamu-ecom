@@ -39,8 +39,8 @@ function simulateGeneration(mode, prompt) {
  * `simulateGenFail`/`simulateUnavailable` are controlled by the caller (the
  * PageEditor's single Simulate panel) rather than owned here, so the AI
  * simulation toggles surface alongside its other simulate options instead of
- * a separate checkbox row inside this modal — the "type fail/unavailable in
- * the prompt" convention above keeps working side by side either way.
+ * a separate floating button — same "type fail/unavailable in the prompt"
+ * convention keeps working side by side.
  */
 export default function GenerateTextModal({
   open,
@@ -143,7 +143,7 @@ export default function GenerateTextModal({
           : undefined
       }
     >
-      <div className="mb-1.5 flex items-center justify-between">
+      <div className="lb-mb-label flex items-center justify-between">
         <label className="block text-xs font-medium text-lb-on-surface-2">
           {t('sectionBuilder:onlineStore.pageEditor.generatePromptLabel', 'Describe what you want')}
         </label>
@@ -179,7 +179,7 @@ export default function GenerateTextModal({
 
       {showingResult && (
         <div className="mt-3">
-          <span className="mb-1.5 flex items-center gap-1 text-xs font-medium text-gray-800">
+          <span className="lb-mb-label flex items-center gap-1 text-xs font-medium text-[#8A3FFC]">
             <Sparkles size={12} />
             {t('sectionBuilder:onlineStore.pageEditor.generateResultLabel', 'Labamu AI generated')}
           </span>

@@ -24,6 +24,26 @@ function InfoIcon() {
   return <CircleHelp size={14} className="text-lb-on-surface-3 shrink-0" aria-hidden="true" />
 }
 
+/** Default "no rows" illustration — a dashed document card behind a solid
+ * one with a magnifying glass over it, matching the reference "No data
+ * available yet" empty state used elsewhere in this design (e.g. the Work
+ * Order list). Hand-drawn rather than an image asset, so it needs no
+ * public/ file a consuming app has to remember to ship. */
+function NoDataIllustration() {
+  return (
+    <svg width="120" height="120" viewBox="0 0 160 160" fill="none" aria-hidden="true">
+      <rect x="52" y="8" width="96" height="128" rx="10" stroke="#D4D4D4" strokeWidth="2" strokeDasharray="6 5" />
+      <rect x="16" y="24" width="96" height="128" rx="10" fill="#FFFFFF" stroke="#E0E0E0" strokeWidth="2" />
+      <rect x="34" y="50" width="60" height="8" rx="4" fill="#E5E5E5" />
+      <rect x="34" y="70" width="60" height="8" rx="4" fill="#E5E5E5" />
+      <rect x="34" y="90" width="60" height="8" rx="4" fill="#E5E5E5" />
+      <rect x="34" y="110" width="40" height="8" rx="4" fill="#E5E5E5" />
+      <line x1="33" y1="117" x2="14" y2="138" stroke="#BDBDBD" strokeWidth="10" strokeLinecap="round" />
+      <circle cx="60" cy="90" r="38" stroke="#BDBDBD" strokeWidth="10" />
+    </svg>
+  )
+}
+
 export interface TableFiltersConfig {
   /** Search field; with other filters it sits on the right (`justify-between`). */
   search?: {
@@ -42,6 +62,12 @@ export interface TableFiltersConfig {
     searchable?: boolean
     size?: "sm" | "lg"
     className?: string
+    /** Adds a trailing "Custom" option that opens a from–to date range picker — see FilterPill's own customDateEnabled. */
+    customDateEnabled?: boolean
+    customDateLabel?: string
+    customDateFrom?: Date | null
+    customDateTo?: Date | null
+    onCustomDateChange?: (from: Date | null, to: Date | null) => void
   }
   /** Multi-select filter pill. */
   multiSelect?: {
@@ -310,6 +336,11 @@ export function Table<T extends { id: string | number }>({
                     allValue={filters.singleSelect.allValue}
                     searchable={filters.singleSelect.searchable}
                     size={filters.singleSelect.size}
+                    customDateEnabled={filters.singleSelect.customDateEnabled}
+                    customDateLabel={filters.singleSelect.customDateLabel}
+                    customDateFrom={filters.singleSelect.customDateFrom}
+                    customDateTo={filters.singleSelect.customDateTo}
+                    onCustomDateChange={filters.singleSelect.onCustomDateChange}
                   />
                 )}
                 {filters.multiSelect && (
@@ -444,7 +475,7 @@ export function Table<T extends { id: string | number }>({
                 <td colSpan={columns.length + (selectable ? 1 : 0)}>
                   {emptyState ?? (
                     <div className="flex flex-col items-center justify-center py-24 gap-4 px-6 text-center">
-                      <img src="/file.svg" alt="" width={120} height={120} />
+                      <NoDataIllustration />
                       <div>
                         <p className="font-lb font-lb-semibold text-[15px] text-lb-on-surface">
                           {emptyStateTitle ?? locale.table.emptyTitle}
@@ -467,7 +498,12 @@ export function Table<T extends { id: string | number }>({
                 return (
                   <tr
                     key={row.id}
-                    onClick={() => { setActiveRowId(row.id); onRowClick?.(row); if (selectable) toggleRow(row.id) }}
+                    // Selection is checkbox-only — clicking elsewhere in the
+                    // row (including a row's own action buttons, which stop
+                    // propagation) no longer also toggles the checkbox, so
+                    // onRowClick (e.g. opening a detail view) and selecting
+                    // rows for bulk actions don't fight each other.
+                    onClick={() => { setActiveRowId(row.id); onRowClick?.(row) }}
                     className={cn("transition-colors duration-[120ms]", onRowClick && "cursor-pointer hover:bg-lb-brand-light")}
                   >
                     {selectable && (

@@ -12,12 +12,17 @@ const VARIANT_MAP = {
 const Snackbar = () => {
   const { t } = useTranslation('common');
   const { snackbar, hideSnackbar } = useSnackbar();
-  const { isOpen, message, variant } = snackbar;
+  const { isOpen, message, variant, id } = snackbar;
 
   if (!isOpen) return null;
 
   return (
     <CeSnackbar
+      // Forces a fresh mount per showSnackbar call, so a message shown while
+      // one is already on screen (e.g. "Installing theme..." handing off to
+      // "Draft theme successfully saved") restarts the auto-dismiss timer
+      // instead of inheriting whatever was left of the previous one's.
+      key={id}
       message={message}
       variant={VARIANT_MAP[variant] || 'default'}
       action={{ label: t('action.oke'), onClick: hideSnackbar }}

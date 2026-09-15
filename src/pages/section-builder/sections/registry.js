@@ -20,6 +20,7 @@ export const SECTION_CATEGORIES = {
   media: 'Media',
   utility: 'Utility',
   commerce: 'Cart & Checkout',
+  editorial: 'Editorial & Storytelling',
 };
 
 export const SECTION_REGISTRY = [
@@ -55,6 +56,8 @@ export const SECTION_REGISTRY = [
   { type: 'product_detail', label: 'Product Detail', category: 'commerce', description: 'Full product page layout with gallery, info panel, description tab and related products.' },
   { type: 'order_detail', label: 'Order Detail', category: 'commerce', description: 'Order info, payment status, customer detail, itemized table and totals breakdown.' },
   { type: 'modifier_popup', label: 'Modifier Popup', category: 'commerce', description: 'Required and optional option groups with live pricing and an Add to Order CTA.' },
+  { type: 'editorial_collection_list', label: 'Editorial Collection List', category: 'editorial', description: 'Showcase editorial collections — portfolios, lookbooks, campaigns — as visual cards.' },
+  { type: 'editorial_collection_detail', label: 'Editorial Collection Detail', category: 'editorial', description: 'Editorial storytelling template: title, description, hero image, gallery and an optional CTA.' },
 ];
 
 export const SECTION_LABELS = Object.fromEntries(SECTION_REGISTRY.map((s) => [s.type, s.label]));

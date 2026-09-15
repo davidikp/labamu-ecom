@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { resolveColor } from '../../ui/fields/colorValue';
 import { resolveMedia } from '../../ui/fields/imageValue';
-import { themedButtonStyle } from '../shared/themedButtonStyle';
+import { themedButtonStyle, themedButtonHoverStyle } from '../shared/themedButtonStyle';
 import EditableText from '../../ui/EditableText';
 import BlockStream from '../../ui/BlockStream';
 import { useResponsiveMobile } from '../shared/useResponsiveMobile';
+import { resolveHeroRecipe } from '../shared/heroRecipes';
+import { resolveFormRecipe } from '../shared/formRecipes';
 
 /**
  * Renderers for the shared/generic and bespoke block types (see registry.js).
@@ -11,21 +14,122 @@ import { useResponsiveMobile } from '../shared/useResponsiveMobile';
  * commits a change to this block's own data (present only in builder mode).
  */
 
-const HEADING_SIZE = { small: 'text-xl', medium: 'text-3xl', large: 'text-5xl' };
+// 'xlarge' — a big, above-the-fold hero headline size (Barger's Figma hero
+// heading is 120px), bigger than 'large' had any option for; responsive
+// (48px mobile / 72px tablet / 96px desktop) rather than one fixed size, so
+// it stays legible on narrow viewports. Generic/reusable, same as the other
+// three sizes — not a Barger-only block.
+//
+// The Tailwind `md:`/`lg:` prefixes here are a real-browser progressive
+// enhancement ONLY — they never fire correctly for the builder/preview's
+// simulated device frame (a fixed-width div inside the real, usually much
+// wider, browser window; `md:`/`lg:` evaluate against that real width, not
+// the frame's — same root cause useResponsiveMobile's own doc comment
+// describes for `sm:`). Whenever a `breakpoint` is explicitly known (the
+// builder canvas/preview always passes one), XLARGE_SIZE_PX below overrides
+// this via inline style instead, which wins over the class regardless of
+// what the real window width happens to be.
+const HEADING_SIZE = { small: 'text-xl', medium: 'text-3xl', large: 'text-5xl', xlarge: 'text-5xl md:text-7xl lg:text-8xl' };
+const XLARGE_SIZE_PX = { mobile: '48px', tablet: '72px', desktop: '96px', largeDesktop: '96px', fit: '96px' };
+const HEADING_WEIGHT = { normal: 'font-normal', bold: 'font-bold' };
 const ALIGN = { left: 'text-left', center: 'text-center', right: 'text-right' };
 
-export function HeadingBlock({ block, onEdit, onSelect }) {
+// Two opt-in hero typography contexts, each keyed to its own slot in the
+// theme's recipe (see heroRecipes.js's `typography.hero`/`typography.heroCta`):
+//   'hero'     -> the split_panel Main Hero's heading/subtitle.
+//   'hero_cta' -> a 'background'-layout hero used as a branded CTA banner
+//                 (e.g. the Appointment section — see hero_banner/Renderer.jsx).
+// Every existing call site (normal section content, and hero_banner's own
+// ordinary 'background' layout) never passes `context`, so it renders
+// through the unchanged `HEADING_SIZE`/`ALIGN` path exactly as before.
+// Values themselves are never hardcoded here — they come from the theme's
+// recipe (Houzez) or the generic DEFAULT_HERO_RECIPE (every other theme).
+const HERO_TYPOGRAPHY_SLOT = { hero: 'hero', hero_cta: 'heroCta' };
+
+// 'section': a prominent, bold content-section heading (32px/800, 16px
+// bottom margin) — a plain, theme-agnostic size step (like HEADING_SIZE's
+// own small/medium/large, not a per-theme recipe), only its *color* is
+// theme-driven (`theme.colors.text_primary`). Reusable by any section that
+// pairs a heading with supporting body copy (Location today; Contact has
+// the same golden-reference value but isn't touched in this task).
+const SECTION_HEADING_STYLE = { fontSize: '32px', fontWeight: 800, marginBottom: '16px' };
+const SECTION_SUBTITLE_STYLE = { fontSize: '15px', marginBottom: '32px' };
+
+export function HeadingBlock({ block, onEdit, onSelect, theme, context, isMobile, breakpoint }) {
   const d = block.data ?? {};
-  const cls = `${HEADING_SIZE[d.size] ?? HEADING_SIZE.medium} ${ALIGN[d.alignment] ?? ''} font-bold`;
+  const mobile = useResponsiveMobile(isMobile);
+  const slot = HERO_TYPOGRAPHY_SLOT[context];
+  if (slot) {
+    const t = resolveHeroRecipe(theme).typography[slot].heading;
+    const style = {
+      fontSize: mobile ? t.fontSizeMobile : t.fontSizeDesktop,
+      fontWeight: t.fontWeight,
+      lineHeight: t.lineHeight,
+      maxWidth: mobile ? undefined : t.maxWidthDesktop,
+      color: t.color,
+    };
+    return onEdit ? (
+      <EditableText as="h2" style={style} value={d.text} placeholder="Heading" onCommit={(v) => onEdit('text', v)} onFocusSelect={onSelect} />
+    ) : (
+      <h2 style={style}>{d.text || 'Heading'}</h2>
+    );
+  }
+  if (context === 'section') {
+    const style = { ...SECTION_HEADING_STYLE, color: theme?.colors?.text_primary };
+    return onEdit ? (
+      <EditableText as="h2" style={style} className={theme?.colors?.text_primary ? '' : 'text-gray-900'} value={d.text} placeholder="Heading" onCommit={(v) => onEdit('text', v)} onFocusSelect={onSelect} />
+    ) : (
+      <h2 style={style} className={theme?.colors?.text_primary ? '' : 'text-gray-900'}>{d.text || 'Heading'}</h2>
+    );
+  }
+  // `weight` defaults to 'bold' — every existing heading block predates
+  // this field and rendered bold unconditionally, so omitting it (the
+  // common case) stays byte-identical to before.
+  const cls = `${HEADING_SIZE[d.size] ?? HEADING_SIZE.medium} ${ALIGN[d.alignment] ?? ''} ${HEADING_WEIGHT[d.weight] ?? HEADING_WEIGHT.bold}`;
+  // 'xlarge' + an explicit `breakpoint` (the builder canvas/preview always
+  // passes one — see BlockStream.jsx) -> inline style wins over the
+  // (real-browser-only) Tailwind md:/lg: classes above, so the builder's
+  // mobile/tablet/desktop device toggle actually resizes the text instead
+  // of it staying stuck at whatever the real window width resolves to.
+  // Single-line only from 'tablet' up — mobile keeps free wrapping so a
+  // long headline never overflows/clips a narrow frame.
+  const xlargeStyle = d.size === 'xlarge' && breakpoint
+    ? { fontSize: XLARGE_SIZE_PX[breakpoint] ?? XLARGE_SIZE_PX.desktop, whiteSpace: breakpoint === 'mobile' ? 'normal' : 'nowrap' }
+    : undefined;
   return onEdit ? (
-    <EditableText as="h2" className={cls} value={d.text} placeholder="Heading" onCommit={(v) => onEdit('text', v)} onFocusSelect={onSelect} />
+    <EditableText as="h2" className={cls} style={xlargeStyle} value={d.text} placeholder="Heading" onCommit={(v) => onEdit('text', v)} onFocusSelect={onSelect} />
   ) : (
-    <h2 className={cls}>{d.text || 'Heading'}</h2>
+    <h2 className={cls} style={xlargeStyle}>{d.text || 'Heading'}</h2>
   );
 }
 
-export function SubheadingBlock({ block, onEdit, onSelect }) {
+export function SubheadingBlock({ block, onEdit, onSelect, theme, context, isMobile }) {
   const d = block.data ?? {};
+  const mobile = useResponsiveMobile(isMobile);
+  const slot = HERO_TYPOGRAPHY_SLOT[context];
+  if (slot) {
+    const t = resolveHeroRecipe(theme).typography[slot].subtitle;
+    const style = {
+      fontSize: mobile ? t.fontSizeMobile : t.fontSizeDesktop,
+      lineHeight: t.lineHeight,
+      maxWidth: mobile ? undefined : t.maxWidthDesktop,
+      color: t.color,
+      opacity: t.opacity,
+    };
+    return onEdit ? (
+      <EditableText as="p" style={style} value={d.text} placeholder="Subheading" onCommit={(v) => onEdit('text', v)} onFocusSelect={onSelect} />
+    ) : (
+      d.text && <p style={style}>{d.text}</p>
+    );
+  }
+  if (context === 'section') {
+    const style = { ...SECTION_SUBTITLE_STYLE, color: theme?.colors?.text_secondary };
+    return onEdit ? (
+      <EditableText as="p" style={style} className={theme?.colors?.text_secondary ? '' : 'text-gray-600'} value={d.text} placeholder="Subheading" onCommit={(v) => onEdit('text', v)} onFocusSelect={onSelect} />
+    ) : (
+      d.text && <p style={style} className={theme?.colors?.text_secondary ? '' : 'text-gray-600'}>{d.text}</p>
+    );
+  }
   return onEdit ? (
     <EditableText as="p" className="text-lg opacity-80" value={d.text} placeholder="Subheading" onCommit={(v) => onEdit('text', v)} onFocusSelect={onSelect} />
   ) : (
@@ -42,16 +146,35 @@ export function TextBlock({ block, onEdit, onSelect }) {
   );
 }
 
-export function ButtonBlock({ block, theme, onEdit, onSelect }) {
+const BUTTON_STYLE_VARIANT = { secondary: 'outline', inverted: 'inverted' };
+
+// `context === 'hero_cta'` is the only opt-in path to CTA-button geometry —
+// a plain 'inverted' button elsewhere never passes this context, so it
+// keeps resolving through theme.buttons exactly as before. The geometry
+// itself is never hardcoded here — it comes from the theme's recipe
+// (Houzez) or `null` (every other theme, i.e. no override at all).
+export function ButtonBlock({ block, theme, context, onEdit, onSelect }) {
   const d = block.data ?? {};
-  const variant = d.style === 'secondary' ? 'outline' : 'filled';
+  const [hovered, setHovered] = useState(false);
+  const variant = BUTTON_STYLE_VARIANT[d.style] ?? 'filled';
+  const ctaOverride = context === 'hero_cta' ? resolveHeroRecipe(theme).ctaButton : undefined;
+  const primary = resolveColor({ slot: 'primary' }, theme.colors);
   const style = themedButtonStyle(theme.buttons, {
     variant,
-    primary: resolveColor({ slot: 'primary' }, theme.colors),
+    primary,
     primaryText: resolveColor({ slot: 'primary_text' }, theme.colors),
+    override: ctaOverride ?? undefined,
   });
+  // theme.buttons.hover_effect was a schema field with no consumer anywhere
+  // — every button rendered with zero hover feedback regardless of the
+  // merchant's choice. See themedButtonHoverStyle's own doc comment.
+  const hoverStyle = hovered ? themedButtonHoverStyle(theme.buttons, style, primary) : null;
   return (
-    <span style={style}>
+    <span
+      style={hoverStyle ? { ...style, ...hoverStyle } : style}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       {onEdit ? (
         <EditableText value={d.label} placeholder="Button" onCommit={(v) => onEdit('label', v)} onFocusSelect={onSelect} />
       ) : (
@@ -202,17 +325,43 @@ export function ProductBlock(props) {
   return <CardBlock {...props} fallbackTitle="Product" />;
 }
 
-export function FormFieldBlock({ block }) {
+// `context === 'themed_form'` is the only opt-in path to recipe-driven
+// field styling (see shared/formRecipes.js) — every existing call site
+// (contact_form's default 'form_only' layout, quote_request_form, any other
+// section using form_field blocks) never passes it, so it renders through
+// the unchanged hardcoded classes exactly as before.
+export function FormFieldBlock({ block, theme, context }) {
   const d = block.data ?? {};
+  const themed = context === 'themed_form';
+  const recipe = themed ? resolveFormRecipe(theme) : null;
+  const isTextarea = d.field_type === 'textarea';
+  const fieldStyle = themed
+    ? { height: isTextarea ? '80px' : `${recipe.field.height}px`, borderRadius: `${recipe.field.radius}px`, fontSize: `${recipe.field.fontSize}px`, borderColor: recipe.field.borderColor }
+    : undefined;
+  const fieldClass = themed
+    ? `w-full border px-4 outline-none ${recipe.field.borderColor ? '' : 'border-gray-300'} ${isTextarea ? 'py-3' : ''}`
+    : 'w-full rounded-md border border-gray-200 px-3 py-2 text-sm';
+  const labelClass = themed
+    ? `mb-1 block font-semibold ${recipe.label.color ? '' : 'text-gray-700'}`
+    : 'mb-1 block text-xs font-medium text-gray-600';
+  const labelStyle = themed ? { fontSize: `${recipe.label.fontSize}px`, color: recipe.label.color } : undefined;
+  const options = (d.options || '').split('\n').map((o) => o.trim()).filter(Boolean);
+
   return (
-    <div className="mb-3">
-      <label className="mb-1 block text-xs font-medium text-gray-600">
-        {d.label || 'Field'}{d.required ? ' *' : ''}
+    <div className={themed ? '' : 'mb-3'}>
+      <label className={labelClass} style={labelStyle}>
+        {d.label || 'Field'}
+        {d.required && (themed ? <span style={{ color: '#EF4444', marginLeft: 4 }}>*</span> : ' *')}
       </label>
-      {d.field_type === 'textarea' ? (
-        <textarea disabled rows={3} placeholder={d.placeholder} className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm" />
+      {isTextarea ? (
+        <textarea disabled rows={3} placeholder={d.placeholder} className={fieldClass} style={fieldStyle} />
+      ) : d.field_type === 'select' ? (
+        <select disabled className={fieldClass} style={fieldStyle}>
+          <option value="">{d.placeholder || 'Select…'}</option>
+          {options.map((opt) => <option key={opt}>{opt}</option>)}
+        </select>
       ) : (
-        <input disabled type={d.field_type || 'text'} placeholder={d.placeholder} className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm" />
+        <input disabled type={d.field_type || 'text'} placeholder={d.placeholder} className={fieldClass} style={fieldStyle} />
       )}
     </div>
   );
@@ -265,7 +414,7 @@ function withLegacyDefaults(d) {
   return { ...d, direction: 'horizontal', direction_mobile: 'vertical', wrap: true, gap: 16, gap_mobile: 8 };
 }
 
-export function GroupBlock({ block, theme, mediaLibrary, childCtx, isMobile }) {
+export function GroupBlock({ block, theme, mediaLibrary, childCtx, isMobile, breakpoint }) {
   const d = withLegacyDefaults(block.data ?? {});
   const children = block.blocks ?? [];
   const empty = children.length === 0;
@@ -321,6 +470,7 @@ export function GroupBlock({ block, theme, mediaLibrary, childCtx, isMobile }) {
           gated={false}
           className="contents"
           isMobile={isMobile}
+          breakpoint={breakpoint}
           // Easyblocks-style hover "+" between items instead of one
           // end-of-list Add button (see BlockStream.jsx/InsertZone.jsx).
           // `direction` matches this group's own current (possibly

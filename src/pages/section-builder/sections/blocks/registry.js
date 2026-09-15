@@ -39,7 +39,15 @@ export const BLOCK_TYPES = {
       text: { type: 'text', label: 'Text', maxLength: 200, default: 'Heading', group: 'content' },
       size: {
         type: 'select', label: 'Size', default: 'medium', group: 'content',
-        options: [{ value: 'small', label: 'Small' }, { value: 'medium', label: 'Medium' }, { value: 'large', label: 'Large' }],
+        options: [
+          { value: 'small', label: 'Small' }, { value: 'medium', label: 'Medium' }, { value: 'large', label: 'Large' },
+          // Big, above-the-fold hero headline size — see blockRenderers.jsx's HEADING_SIZE.
+          { value: 'xlarge', label: 'Extra large' },
+        ],
+      },
+      weight: {
+        type: 'select', label: 'Weight', default: 'bold', group: 'content',
+        options: [{ value: 'normal', label: 'Normal' }, { value: 'bold', label: 'Bold' }],
       },
       alignment: {
         type: 'select', label: 'Alignment', default: 'left', group: 'content',
@@ -68,7 +76,11 @@ export const BLOCK_TYPES = {
       url: { type: 'text', label: 'Link URL', default: '/collections/all', group: 'content' },
       style: {
         type: 'select', label: 'Style', default: 'primary', group: 'content',
-        options: [{ value: 'primary', label: 'Primary' }, { value: 'secondary', label: 'Secondary' }],
+        options: [
+          { value: 'primary', label: 'Primary' },
+          { value: 'secondary', label: 'Secondary' },
+          { value: 'inverted', label: 'Inverted (for photo/color backgrounds)' },
+        ],
       },
     },
   },
@@ -261,10 +273,18 @@ export const BLOCK_TYPES = {
           { value: 'email', label: 'Email' },
           { value: 'tel', label: 'Phone' },
           { value: 'textarea', label: 'Long text' },
+          { value: 'select', label: 'Dropdown' },
         ],
       },
       required: { type: 'boolean', label: 'Required', default: false, group: 'content' },
       placeholder: { type: 'text', label: 'Placeholder', maxLength: 100, default: '', group: 'content' },
+      // Same "one per line" convention as MenuColumnBlock's `links` field —
+      // a simple bounded list, not a repeater, for a dropdown's option
+      // labels (e.g. a salutation field: "Mr.\nMrs.\nMs.\nDr.").
+      options: {
+        type: 'textarea', label: 'Dropdown options (one per line)', default: '', group: 'content',
+        dependsOn: { field: 'field_type', equals: 'select' },
+      },
     },
   },
   nav_link: {

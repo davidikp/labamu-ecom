@@ -1,5 +1,6 @@
 import { xinearTheme } from './xinear';
 import { houzezTheme } from './houzez';
+import { bargerTheme } from './barger';
 
 /**
  * @module section-builder/themes/registry
@@ -9,6 +10,7 @@ import { houzezTheme } from './houzez';
 export const themes = {
   xinear: xinearTheme,
   houzez: houzezTheme,
+  barger: bargerTheme,
 };
 
 /**

@@ -45,8 +45,22 @@ export default function BlockStream({
   gated = true,
   hideAdd = false,
   isMobile,
+  // Additive alongside `isMobile` (Phase 0 — see themes/breakpoints.js),
+  // same convention Canvas.jsx's RenderedEntity already forwards `breakpoint`
+  // to a section's own Renderer under. A block Renderer that wants true
+  // per-breakpoint values (not just a mobile/non-mobile split) resolves its
+  // own `$res`-tagged field via resolveResponsiveValue(field, breakpoint) —
+  // existing block Renderers simply ignore this unknown prop.
+  breakpoint,
   insertBetween = true,
   direction = 'vertical',
+  // Optional semantic rendering context forwarded to each block's Renderer
+  // (e.g. 'hero' — see sections/blocks/blockRenderers.jsx's HeadingBlock/
+  // SubheadingBlock). Undefined by default, so every existing call site
+  // (including hero_banner's own 'background' layout) renders exactly as
+  // before — a block only picks up alternate styling when a caller
+  // explicitly opts in.
+  context,
 }) {
   const showAdd = !insertBetween && !hideAdd && blockCtx && !blockCtx.atMax && (!gated || blockCtx.selectedBlockId || blockCtx.sectionActive);
   const insertActive = insertBetween && !hideAdd && blockCtx && !blockCtx.atMax;
@@ -103,6 +117,8 @@ export default function BlockStream({
                   onSelect={blockCtx ? () => blockCtx.onSelect(b.id) : undefined}
                   childCtx={childCtx}
                   isMobile={isMobile}
+                  breakpoint={breakpoint}
+                  context={context}
                 />
               </div>
             </BlockBoundary>

@@ -10,7 +10,7 @@ export const Popup: React.FC<{
   title?: string
   description?: string
   platform?: "mobile" | "tablet" | "desktop"
-  /** Header text alignment.
+  /** Description text alignment (title is always centered).
    *  - "center" (default): confirmation/alert modals
    *  - "left": form modals with input fields */
   align?: "center" | "left"
@@ -61,7 +61,7 @@ export const Popup: React.FC<{
         )}
 
         {(title || description) && (
-          <div className={cn("relative px-6 pt-6 flex-shrink-0", align === "left" ? "text-left" : "text-center")}>
+          <div className="relative px-6 pt-6 flex-shrink-0 text-center">
             <button
               onClick={onClose}
               className="absolute top-4 right-4 w-6 h-6 flex items-center justify-center text-lb-on-surface hover:bg-lb-surface-grey transition-colors bg-transparent border-none cursor-pointer rounded-full"
@@ -77,17 +77,22 @@ export const Popup: React.FC<{
               </h2>
             )}
             {description && (
-              <p className="font-lb text-[14px] text-lb-on-surface-2 leading-[20px] tracking-[0.0962px] mt-2 mb-0">
+              <p
+                className={cn(
+                  "font-lb text-[14px] text-lb-on-surface-2 leading-[20px] tracking-[0.0962px] mt-2 mb-0",
+                  align === "left" ? "text-left" : "text-center"
+                )}
+              >
                 {description}
               </p>
             )}
           </div>
         )}
 
-        {children && <div className="flex-1 overflow-y-auto px-6 py-4 min-h-0">{children}</div>}
+        {children && <div className="flex-1 overflow-y-auto px-6 pt-4 pb-0 min-h-0">{children}</div>}
 
         {(primaryAction || secondaryAction) && (
-          <div className="px-6 py-4 border-t border-lb-line-1 bg-lb-surface flex gap-3 flex-shrink-0">
+          <div className="px-6 pt-6 pb-4 bg-lb-surface flex gap-3 flex-shrink-0">
             {secondaryAction && (
               <MainBtn
                 className="flex-1"

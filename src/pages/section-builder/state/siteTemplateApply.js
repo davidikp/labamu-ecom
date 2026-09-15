@@ -53,10 +53,19 @@ export function applySiteTemplate(storeId, template, mode = 'restyle') {
           media: cloneJson(template.media ?? []),
           // Templates override header/footer content (logo text, layout
           // variant, tagline, ...) on top of the generic defaults —
-          // createDefaultGlobals still supplies the auto-derived nav_links
-          // and any field a template doesn't override.
+          // createDefaultGlobals still supplies any field a template doesn't
+          // override.
           header: { ...globals.header, data: { ...globals.header.data, ...cloneJson(template.header ?? {}) } },
           footer: { ...globals.footer, data: { ...globals.footer.data, ...cloneJson(template.footer ?? {}) } },
+          // Content > Menus (US-Content.1) — same "template wins per-menu,
+          // else the generic page-roster-derived default" merge header/
+          // footer just used above (see also siteTemplates.js's
+          // defaultPreviewDataFor, which mirrors this for the gallery
+          // preview route).
+          menus: {
+            'main-menu': { ...globals.menus['main-menu'], ...cloneJson(template.menus?.['main-menu'] ?? {}) },
+            'footer-menu': { ...globals.menus['footer-menu'], ...cloneJson(template.menus?.['footer-menu'] ?? {}) },
+          },
         };
       })()
     : {

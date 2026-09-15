@@ -136,7 +136,7 @@ export default function ThemePanel({ theme, onFieldChange, onApplyPreset, onSetS
 
   return (
     <aside className="w-[280px] min-w-[240px] shrink-0 overflow-y-auto border-l border-gray-200 bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold text-gray-900">{t('sectionBuilder:editor.themePanel.heading')}</h2>
+      <h2 className="lb-mb-heading text-sm font-semibold text-gray-900">{t('sectionBuilder:editor.themePanel.heading')}</h2>
 
       <div className="mb-4">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">{t('sectionBuilder:editor.themePanel.presets')}</p>
@@ -150,7 +150,7 @@ export default function ThemePanel({ theme, onFieldChange, onApplyPreset, onSetS
       {groups.map((group) => (
         <div key={group.key}>
           <hr className="my-4 border-gray-100" />
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">{group.label}</p>
+          <p className="lb-mb-heading text-xs font-semibold uppercase tracking-wide text-gray-400">{group.label}</p>
           <div className="space-y-4">
             {Object.entries(group.fields).map(([key, field]) => (
               <div key={key}>

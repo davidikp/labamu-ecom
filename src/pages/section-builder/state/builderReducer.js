@@ -18,8 +18,32 @@
  * confirmed separately per US-9.4) — see TRANSIENT_ACTION_TYPES there.
  */
 
+import { mergeRequiredSystemPages, requiredSystemPages, REQUIRED_SYSTEM_TYPES, POLICY_SYSTEM_TYPES } from './defaultTheme';
+import { SHOP_CORE_SECTION_ID } from '../sections/catalog_list/schema';
+import { PRODUCT_CORE_SECTION_ID } from '../sections/product_detail/schema';
+import { EDITORIAL_COLLECTION_LIST_CORE_SECTION_ID } from '../sections/editorial_collection_list/schema';
+import { EDITORIAL_COLLECTION_DETAIL_CORE_SECTION_ID } from '../sections/editorial_collection_detail/schema';
+
 export const MAX_SECTIONS_PER_PAGE = 20;
 export const SECTION_WARNING_THRESHOLD = 18;
+
+/** Section ids that must not be removable via REMOVE_SECTION, per system
+ * page kind — the section-level analogue of REQUIRED_SYSTEM_TYPES' page-
+ * level guard: the Shop page's `sections` array is an ordinary reorderable
+ * list, so without this a merchant could delete its only catalog section
+ * and leave Shop blank. Keyed by `systemType`, not page id, matching how
+ * `pageFillsSystemType` (defaultTheme.js) already treats those two as
+ * interchangeable. */
+const REQUIRED_SECTION_ID_BY_SYSTEM_TYPE = {
+  shop: SHOP_CORE_SECTION_ID,
+  product: PRODUCT_CORE_SECTION_ID,
+  // Guarded the same way even though neither page is in REQUIRED_SYSTEM_TYPES
+  // (both stay optional/removable pages, per US Collection feature) — this
+  // map only protects the *section* from being emptied out while its page
+  // still exists, independent of whether the page itself is required.
+  editorial_collection_list: EDITORIAL_COLLECTION_LIST_CORE_SECTION_ID,
+  editorial_collection_detail: EDITORIAL_COLLECTION_DETAIL_CORE_SECTION_ID,
+};
 
 export const ACTIONS = {
   SET_ACTIVE_PAGE: 'SET_ACTIVE_PAGE',
@@ -64,9 +88,46 @@ export const ACTIONS = {
   DESELECT: 'DESELECT',
   ADD_MEDIA_ITEM: 'ADD_MEDIA_ITEM',
   REMOVE_MEDIA_ITEM: 'REMOVE_MEDIA_ITEM',
+  DELETE_MEDIA_ITEM: 'DELETE_MEDIA_ITEM',
+  BULK_DELETE_MEDIA_ITEMS: 'BULK_DELETE_MEDIA_ITEMS',
+  RENAME_MEDIA_ITEM: 'RENAME_MEDIA_ITEM',
+  // Content > Menus (US-Content.1) — a menu's `items` array (each
+  // `{ id, label, url }`) is always replaced wholesale rather than mutated
+  // item-by-item, matching how repeater-style fields elsewhere in this
+  // reducer (e.g. UPDATE_SECTION_DATA/UPDATE_BLOCK_DATA) are committed as a
+  // single settled edit from the editing UI rather than one action per
+  // keystroke/reorder.
+  UPDATE_MENU_ITEMS: 'UPDATE_MENU_ITEMS',
+  // Adds a brand-new entry to `state.menus`, starting with `items: []` — the
+  // Content > Menus "Create menu" action (MenusManagement.jsx). Kept
+  // separate from UPDATE_MENU_ITEMS (which only ever replaces an existing
+  // menu's items) rather than overloading it, since this also has to invent
+  // a stable id/name pair for a menu that doesn't exist yet.
+  CREATE_MENU: 'CREATE_MENU',
+  // Upserts a menu's `name` and `items` together in one dispatch — the
+  // single create-or-edit modal (MenusManagement.jsx's MenuFormPopup) that
+  // replaced the separate "name a new menu" / "edit an existing menu's
+  // items" popups. Left as an addition alongside CREATE_MENU/UPDATE_MENU_ITEMS
+  // rather than folding into either of them, so any other caller of those two
+  // (e.g. future automated menu seeding) keeps its current single-field
+  // contract unchanged.
+  SAVE_MENU: 'SAVE_MENU',
+  // Removes a custom menu from `state.menus` — MenusManagement.jsx's Edit
+  // drawer Delete button. The two default menus ('main-menu'/'footer-menu')
+  // are never dispatched through this action (the UI disables Delete for
+  // them, since Header/Footer's `nav_menu_ref` defaults point at those fixed
+  // ids), but this reducer case also refuses to remove them defensively —
+  // same "UI guard + reducer backstop" pairing as ACTIONS.DELETE_PAGE.
+  DELETE_MENU: 'DELETE_MENU',
 };
 
-export function createInitialState({ storeId, pages, theme, header, footer, activeTemplateId = null }) {
+// Default menus every store starts with (see createInitialState below) —
+// these ids can never be deleted since Header/Footer's `nav_menu_ref`
+// defaults point at them. Exported so MenusManagement.jsx's Edit drawer can
+// disable its Delete button for the same two ids without duplicating them.
+export const PROTECTED_MENU_IDS = ['main-menu', 'footer-menu'];
+
+export function createInitialState({ storeId, pages, theme, header, footer, activeTemplateId = null, menus }) {
   return {
     storeId,
     pages,
@@ -86,6 +147,16 @@ export function createInitialState({ storeId, pages, theme, header, footer, acti
     activeTemplateId,
     selection: { id: null },
     mediaLibrary: [],
+    // Content > Menus (US-Content.1) — two default menus every store starts
+    // with, mirroring Shopify's "Main menu"/"Footer menu" pair. Header/
+    // footer sections reference one of these by id (see their schema's
+    // `nav_menu_ref` field) rather than storing nav links inline. `menus`
+    // lets a caller (e.g. createDefaultGlobals's page-roster-derived nav)
+    // seed real starting items instead of always starting empty.
+    menus: menus ?? {
+      'main-menu': { id: 'main-menu', name: 'Main menu', items: [] },
+      'footer-menu': { id: 'footer-menu', name: 'Footer menu', items: [] },
+    },
   };
 }
 
@@ -169,6 +240,9 @@ export function builderReducer(state, action) {
 
     case ACTIONS.REMOVE_SECTION: {
       const { pageId, sectionId } = action;
+      const page = state.pages.find((p) => p.id === pageId);
+      const requiredId = page?.type === 'system' ? REQUIRED_SECTION_ID_BY_SYSTEM_TYPE[page.systemType] : null;
+      if (requiredId && requiredId === sectionId) return state;
       return {
         ...state,
         pages: updatePage(state.pages, pageId, (page) => ({
@@ -380,16 +454,25 @@ export function builderReducer(state, action) {
       // generates the page roster + globals + media library from the
       // template's scaffold. Only used when state.activeTemplateId is still
       // null — see siteTemplates.js for the seed-vs-reskin contract.
-      const { templateId, theme, pages, header, footer, media } = action;
+      // mergeRequiredSystemPages guarantees Shop + Product Detail exist even
+      // for templates (siteTemplates.js) that don't define them themselves —
+      // it never duplicates a page a template *does* already define (e.g. a
+      // future template with its own 'shop'-id or systemType:'shop' page).
+      const { templateId, theme, pages, header, footer, media, menus } = action;
+      const mergedPages = mergeRequiredSystemPages(pages, requiredSystemPages());
       return {
         ...state,
         activeTemplateId: templateId,
         theme: { ...state.theme, ...theme },
-        pages,
-        activePageId: pages[0]?.id ?? null,
+        pages: mergedPages,
+        activePageId: pages[0]?.id ?? mergedPages[0]?.id ?? null,
         header,
         footer,
         mediaLibrary: media ?? [],
+        // Optional — callers that don't seed nav menus (e.g. existing tests
+        // constructing this action by hand) leave `state.menus` untouched
+        // rather than clobbering it with nothing.
+        menus: menus ?? state.menus,
         selection: { id: null },
       };
     }
@@ -455,6 +538,15 @@ export function builderReducer(state, action) {
       };
 
     case ACTIONS.DELETE_PAGE: {
+      // Integrity guard: required system pages (Shop, Product Detail — see
+      // REQUIRED_SYSTEM_TYPES in defaultTheme.js) can't be deleted through
+      // this path. PagesPanel.jsx's UI already hides the delete affordance
+      // for any `type: 'system'` page, so this is a defensive backstop, not
+      // the primary guard.
+      const target = state.pages.find((p) => p.id === action.pageId);
+      if (target && target.type === 'system' && REQUIRED_SYSTEM_TYPES.includes(target.systemType)) {
+        return state;
+      }
       const pages = state.pages.filter((p) => p.id !== action.pageId);
       const activePageId = state.activePageId === action.pageId ? pages[0]?.id ?? null : state.activePageId;
       return { ...state, pages, activePageId };
@@ -510,11 +602,19 @@ export function builderReducer(state, action) {
     case ACTIONS.UPDATE_PAGE:
       return {
         ...state,
-        pages: updatePage(state.pages, action.pageId, (page) => ({
-          ...page,
-          ...action.patch,
-          updatedAt: Date.now(),
-        })),
+        pages: updatePage(state.pages, action.pageId, (page) => {
+          // Written-policy pages (Settings > Policies) are reserved: name and
+          // slug are locked so their footer/menu links and Settings rows
+          // never break — only content/seo/visibility stay editable through
+          // this generic patch path.
+          const isLockedPolicy = page.type === 'system' && POLICY_SYSTEM_TYPES.includes(page.systemType);
+          const { name: _name, slug: _slug, ...restPatch } = action.patch ?? {};
+          return {
+            ...page,
+            ...(isLockedPolicy ? restPatch : action.patch),
+            updatedAt: Date.now(),
+          };
+        }),
       };
 
     // Bulk Set Pages Visible/Hidden/Scheduled — same visibility field
@@ -534,9 +634,16 @@ export function builderReducer(state, action) {
     }
 
     case ACTIONS.BULK_DELETE_PAGES: {
+      // Same integrity guard as DELETE_PAGE — required system pages are
+      // silently excluded from the bulk-delete set rather than blocking the
+      // whole operation.
       const ids = new Set(action.pageIds);
-      const pages = state.pages.filter((p) => !ids.has(p.id));
-      const activePageId = ids.has(state.activePageId) ? pages[0]?.id ?? null : state.activePageId;
+      const pages = state.pages.filter((p) => {
+        if (!ids.has(p.id)) return true;
+        return p.type === 'system' && REQUIRED_SYSTEM_TYPES.includes(p.systemType);
+      });
+      const remainingIds = new Set(pages.map((p) => p.id));
+      const activePageId = remainingIds.has(state.activePageId) ? state.activePageId : pages[0]?.id ?? null;
       return { ...state, pages, activePageId };
     }
 
@@ -548,6 +655,69 @@ export function builderReducer(state, action) {
       // to nothing at render time — see ui/fields/imageValue.js — so there's
       // no section data to clean up here (US-9.4).
       return { ...state, mediaLibrary: state.mediaLibrary.filter((m) => m.id !== action.id) };
+
+    // Single-item delete for the Content > Files screen — same "no cleanup
+    // needed" rationale as REMOVE_MEDIA_ITEM above (kept as a distinct
+    // action, rather than reusing REMOVE_MEDIA_ITEM, to match this reducer's
+    // existing single/bulk pairing convention, e.g. DELETE_PAGE vs.
+    // BULK_DELETE_PAGES).
+    case ACTIONS.DELETE_MEDIA_ITEM:
+      return { ...state, mediaLibrary: state.mediaLibrary.filter((m) => m.id !== action.id) };
+
+    case ACTIONS.BULK_DELETE_MEDIA_ITEMS: {
+      const ids = new Set(action.ids);
+      return { ...state, mediaLibrary: state.mediaLibrary.filter((m) => !ids.has(m.id)) };
+    }
+
+    // Content > Files' row-level "Edit" action — renames the item in place,
+    // same filter-and-map-by-id style as the delete cases above.
+    case ACTIONS.RENAME_MEDIA_ITEM:
+      return {
+        ...state,
+        mediaLibrary: state.mediaLibrary.map((m) =>
+          m.id === action.id ? { ...m, filename: action.filename } : m
+        ),
+      };
+
+    // Replaces a menu's full `items` array — see ACTIONS.UPDATE_MENU_ITEMS
+    // above for why this is whole-array rather than per-item.
+    case ACTIONS.UPDATE_MENU_ITEMS: {
+      const { menuId, items } = action;
+      const menu = state.menus?.[menuId];
+      if (!menu) return state;
+      return { ...state, menus: { ...state.menus, [menuId]: { ...menu, items } } };
+    }
+
+    // Adds a new menu with the given `id`/`name` and empty `items` — a no-op
+    // if `id` already exists (the caller, MenusManagement.jsx, is expected
+    // to generate a unique slug against the current `state.menus` keys, the
+    // same "stable id" convention MenuEditorPopup's items already use via
+    // `crypto.randomUUID()`, just slug-based here for a human-readable id).
+    case ACTIONS.CREATE_MENU: {
+      const { id, name } = action;
+      if (state.menus?.[id]) return state;
+      return { ...state, menus: { ...state.menus, [id]: { id, name, items: [] } } };
+    }
+
+    // Upsert form save for MenuFormPopup — sets `name`+`items` together,
+    // creating the menu at `id` if it doesn't exist yet (so the same action
+    // covers both "Save" on a brand-new menu and "Save" on an existing one).
+    case ACTIONS.SAVE_MENU: {
+      const { id, name, items } = action;
+      const existing = state.menus?.[id];
+      return { ...state, menus: { ...state.menus, [id]: { id, name, items: items ?? existing?.items ?? [] } } };
+    }
+
+    // Removes a menu from `state.menus` — same entity-removal shape as
+    // REMOVE_MEDIA_ITEM/DELETE_MEDIA_ITEM above, applied to the `menus`
+    // object's keys instead of an array. Protected default menus are never
+    // removed, even if a caller mistakenly dispatches this for one.
+    case ACTIONS.DELETE_MENU: {
+      const { id } = action;
+      if (PROTECTED_MENU_IDS.includes(id) || !state.menus?.[id]) return state;
+      const { [id]: _removed, ...rest } = state.menus;
+      return { ...state, menus: rest };
+    }
 
     case ACTIONS.SELECT:
       return { ...state, selection: { id: action.id } };

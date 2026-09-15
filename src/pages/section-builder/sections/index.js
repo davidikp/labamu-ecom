@@ -72,6 +72,10 @@ import { schema as orderDetailSchema } from './order_detail/schema';
 import OrderDetailRenderer from './order_detail/Renderer';
 import { schema as modifierPopupSchema } from './modifier_popup/schema';
 import ModifierPopupRenderer from './modifier_popup/Renderer';
+import { schema as editorialCollectionListSchema, blockConfig as editorialCollectionListBlocks } from './editorial_collection_list/schema';
+import EditorialCollectionListRenderer from './editorial_collection_list/Renderer';
+import { schema as editorialCollectionDetailSchema, blockConfig as editorialCollectionDetailBlocks } from './editorial_collection_detail/schema';
+import EditorialCollectionDetailRenderer from './editorial_collection_detail/Renderer';
 
 export const SECTION_DEFINITIONS = {
   header: { schema: headerSchema, Renderer: HeaderRenderer },
@@ -108,6 +112,8 @@ export const SECTION_DEFINITIONS = {
   product_detail: { schema: productDetailSchema, Renderer: ProductDetailRenderer },
   order_detail: { schema: orderDetailSchema, Renderer: OrderDetailRenderer },
   modifier_popup: { schema: modifierPopupSchema, Renderer: ModifierPopupRenderer },
+  editorial_collection_list: { schema: editorialCollectionListSchema, blockConfig: editorialCollectionListBlocks, Renderer: EditorialCollectionListRenderer },
+  editorial_collection_detail: { schema: editorialCollectionDetailSchema, blockConfig: editorialCollectionDetailBlocks, Renderer: EditorialCollectionDetailRenderer },
 };
 
 export function schemaForType(type) {

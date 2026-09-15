@@ -23,6 +23,8 @@
       "simulateNotFound": "Simulate page not found",
       "simulateGenerateFailed": "Simulate generation failed",
       "simulateAiUnavailable": "Simulate AI unavailable",
+      "simulateSmallImage": "Simulate image under 1KB",
+      "imageTooSmall": "Image must be at least 1 KB",
       "titleLabel": "Title",
       "generateText": "Generate text",
       "titlePlaceholder": "e.g. About us",
@@ -127,6 +129,7 @@
       "scheduleRequired": "Select a publish date and time.",
       "scheduleMustBeFuture": "Choose a date and time in the future.",
       "columnTitle": "Title",
+      "policyBadge": "Policy",
       "columnVisibility": "Visibility",
       "columnUrl": "URL",
       "columnContent": "Content",
@@ -155,6 +158,88 @@
       "scheduleConfirm": "Schedule",
       "scheduleDateLabel": "Publish date and time",
       "heading": "Pages"
+    },
+    "files": {
+      "heading": "Files",
+      "newFile": "New File",
+      "uploadFile": "Upload file",
+      "uploadFromUrl": "Upload from URL",
+      "addFromUrlTitle": "Add file from URL",
+      "urlFieldLabel": "Image, YouTube, or Vimeo URL",
+      "urlFilenamePlaceholder": "e.g. hero-banner",
+      "addFile": "Add file",
+      "urlInvalidImage": "That URL doesn’t point to a valid image.",
+      "urlInvalidVideo": "That URL doesn’t point to a valid video.",
+      "watchOnProvider": "Watch on {{provider}}",
+      "uploadModalTitle": "Upload File",
+      "upload": "Upload",
+      "save": "Save",
+      "columnPreview": "Preview",
+      "columnFilename": "Filename",
+      "columnFileType": "File Type",
+      "columnDateAdded": "Date Added",
+      "columnFileSize": "File Size",
+      "columnActions": "Actions",
+      "searchPlaceholder": "Search by filename",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days",
+      "noFilesTitle": "No files available yet",
+      "noFilesDescription": "Files will appear here once you upload one.",
+      "unsupportedFileType": "That file type isn’t supported. Please upload an image.",
+      "fileTooLarge": "That image is too large (max 10MB).",
+      "bulkSelectedCount": "{{count}} selected",
+      "downloadTooltip": "Download",
+      "editTooltip": "Edit",
+      "renameFileTitle": "Rename file",
+      "renameFilenameLabel": "File Name",
+      "previewInformation": "Information",
+      "previewDimensions": "Dimensions",
+      "previewUsedIn": "Used in",
+      "previewNotUsed": "Not referenced in your store",
+      "deleteFile": "Delete file",
+      "deleteFiles": "Delete files",
+      "deleteConfirmTitle": "Delete this file?",
+      "deleteConfirmDescription": "This can’t be undone.",
+      "bulkDeleteConfirmTitle": "Delete {{count}} files?"
+    },
+    "menus": {
+      "heading": "Menus",
+      "columnName": "Name",
+      "columnItems": "Items",
+      "columnActions": "Actions",
+      "editTooltip": "Edit",
+      "deleteTooltip": "Delete",
+      "deleteProtectedTooltip": "This menu can't be deleted",
+      "noItemsShort": "No items",
+      "noMenus": "No menus yet",
+      "searchPlaceholder": "Search by menu name",
+      "editMenuTitle": "Edit Menu",
+      "save": "Save",
+      "saveChanges": "Save Changes",
+      "savedSnackbar": "Menu successfully saved",
+      "deletedSnackbar": "Menu successfully deleted",
+      "noItems": "No menu items yet.",
+      "labelPlaceholder": "e.g. About us",
+      "urlPlaceholder": "URL",
+      "addItem": "Add menu item",
+      "addChildItem": "Add menu item to {{label}}",
+      "thisItem": "this item",
+      "expandItem": "Expand",
+      "collapseItem": "Collapse",
+      "createMenuTitle": "Add New Menu",
+      "create": "New Menu",
+      "namePlaceholder": "e.g. Main menu",
+      "nameLabel": "Name",
+      "handlePrefix": "Handle: {{handle}}",
+      "itemLabelField": "Menu Item",
+      "itemLinkField": "Link",
+      "itemFieldRequired": "Field cannot be empty",
+      "linkSearchPlaceholder": "Search or paste link",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete this menu?",
+      "deleteConfirmDescription": "This menu and its items will be permanently deleted.",
+      "deleteConfirm": "Yes, Delete"
     }
   },
   "editor": {
@@ -258,6 +343,8 @@
       "metaDescriptionLabel": "Meta description",
       "metaDescriptionPlaceholder": "Describe this page in 1-2 sentences",
       "rename": "Rename",
+      "saveRename": "Save",
+      "cancelRename": "Cancel",
       "showNav": "Show",
       "hideNav": "Hide",
       "deleteConfirmTitle": "Delete {{name}}? Shoppers visiting this URL will see a 404. This can't be undone.",
@@ -348,6 +435,9 @@
     "fontPickerField": {
       "sampleText": "My Store — the quick brown fox jumps over the lazy dog"
     },
+    "menuReference": {
+      "editMenu": "Edit menu"
+    },
     "imageField": {
       "unsupportedFileType": "Unsupported file type — use JPG, PNG, WebP, or SVG.",
       "fileTooLarge": "File too large — max 10MB",
@@ -365,7 +455,9 @@
   "sections": {
     "common": {
       "noImage": "No image",
-      "link": "Link"
+      "link": "Link",
+      "soldOut": "Sold out",
+      "addToCart": "Add to cart"
     },
     "announcementBar": {
       "defaultMessage": "Free shipping on orders over $50"
@@ -398,6 +490,10 @@
     "dividerSpacer": {
       "label": "Spacer ({{height}}px)"
     },
+    "editorialCollectionDetail": {
+      "home": "Home",
+      "collectionList": "Collection"
+    },
     "faqAccordion": {
       "defaultQuestion": "Question",
       "defaultAnswer": "Answer goes here.",
@@ -409,7 +505,8 @@
     "featuredProducts": {
       "soldOut": "Sold out",
       "defaultHeading": "Featured products",
-      "viewAll": "View all products"
+      "viewAll": "View all products",
+      "collectionEmpty": "No products in this collection yet."
     },
     "footer": {
       "linksHeading": "Links",
@@ -521,6 +618,18 @@
       "addressPlaceholder": "Add your address…",
       "phonePlaceholder": "Add a phone number…",
       "storeHoursPlaceholder": "Add store hours…"
+    },
+    "quoteRequestForm": {
+      "fileTooLarge": "\"{{name}}\" is over 5MB and was not added.",
+      "submitError": "Failed to submit request. Please try again.",
+      "submitSuccess": "Your request has been submitted — we’ll be in touch soon.",
+      "submitting": "Submitting…",
+      "cancel": "Cancel",
+      "addProduct": "Add",
+      "selectProduct": "Select a product…",
+      "removeItem": "Remove",
+      "removeFile": "Remove file",
+      "uploadFiles": "Click to upload files"
     }
   },
   "templates": {

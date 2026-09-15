@@ -84,6 +84,77 @@ describe('builderReducer', () => {
     expect(next.selection.id).toBeNull();
   });
 
+  it('refuses to remove the Shop page\'s designated core catalog_list section', () => {
+    const state = createInitialState({
+      storeId: 'store-1',
+      pages: [
+        { id: 'home', name: 'Home', type: 'system', slug: '/', sections: [], seo: {} },
+        {
+          id: 'shop', name: 'Shop', type: 'system', systemType: 'shop', slug: '/shop', seo: {},
+          sections: [{ id: 'shop-catalog', type: 'catalog_list', data: {} }],
+        },
+      ],
+      theme: {},
+      header: { id: 'header', type: 'header', hidden: false, data: {} },
+      footer: { id: 'footer', type: 'footer', hidden: false, data: {} },
+    });
+    const next = builderReducer(state, { type: ACTIONS.REMOVE_SECTION, pageId: 'shop', sectionId: 'shop-catalog' });
+    expect(next.pages.find((p) => p.id === 'shop').sections).toHaveLength(1);
+  });
+
+  it('refuses to remove the Product page\'s designated core product_detail section', () => {
+    const state = createInitialState({
+      storeId: 'store-1',
+      pages: [
+        { id: 'home', name: 'Home', type: 'system', slug: '/', sections: [], seo: {} },
+        {
+          id: 'product', name: 'Product', type: 'system', systemType: 'product', slug: '/products/:handle', seo: {},
+          sections: [{ id: 'product-default-detail', type: 'product_detail', data: {} }],
+        },
+      ],
+      theme: {},
+      header: { id: 'header', type: 'header', hidden: false, data: {} },
+      footer: { id: 'footer', type: 'footer', hidden: false, data: {} },
+    });
+    const next = builderReducer(state, { type: ACTIONS.REMOVE_SECTION, pageId: 'product', sectionId: 'product-default-detail' });
+    expect(next.pages.find((p) => p.id === 'product').sections).toHaveLength(1);
+  });
+
+  it("refuses to remove the Editorial Collection Detail page's designated core section", () => {
+    const state = createInitialState({
+      storeId: 'store-1',
+      pages: [
+        { id: 'home', name: 'Home', type: 'system', slug: '/', sections: [], seo: {} },
+        {
+          id: 'editorial-collection-detail', name: 'Collection Detail', type: 'system', systemType: 'editorial_collection_detail', slug: '/collection/:slug', seo: {},
+          sections: [{ id: 'editorial-collection-detail-story', type: 'editorial_collection_detail', data: {} }],
+        },
+      ],
+      theme: {},
+      header: { id: 'header', type: 'header', hidden: false, data: {} },
+      footer: { id: 'footer', type: 'footer', hidden: false, data: {} },
+    });
+    const next = builderReducer(state, { type: ACTIONS.REMOVE_SECTION, pageId: 'editorial-collection-detail', sectionId: 'editorial-collection-detail-story' });
+    expect(next.pages.find((p) => p.id === 'editorial-collection-detail').sections).toHaveLength(1);
+  });
+
+  it('still allows removing a non-core section from the Shop page', () => {
+    const state = createInitialState({
+      storeId: 'store-1',
+      pages: [
+        {
+          id: 'shop', name: 'Shop', type: 'system', systemType: 'shop', slug: '/shop', seo: {},
+          sections: [{ id: 'shop-catalog', type: 'catalog_list', data: {} }, { id: 'extra', type: 'hero_banner', data: {} }],
+        },
+      ],
+      theme: {},
+      header: { id: 'header', type: 'header', hidden: false, data: {} },
+      footer: { id: 'footer', type: 'footer', hidden: false, data: {} },
+    });
+    const next = builderReducer(state, { type: ACTIONS.REMOVE_SECTION, pageId: 'shop', sectionId: 'extra' });
+    expect(next.pages.find((p) => p.id === 'shop').sections.map((s) => s.id)).toEqual(['shop-catalog']);
+  });
+
   it('merges partial data on UPDATE_SECTION_DATA without touching other fields', () => {
     let state = makeState();
     state = builderReducer(state, {
@@ -142,10 +213,33 @@ describe('builderReducer', () => {
     });
     expect(next.activeTemplateId).toBe('fnb');
     expect(next.theme.colors).toEqual({ primary: '#6b4f3b' });
-    expect(next.pages).toHaveLength(1);
+    // Template supplied only 'home' — Shop + Product Detail are merged in
+    // automatically (mergeRequiredSystemPages, see defaultTheme.js) since no
+    // page in the template's own list already fills those roles.
+    expect(next.pages).toHaveLength(3);
     expect(next.pages[0].sections).toHaveLength(1);
+    expect(next.pages.map((p) => p.id)).toEqual(['home', 'shop', 'product']);
     expect(next.activePageId).toBe('home');
     expect(next.header.data).toEqual({ foo: 'bar' });
+  });
+
+  it('does not duplicate Shop/Product when a template already defines pages filling those roles', () => {
+    let state = makeState();
+    state = { ...state, activeTemplateId: null };
+    const next = builderReducer(state, {
+      type: ACTIONS.APPLY_SITE_TEMPLATE_SEED,
+      templateId: 'custom-template',
+      theme: {},
+      pages: [
+        { id: 'home', name: 'Home', type: 'system', slug: '/', sections: [], seo: {} },
+        { id: 'shop', name: 'Shop', type: 'system', systemType: 'shop', slug: '/shop', sections: [], seo: {} },
+        { id: 'my-pdp', name: 'PDP', type: 'system', systemType: 'product', slug: '/products/:handle', sections: [], seo: {} },
+      ],
+      header: { id: 'header', type: 'header', hidden: false, data: {} },
+      footer: { id: 'footer', type: 'footer', hidden: false, data: {} },
+    });
+    expect(next.pages).toHaveLength(3);
+    expect(next.pages.map((p) => p.id)).toEqual(['home', 'shop', 'my-pdp']);
   });
 
   it('seeds mediaLibrary from the template media, defaulting to empty when omitted', () => {
@@ -229,6 +323,52 @@ describe('builderReducer', () => {
     const next = builderReducer(state, { type: ACTIONS.DELETE_PAGE, pageId: 'about' });
     expect(next.pages.map((p) => p.id)).toEqual(['home']);
     expect(next.activePageId).toBe('home');
+  });
+
+  it('refuses to delete a required system page (Shop/Product Detail) via DELETE_PAGE', () => {
+    let state = makeState();
+    state = {
+      ...state,
+      pages: [
+        ...state.pages,
+        { id: 'shop', name: 'Shop', type: 'system', systemType: 'shop', slug: '/shop', sections: [], seo: {} },
+        { id: 'product', name: 'Product', type: 'system', systemType: 'product', slug: '/products/:handle', sections: [], seo: {} },
+      ],
+    };
+    let next = builderReducer(state, { type: ACTIONS.DELETE_PAGE, pageId: 'shop' });
+    expect(next.pages.map((p) => p.id)).toEqual(['home', 'shop', 'product']);
+    next = builderReducer(state, { type: ACTIONS.DELETE_PAGE, pageId: 'product' });
+    expect(next.pages.map((p) => p.id)).toEqual(['home', 'shop', 'product']);
+  });
+
+  it('allows deleting Editorial Collection List/Detail — optional system pages, not required like Shop/Product', () => {
+    let state = makeState();
+    state = {
+      ...state,
+      pages: [
+        ...state.pages,
+        { id: 'editorial-collection-list', name: 'Collection', type: 'system', systemType: 'editorial_collection_list', slug: '/collection', sections: [], seo: {} },
+        { id: 'editorial-collection-detail', name: 'Collection Detail', type: 'system', systemType: 'editorial_collection_detail', slug: '/collection/:slug', sections: [], seo: {} },
+      ],
+    };
+    let next = builderReducer(state, { type: ACTIONS.DELETE_PAGE, pageId: 'editorial-collection-list' });
+    expect(next.pages.map((p) => p.id)).not.toContain('editorial-collection-list');
+    next = builderReducer(next, { type: ACTIONS.DELETE_PAGE, pageId: 'editorial-collection-detail' });
+    expect(next.pages.map((p) => p.id)).not.toContain('editorial-collection-detail');
+  });
+
+  it('excludes required system pages from a BULK_DELETE_PAGES set, deleting the rest', () => {
+    let state = makeState();
+    state = {
+      ...state,
+      pages: [
+        ...state.pages,
+        { id: 'shop', name: 'Shop', type: 'system', systemType: 'shop', slug: '/shop', sections: [], seo: {} },
+        { id: 'about', name: 'About', type: 'custom', slug: '/about', sections: [], seo: {} },
+      ],
+    };
+    const next = builderReducer(state, { type: ACTIONS.BULK_DELETE_PAGES, pageIds: ['shop', 'about'] });
+    expect(next.pages.map((p) => p.id)).toEqual(['home', 'shop']);
   });
 
   it('merges partial SEO data for a page', () => {

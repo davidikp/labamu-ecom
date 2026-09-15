@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { resolveColor } from '../../ui/fields/colorValue';
-import { themedButtonStyle } from '../shared/themedButtonStyle';
+import { themedButtonStyle, useThemedButtonHover } from '../shared/themedButtonStyle';
 import catalog from '../../mocks/catalog.json';
 import EditableText from '../../ui/EditableText';
 
@@ -10,6 +10,9 @@ const DEMO_LINE_ITEMS = catalog.products.slice(0, 2).map((product) => ({ product
 
 function CartSummaryRenderer({ data, theme, onEdit }) {
   const subtotal = DEMO_LINE_ITEMS.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
+  const primary = resolveColor({ slot: 'primary' }, theme.colors);
+  const restingStyle = themedButtonStyle(theme.buttons, { primary, primaryText: resolveColor({ slot: 'primary_text' }, theme.colors) });
+  const { style: buttonStyle, hoverHandlers } = useThemedButtonHover(theme.buttons, restingStyle, primary);
 
   return (
     <section className="px-6">
@@ -45,10 +48,7 @@ function CartSummaryRenderer({ data, theme, onEdit }) {
             </div>
           )}
 
-          <span
-            style={themedButtonStyle(theme.buttons, { primary: resolveColor({ slot: 'primary' }, theme.colors), primaryText: resolveColor({ slot: 'primary_text' }, theme.colors) })}
-            className="w-fit"
-          >
+          <span style={buttonStyle} className="w-fit" {...hoverHandlers}>
             {onEdit ? (
               <EditableText value={data.button_label} placeholder="Checkout" onCommit={(v) => onEdit('button_label', v)} />
             ) : (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { Play, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { MediaUploadField } from '../../../ce-ui';
 import { matchesSearch, findUsages } from '../sections/mediaHelpers';
@@ -115,7 +115,23 @@ export default function MediaLibraryPanel({ mode, mediaLibrary, state, onUpload,
                   onClick={() => (mode === 'picker' ? onPick(item) : undefined)}
                   className={'block w-full ' + (mode === 'picker' ? 'cursor-pointer' : '')}
                 >
-                  <img src={item.url} alt={item.filename} className="aspect-square w-full rounded object-cover" />
+                  <span className="relative block">
+                    <img
+                      src={item.mediaType === 'video' ? item.thumbnailUrl : item.url}
+                      alt={item.filename}
+                      className="aspect-square w-full rounded object-cover"
+                    />
+                    {/* Video items (Content > Files "Upload from URL") badged
+                        the same way FilesManagement.jsx's own Preview column
+                        and SelectImageModal.jsx do — pickable like any other
+                        item, but see those files' own comments on why that's
+                        left as-is rather than made video-aware downstream. */}
+                    {item.mediaType === 'video' && (
+                      <span className="absolute inset-0 flex items-center justify-center rounded bg-black/25">
+                        <Play size={16} className="text-white" fill="currentColor" />
+                      </span>
+                    )}
+                  </span>
                 </button>
                 <p className="mt-1 truncate text-[11px] text-gray-600">{item.filename}</p>
                 {item.width && (

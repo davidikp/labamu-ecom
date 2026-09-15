@@ -32,6 +32,8 @@ const DashboardPage = React.lazy(() => import('./pages/Dashboard'));
 const PublicStorefront = React.lazy(() => import('./pages/PublicStorefront'));
 const WebsiteTemplates = React.lazy(() => import('./pages/WebsiteTemplates'));
 const CompanyProfile = React.lazy(() => import('./pages/CompanyProfile'));
+const SettingsIndex = React.lazy(() => import('./pages/SettingsIndex'));
+const PoliciesSettings = React.lazy(() => import('./pages/settings/PoliciesSettings'));
 const CatalogProducts = React.lazy(() => import('./pages/CatalogProducts'));
 const ProductDetail = React.lazy(() => import('./pages/ProductDetail'));
 const ConnectedModifiers = React.lazy(() => import('./pages/ConnectedModifiers'));
@@ -47,11 +49,16 @@ const OrderList = React.lazy(() => import('./pages/OrderList'));
 const OrderDetail = React.lazy(() => import('./pages/OrderDetail'));
 const HouzezPreview = React.lazy(() => import('./pages/websites/templates/houzez/HouzezPreview'));
 const TemplateBuilder = React.lazy(() => import('./pages/websites/TemplateBuilder'));
+const SectionBuilder = React.lazy(() => import('./pages/section-builder/SectionBuilder'));
 const SectionBuilderPreview = React.lazy(() => import('./pages/section-builder/PreviewLive'));
+const ThemeGallery = React.lazy(() => import('./pages/online-store/ThemeGallery'));
 const PagesManagement = React.lazy(() => import('./pages/online-store/PagesManagement'));
 const PageEditor = React.lazy(() => import('./pages/online-store/PageEditor'));
 const ThemePreview = React.lazy(() => import('./pages/online-store/ThemePreview'));
 const PagePreview = React.lazy(() => import('./pages/online-store/PagePreview'));
+const StorePreferences = React.lazy(() => import('./pages/online-store/StorePreferences'));
+const FilesManagement = React.lazy(() => import('./pages/online-store/FilesManagement'));
+const MenusManagement = React.lazy(() => import('./pages/online-store/MenusManagement'));
 
 // Simple mock auth context — replace with real auth later
 function isAuthenticated() {
@@ -90,11 +97,13 @@ export default function App() {
           <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/websites" element={<WebsiteTemplates />} />
-            <Route path="/online-store/theme" element={<ComingSoon />} />
+            <Route path="/online-store/theme" element={<ThemeGallery />} />
             <Route path="/online-store/pages" element={<PagesManagement />} />
             <Route path="/online-store/pages/new" element={<PageEditor />} />
             <Route path="/online-store/pages/:pageId" element={<PageEditor />} />
-            <Route path="/online-store/preferences" element={<ComingSoon />} />
+            <Route path="/online-store/preferences" element={<StorePreferences />} />
+            <Route path="/content/files" element={<FilesManagement />} />
+            <Route path="/content/menus" element={<MenusManagement />} />
             <Route path="/catalog" element={<CatalogProducts />} />
             <Route path="/catalog/bulk-edit" element={<BulkEditCatalog />} />
             <Route path="/catalog/package/bulk-edit" element={<BulkEditCatalog />} />
@@ -115,6 +124,8 @@ export default function App() {
             <Route path="/domain/tracking" element={<ComingSoon />} />
             <Route path="/role-management" element={<ComingSoon />} />
             <Route path="/profile" element={<CompanyProfile />} />
+            <Route path="/settings" element={<SettingsIndex />} />
+            <Route path="/settings/policies" element={<PoliciesSettings />} />
           </Route>
 
           <Route path="/storefront" element={<PublicStorefront />} />
@@ -162,16 +173,15 @@ export default function App() {
           <Route path="/section-builder/:storeId" element={
             <BuilderErrorBoundary>
               <ProtectedRoute>
-                <ComingSoon />
+                <SectionBuilder />
               </ProtectedRoute>
             </BuilderErrorBoundary>
           } />
-          {/* Deep link from Online Store > Pages into a specific page —
-              same as Website Builder, this is disabled behind Coming Soon. */}
+          {/* Deep link from Online Store > Pages into a specific page */}
           <Route path="/section-builder/:storeId/pages/:pageId" element={
             <BuilderErrorBoundary>
               <ProtectedRoute>
-                <ComingSoon />
+                <SectionBuilder />
               </ProtectedRoute>
             </BuilderErrorBoundary>
           } />

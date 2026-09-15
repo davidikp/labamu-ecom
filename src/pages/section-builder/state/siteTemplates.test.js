@@ -56,3 +56,36 @@ describe('SITE_TEMPLATES', () => {
     }
   });
 });
+
+describe('SITE_TEMPLATES — Houzez Collection integration', () => {
+  const houzez = siteTemplateById('houzez');
+
+  it("includes Editorial Collection List/Detail in Houzez's own page roster (not merged in automatically — Collection isn't a REQUIRED_SYSTEM_TYPES page)", () => {
+    const systemTypes = houzez.pages.map((p) => p.systemType);
+    expect(systemTypes).toContain('editorial_collection_list');
+    expect(systemTypes).toContain('editorial_collection_detail');
+  });
+
+  it('gives Houzez Collection List a visible, non-parameterized slug and Collection Detail a hidden, parameterized one', () => {
+    const list = houzez.pages.find((p) => p.systemType === 'editorial_collection_list');
+    const detail = houzez.pages.find((p) => p.systemType === 'editorial_collection_detail');
+    expect(list.slug).toBe('/collection');
+    expect(list.hiddenFromNav).toBe(false);
+    expect(detail.slug).toBe('/collection/:slug');
+    expect(detail.hiddenFromNav).toBe(true);
+  });
+
+  it("exposes Collection in Houzez's Main menu pointing at /collection", () => {
+    const collectionLink = houzez.menus['main-menu'].items.find((l) => l.url === '/collection');
+    expect(collectionLink).toBeTruthy();
+    expect(collectionLink.label).toBe('Collection');
+  });
+
+  it('places Collection within the first nav_overflow_after entries so it renders visibly, not inside the "⋯" overflow menu', () => {
+    const items = houzez.menus['main-menu'].items;
+    const index = items.findIndex((l) => l.url === '/collection');
+    expect(index).toBeGreaterThanOrEqual(0);
+    expect(index).toBeLessThan(items.length);
+    expect(index < houzez.header.nav_overflow_after).toBe(true);
+  });
+});

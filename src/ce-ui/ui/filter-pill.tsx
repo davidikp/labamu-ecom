@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import ReactDOM from "react-dom"
 import { Check, ChevronDown, Loader2, Search } from "lucide-react"
 import { cn, toTestId } from "../lib/utils"
 import { useLocale } from "../locale"
@@ -116,7 +117,13 @@ export const FilterPill: React.FC<FilterPillProps> = ({
   const [open, setOpen] = React.useState(false)
   const [search, setSearch] = React.useState("")
   const ref = React.useRef<HTMLDivElement>(null)
+  const panelRef = React.useRef<HTMLDivElement>(null)
   const sentinelRef = React.useRef<HTMLDivElement>(null)
+  // The panel portals to document.body (see render below) so it can't be
+  // clipped by an ancestor's overflow:hidden (e.g. Table's rounded-card
+  // wrapper) — position is computed from the trigger's own rect instead of
+  // relying on being an absolutely-positioned descendant of it.
+  const [panelPos, setPanelPos] = React.useState<{ top: number; left: number; width: number } | null>(null)
 
   const isCustomSelected = !multiple && value === CUSTOM_VALUE
 
@@ -138,13 +145,41 @@ export const FilterPill: React.FC<FilterPillProps> = ({
   }, [multiple, isCustomSelected, customDateFrom, customDateTo, isSingleActive, value, options, label, resolvedCustomDateLabel])
 
   // ── Click outside ───────────────────────────────────────────────────────────
+  // The portaled panel isn't a DOM descendant of `ref` any more, so it needs
+  // its own contains() check alongside the trigger's.
   React.useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+      const target = e.target as Node
+      if (ref.current?.contains(target)) return
+      if (panelRef.current?.contains(target)) return
+      setOpen(false)
     }
     document.addEventListener("mousedown", handler)
     return () => document.removeEventListener("mousedown", handler)
   }, [])
+
+  // ── Panel position ────────────────────────────────────────────────────────
+  // Recomputed whenever the panel opens and on scroll/resize while it's
+  // open — `true` (capture) so scrolling any clipped/scrollable ancestor
+  // (e.g. Table's internal body scroll) is caught too, since scroll events
+  // don't bubble but do fire during the capture phase.
+  React.useLayoutEffect(() => {
+    if (!open) {
+      setPanelPos(null)
+      return
+    }
+    const updatePosition = () => {
+      const rect = ref.current?.getBoundingClientRect()
+      if (rect) setPanelPos({ top: rect.bottom + 6, left: rect.left, width: rect.width })
+    }
+    updatePosition()
+    window.addEventListener("scroll", updatePosition, true)
+    window.addEventListener("resize", updatePosition)
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true)
+      window.removeEventListener("resize", updatePosition)
+    }
+  }, [open])
 
   // ── Infinite scroll sentinel ─────────────────────────────────────────────────
   React.useEffect(() => {
@@ -247,11 +282,17 @@ export const FilterPill: React.FC<FilterPillProps> = ({
       </button>
 
       {/* ── Dropdown panel ── */}
-      {open && (
+      {/* Portaled to document.body (fixed-positioned from the trigger's own
+          rect, see the layout effect above) so an ancestor's
+          overflow:hidden — e.g. Table's rounded-card wrapper — can't clip
+          it, the way an absolutely-positioned descendant would be. */}
+      {open && panelPos && ReactDOM.createPortal(
         <div
+          ref={panelRef}
           data-testid={`${baseId}_panel`}
+          style={{ top: panelPos.top, left: panelPos.left }}
           className={cn(
-            "absolute top-[calc(100%+6px)] left-0 z-[300]",
+            "fixed z-[300]",
             "w-[260px] bg-lb-surface border border-lb-line-2",
             "rounded-lb-card shadow-lb-filter",
             "p-4 flex flex-col gap-3"
@@ -380,7 +421,8 @@ export const FilterPill: React.FC<FilterPillProps> = ({
               fieldVariant="outlined"
             />
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )

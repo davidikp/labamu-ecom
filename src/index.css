@@ -10,7 +10,24 @@
    Source: labamu-prototype-library-SKILL.md v6.0
    Rules: NEVER hardcode hex values. NEVER add new variables.
          ALWAYS use ONLY the classes defined in this file.
+   Exception (2026-09-02): a --space-* scale was added below —
+   admin back-office density was ~20-25% looser than target
+   (Shopify-admin-like) and had no shared spacing scale to fix
+   consistently from. Use --space-* / the .lb-card-pad,
+   .lb-stack-gap-*, .lb-mb-* classes for any back-office
+   card/section spacing instead of raw Tailwind p-*, gap-*, mb-*.
    ═══════════════════════════════════════════════════════════ */
+
+/* MenusManagement's MenuFormDrawer widens ce-ui's Popup (ce-ui/ui/popup.tsx)
+   past its `platform="desktop"` default of `w-[560px]` to fit the item
+   table's Label/Link columns — same technique as demo-mrp's own
+   `.gm-modal-width` (see components/molecules/GeneralModal.jsx there): a
+   static override class with `!important`, because Popup's `cn()` is a
+   plain string join (no tailwind-merge), so a later utility class in the
+   className string isn't guaranteed to win purely by DOM order, and a
+   dynamic `w-[720px]` string couldn't be picked up by Tailwind's static
+   class scanner anyway. */
+.menu-form-popup { width: 720px !important; max-width: 95vw !important; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -140,6 +157,12 @@ body {
   --radius-small:  8px;
   --radius-xxs:    4px;
 
+  /* ─── Spacing (back-office admin density) ─────────────── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+
   /* ─── Shadows — floating elements only ───────────────── */
   --elevation-sm:            0px 4px 12px 0px rgba(0,0,0,0.12);
   --elevation-btn-hover:     0 2px 8px rgba(0,107,255,0.28);
@@ -221,6 +244,18 @@ body {
   font-family: var(--font-family); font-size: 14px; line-height: 20px;
   letter-spacing: 0.0962px; color: var(--neutral-on-surface-primary);
 }
+
+/* ═══════════════════════════════════════════════════════════
+   [06] Back-office admin spacing (compact/Shopify-like density)
+   Replaces the raw Tailwind p-5/gap-6/gap-5/mb-3/mb-1.5 pattern
+   that repeated across every admin card/section — same visual
+   role, tokenized so the whole back office moves together.
+   ═══════════════════════════════════════════════════════════ */
+.lb-card-pad     { padding: var(--space-lg); }      /* was p-5   (20px) → 16px */
+.lb-stack-gap-lg { gap: var(--space-lg); }          /* was gap-6 (24px) → 16px — column gaps */
+.lb-stack-gap-md { gap: var(--space-md); }          /* was gap-5 (20px) → 12px — stacked cards */
+.lb-mb-heading   { margin-bottom: var(--space-sm); } /* was mb-3   (12px) → 8px — section headings & stacked field gaps */
+.lb-mb-label     { margin-bottom: var(--space-xs); } /* was mb-1.5 (6px)  → 4px — field labels */
 
 /* ─── Labamu Custom Scrollbar (Global) ─── */
 ::-webkit-scrollbar {

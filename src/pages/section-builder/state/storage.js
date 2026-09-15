@@ -14,7 +14,6 @@ const PUBLISHED_KEY_PREFIX = 'sb_published_v1';
 const OT_PUBLISHED_THEME_KEY_PREFIX = 'ot_published_theme_v1';
 const OT_DRAFT_THEMES_KEY_PREFIX = 'ot_draft_themes_v1';
 const OT_STORE_PREFERENCES_KEY_PREFIX = 'ot_store_preferences_v1';
-const OT_PENDING_PREVIEW_KEY_PREFIX = 'ot_pending_preview_v1';
 
 function keyFor(prefix, storeId) {
   return `${prefix}_${storeId}`;
@@ -122,50 +121,4 @@ function saveStorePreferences(storeId, prefs) {
   }
 }
 
-/**
- * PageEditor.jsx's Preview button — a one-shot handoff of the CURRENT,
- * possibly-unsaved form state to the preview tab, so Preview reflects what's
- * on screen right now rather than what was last saved to the draft (the old
- * behavior forced a Save before an edit would show up in Preview).
- * sessionStorage rather than localStorage since this is only meant to reach
- * the one preview tab window.open() is about to spawn — a same-origin tab
- * opened via window.open() (without noopener) gets a clone of the opener's
- * sessionStorage per the HTML spec (see PageEditor.jsx's handlePreview for
- * the same rationale re: the ProtectedRoute session check).
- *
- * One-shot by design: `loadPendingPreview` removes the entry as soon as it
- * reads it, so a plain reload of the preview tab (no fresh Preview click)
- * falls back to the real persisted draft instead of replaying a stale
- * snapshot.
- */
-function savePendingPreview(storeId, page) {
-  try {
-    sessionStorage.setItem(keyFor(OT_PENDING_PREVIEW_KEY_PREFIX, storeId), JSON.stringify(page));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function loadPendingPreview(storeId) {
-  const key = keyFor(OT_PENDING_PREVIEW_KEY_PREFIX, storeId);
-  try {
-    const raw = sessionStorage.getItem(key);
-    if (!raw) return null;
-    sessionStorage.removeItem(key);
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-export {
-  loadPublishedTheme,
-  savePublishedTheme,
-  loadDraftThemes,
-  saveDraftThemes,
-  loadStorePreferences,
-  saveStorePreferences,
-  savePendingPreview,
-  loadPendingPreview,
-};
+export { loadPublishedTheme, savePublishedTheme, loadDraftThemes, saveDraftThemes, loadStorePreferences, saveStorePreferences };

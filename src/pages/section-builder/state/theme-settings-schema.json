@@ -14,6 +14,7 @@
       "text_primary",
       "text_secondary",
       "border",
+      "rating",
       "success",
       "error"
     ]
@@ -170,6 +171,13 @@
           "paletteSlot": "border",
           "default": "#e5e5e5",
           "helpText": "Dividers, card outlines, and input borders."
+        },
+        "rating": {
+          "type": "color",
+          "label": "Rating star color",
+          "paletteSlot": "rating",
+          "default": "#F59E0B",
+          "helpText": "Used for star ratings in testimonials and reviews."
         }
       }
     },
@@ -211,6 +219,16 @@
           "max": 20,
           "step": 2,
           "unit": "px"
+        },
+        "font_size": {
+          "type": "range",
+          "label": "Button label size",
+          "default": null,
+          "min": 12,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "helpText": "Leave unset to inherit the surrounding text size."
         },
         "font_weight": {
           "type": "select",
@@ -263,6 +281,12 @@
             { "value": "lift", "label": "Lift (subtle shadow)" },
             { "value": "none", "label": "None" }
           ]
+        },
+        "hover_color": {
+          "type": "color",
+          "label": "Hover background color",
+          "default": null,
+          "helpText": "Only used by the 'darken'/'lighten' hover effects. Leave unset to approximate it by adjusting the resting background's brightness instead of an exact color."
         }
       }
     },
@@ -279,8 +303,20 @@
           "options": [
             { "value": "1024", "label": "Narrow (1024px)" },
             { "value": "1200", "label": "Standard (1200px — recommended)" },
+            { "value": "1280", "label": "Roomy (1280px)" },
             { "value": "1400", "label": "Wide (1400px)" },
             { "value": "full", "label": "Full bleed (no max width)" }
+          ]
+        },
+        "container_gutter": {
+          "type": "select",
+          "label": "Side padding (gutter)",
+          "default": "standard",
+          "helpText": "Horizontal breathing room between page content and the browser edge. Scales down automatically on smaller screens.",
+          "options": [
+            { "value": "compact", "label": "Compact (16px)" },
+            { "value": "standard", "label": "Standard (24px — recommended)" },
+            { "value": "spacious", "label": "Spacious (40px desktop)" }
           ]
         },
         "section_spacing": {
@@ -318,7 +354,7 @@
         "card_corners": {
           "type": "range",
           "label": "Card corner radius",
-          "default": 4,
+          "default": 6,
           "min": 0,
           "max": 20,
           "step": 2,
@@ -334,6 +370,12 @@
             { "value": "subtle", "label": "Subtle" },
             { "value": "medium", "label": "Medium" }
           ]
+        },
+        "card_border": {
+          "type": "boolean",
+          "label": "Card border",
+          "default": true,
+          "helpText": "Outlines product cards with the theme's border color."
         }
       }
     },

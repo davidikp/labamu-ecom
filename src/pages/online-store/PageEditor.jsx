@@ -4,14 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import { RadioButton, Dropdown, MainBtn, Popup, DateTimeField } from '../../ce-ui';
 import { useSnackbar } from '../../contexts/SnackbarContext';
-import { loadDraft, savePendingPreview } from '../section-builder/state/storage';
+import { loadDraft } from '../section-builder/state/storage';
 import { createFreshState } from '../section-builder/state/useSectionBuilder';
 import { runDraftAction } from '../section-builder/state/runDraftAction';
 import { ACTIONS } from '../section-builder/state/builderReducer';
 import { slugify, isSlugTaken, createPageId, visibilityBucket, pageUrlFor } from '../section-builder/sections/pageHelpers';
-import { schemaForType } from '../section-builder/sections/index';
-import { defaultsForSchema } from '../section-builder/sections/schemaDefaults';
-import { makeBlock } from '../section-builder/sections/blockHelpers';
+import { POLICY_SYSTEM_TYPES } from '../section-builder/state/defaultTheme';
+import { syncSectionsWithContent } from '../section-builder/sections/pageContentSync';
 import ConfirmDialog from '../section-builder/ui/ConfirmDialog';
 import RichTextEditor from './RichTextEditor';
 import GenerateTextModal from './GenerateTextModal';
@@ -60,64 +59,6 @@ function isForcedSaveFailure(name) {
   return name.trim().toLowerCase().includes('(save fail)');
 }
 
-// Stable id for the single auto-generated `rich_text` section that mirrors
-// this page's Title+Content fields — keyed off the page id so it can be
-// found/replaced idempotently on every save (never duplicated) instead of
-// being regenerated with a random uuid each time.
-function contentSyncSectionId(pageId) {
-  return `${pageId}-content-sync`;
-}
-
-// Splits the RichTextEditor's Tiptap HTML into plain-text paragraphs, one
-// per block-level element (<p>, <h1-6>, <li>, ...). The section-builder's
-// own text-block editor (`EditableText`) is a plain contenteditable field,
-// not an HTML renderer — feeding it raw HTML would show literal "<p>" tags
-// while editing (it only gets interpreted as HTML in the site's read-only
-// render). Stripping tags per-paragraph keeps paragraph breaks (as separate
-// blocks) while avoiding that literal-markup artifact in the editor.
-function splitContentIntoParagraphs(html) {
-  if (!html) return [];
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const blocks = Array.from(doc.body.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li'));
-  const source = blocks.length ? blocks : [doc.body];
-  return source
-    .map((el) => el.textContent.trim())
-    .filter(Boolean);
-}
-
-// Builds/refreshes the auto-managed rich_text section mirroring Title
-// (heading block) + Content (one text block per paragraph) so "Edit in
-// Editor" and the section-builder preview show something in sync with the
-// Page Editor fields, not an empty canvas.
-function buildContentSyncSection(pageId, form) {
-  const headingBlock = makeBlock('rich_text', 'heading');
-  headingBlock.data = { ...headingBlock.data, text: form.name };
-
-  const paragraphs = splitContentIntoParagraphs(form.content);
-  const textBlocks = (paragraphs.length ? paragraphs : ['']).map((text) => {
-    const block = makeBlock('rich_text', 'text');
-    block.data = { ...block.data, content: text };
-    return block;
-  });
-
-  return {
-    id: contentSyncSectionId(pageId),
-    type: 'rich_text',
-    data: defaultsForSchema(schemaForType('rich_text')),
-    blocks: [headingBlock, ...textBlocks],
-  };
-}
-
-// Replaces (or inserts) the auto-managed content-sync section within an
-// existing sections array — kept as the FIRST section (matching the
-// natural reading order of a custom page's own Title/Content, ahead of
-// any other authored sections), leaving every other section untouched.
-function syncSectionsWithContent(sections, pageId, form) {
-  const syncId = contentSyncSectionId(pageId);
-  const withoutSync = (sections ?? []).filter((s) => s.id !== syncId);
-  return [buildContentSyncSection(pageId, form), ...withoutSync];
-}
-
 // Duplicate a Page — distinct auto-generated titles ("Copy of X", "Copy of X
 // (2)", ...) instead of always appending the same " copy" suffix, so
 // duplicating the same page repeatedly doesn't produce indistinguishable
@@ -163,6 +104,10 @@ export default function PageEditor() {
   const [draft, setDraft] = useState(() => loadDraft(STORE_ID) ?? createFreshState(STORE_ID));
   const [pageId, setPageId] = useState(routePageId ?? null);
   const existingPage = useMemo(() => draft.pages.find((p) => p.id === pageId) ?? null, [draft, pageId]);
+  // Written-policy pages (Settings > Policies) are reserved: only Content is
+  // editable here — Title/URL handle are locked, matching the reducer guard
+  // in builderReducer.js's UPDATE_PAGE case.
+  const isLockedPolicy = existingPage?.type === 'system' && POLICY_SYSTEM_TYPES.includes(existingPage.systemType);
 
   const initialForm = useMemo(() => {
     const page = existingPage ?? blankPage();
@@ -222,14 +167,27 @@ export default function PageEditor() {
   const [simulateNotFound, setSimulateNotFound] = useState(false);
   // Shared with GenerateTextModal (both the Title field's and the Rich Text
   // Editor's "Generate text" dialogs) so their AI-simulation toggles surface
-  // in this same Simulate panel instead of a separate floating checkbox row
-  // inside each modal.
+  // in this same Simulate panel instead of a separate floating button.
   const [simulateGenFail, setSimulateGenFail] = useState(false);
   const [simulateUnavailable, setSimulateUnavailable] = useState(false);
+  // Also shared with the Rich Text Editor's Insert Image modal — forces the
+  // next upload there to show the "Image must be at least 1 KB" error,
+  // regardless of the file actually picked (see SelectImageModal.jsx).
+  const [simulateSmallImage, setSimulateSmallImage] = useState(false);
 
   // Edit Search Engine Listing — only meaningful once a handle already
   // exists to redirect *from* (a brand-new page has no prior URL yet).
   const handleChanged = !isCreate && pageId && form.urlHandle !== initialForm.urlHandle;
+
+  // A page opened from the Page List that no longer exists in the draft
+  // (deleted elsewhere) — show a not-found state instead of a blank form
+  // silently pretending it's a fresh "Add page". `simulateNotFound` forces
+  // this same state on demand, regardless of the actual route id.
+  const notFound = simulateNotFound || (!isCreate && routePageId && !existingPage && pageId === routePageId);
+
+  const isDirty = formToSnapshot(form) !== savedSnapshot;
+
+  const patchForm = (patch) => setForm((f) => ({ ...f, ...patch }));
 
   // Sets Title, keeping Add New Page's URL handle and SEO "Page title"
   // mirroring it (slugified for the handle, verbatim for metaTitle) live as
@@ -244,16 +202,6 @@ export default function PageEditor() {
     if (isCreate && !metaTitleTouched) patch.metaTitle = name;
     patchForm(patch);
   };
-
-  // A page opened from the Page List that no longer exists in the draft
-  // (deleted elsewhere) — show a not-found state instead of a blank form
-  // silently pretending it's a fresh "Add page". `simulateNotFound` forces
-  // this same state on demand, regardless of the actual route id.
-  const notFound = simulateNotFound || (!isCreate && routePageId && !existingPage && pageId === routePageId);
-
-  const isDirty = formToSnapshot(form) !== savedSnapshot;
-
-  const patchForm = (patch) => setForm((f) => ({ ...f, ...patch }));
 
   // Persists the form (create or update) and returns the page's id, or
   // `null` if the save was rejected (empty title, bad URL handle, an
@@ -294,7 +242,7 @@ export default function PageEditor() {
 
     if (isCreate && !pageId) {
       // URL handle is user-editable in create mode too now (auto-synced
-      // from Title until touched — see the effect above), so a collision
+      // from Title until touched — see setName above), so a collision
       // surfaces as the same inline error Edit Page already shows instead
       // of silently appending a random suffix.
       const normalizedHandle = slugify(form.urlHandle) || slugify(form.name);
@@ -434,50 +382,28 @@ export default function PageEditor() {
     navigate('/online-store/pages');
   };
 
-  // Builds the page Preview should render from the CURRENT form state —
-  // same field derivation persistPage() uses for its ADD_PAGE/UPDATE_PAGE
-  // patch, just not dispatched/saved. Lets Preview show in-progress edits
-  // immediately instead of requiring a Save first (PagePreview.jsx reads
-  // this via the one-shot pending-preview handoff, falling back to the real
-  // persisted draft otherwise).
-  const buildPreviewPage = (previewId) => {
-    const visibility = form.visibilityMode === 'hidden' ? 'hidden' : 'visible';
-    const visibleFrom = form.visibilityMode === 'schedule' ? form.visibleFrom : null;
-    const seo = { metaTitle: form.metaTitle, metaDescription: form.metaDescription };
-    const base = existingPage ?? blankPage();
-    // `form.urlHandle` is populated either way now — auto-synced from Title
-    // in create mode (see the effect above) or seeded from the existing
-    // slug in edit mode — so both branches read the same field.
-    const slug = `/${slugify(form.urlHandle) || slugify(form.name) || previewId}`;
-    return {
-      ...base,
-      id: previewId,
-      name: form.name.trim() || t('sectionBuilder:onlineStore.pageEditor.addNewPageTitle', 'Add New Page'),
-      type: base.type ?? 'custom',
-      slug,
-      content: form.content,
-      template: form.template,
-      seo,
-      visibility,
-      visibleFrom,
-      sections: syncSectionsWithContent(base.sections, previewId, form),
-    };
-  };
-
   const handlePreview = () => {
-    // Add New Page has no persisted id yet — mint a transient one just for
-    // this preview tab (never dispatched to the draft) rather than forcing
-    // a Save first.
-    const previewId = pageId ?? createPageId(form.name || 'untitled-page');
-    savePendingPreview(STORE_ID, buildPreviewPage(previewId));
+    if (!pageId) return;
     // No `noopener`/`noreferrer` here on purpose: this app's route guard
     // (App.jsx's ProtectedRoute) checks `sessionStorage`, which the browser
     // only clones into a same-origin tab opened via window.open() when it
     // keeps the opener relationship. With noopener set, the new tab got a
     // blank sessionStorage and bounced straight to /login instead of
-    // showing the preview (same reason the pending-preview handoff above
-    // reaches that tab at all — see storage.js's savePendingPreview doc).
-    window.open(`/online-store/pages/${previewId}/preview`, '_blank');
+    // showing the preview. This link is our own internal route, not
+    // third-party content, so there's no tab-nabbing risk being traded away.
+    window.open(`/online-store/pages/${pageId}/preview`, '_blank');
+  };
+
+  // Add New Page has no pageId yet — handlePreview above early-returns
+  // without one, since the preview route needs a real, persisted page to
+  // read. So the Preview button in create mode saves first (same as "Edit
+  // in Editor"'s handleSaveThenEditInEditor), then opens the preview for
+  // the page it just created. persistPage() itself already surfaces any
+  // validation failure (e.g. empty title) as an inline field error, so a
+  // null return here just means "don't navigate anywhere."
+  const handleSaveThenPreview = () => {
+    const id = persistPage();
+    if (id) window.open(`/online-store/pages/${id}/preview`, '_blank');
   };
 
   const [confirmUnsavedEditor, setConfirmUnsavedEditor] = useState(false);
@@ -555,6 +481,12 @@ export default function PageEditor() {
       label: t('sectionBuilder:onlineStore.pageEditor.simulateAiUnavailable', 'Simulate AI unavailable'),
       checked: simulateUnavailable,
       onChange: setSimulateUnavailable,
+    },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.pageEditor.simulateSmallImage', 'Simulate image under 1KB'),
+      checked: simulateSmallImage,
+      onChange: setSimulateSmallImage,
     },
   ];
 
@@ -651,13 +583,13 @@ export default function PageEditor() {
       </div>
 
       <div className="w-full px-6 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] lb-stack-gap-lg">
           {/* Main column */}
-          <div className="flex flex-col gap-5">
-            <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <div className="flex items-center justify-between mb-1.5">
+          <div className="flex flex-col lb-stack-gap-md">
+            <div className="bg-white rounded-xl border border-gray-200 lb-card-pad">
+              <div className="flex items-center justify-between lb-mb-label">
                 <label className="block text-sm font-semibold text-gray-800">
-                  * {t('sectionBuilder:onlineStore.pageEditor.titleLabel', 'Title')}
+                  {t('sectionBuilder:onlineStore.pageEditor.titleLabel', 'Title')}
                 </label>
                 <button
                   type="button"
@@ -672,19 +604,20 @@ export default function PageEditor() {
                 <input
                   type="text"
                   value={form.name}
+                  disabled={isLockedPolicy}
                   onChange={(e) => {
                     setName(e.target.value);
                     if (titleError) setTitleError(null);
                   }}
                   placeholder={t('sectionBuilder:onlineStore.pageEditor.titlePlaceholder', 'e.g. About us')}
-                  className={`w-full h-11 rounded-lg border pl-4 pr-4 text-[15px] text-gray-800 outline-none focus:shadow-[0_0_0_3px_rgba(0,107,255,0.12)] ${
+                  className={`w-full h-11 rounded-lg border pl-4 pr-4 text-[15px] text-gray-800 outline-none focus:shadow-[0_0_0_3px_rgba(0,107,255,0.12)] disabled:bg-gray-50 disabled:text-gray-500 ${
                     titleError ? 'border-red-400 focus:border-red-400' : 'border-gray-300 focus:border-[#006BFF]'
                   }`}
                 />
               </div>
               {titleError && <p className="mt-1 text-xs text-red-600">{titleError}</p>}
 
-              <label className="block text-sm font-semibold text-gray-800 mt-5 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mt-5 lb-mb-label">
                 {t('sectionBuilder:onlineStore.pageEditor.contentLabel', 'Content')}
               </label>
               <RichTextEditor
@@ -694,12 +627,13 @@ export default function PageEditor() {
                 onUploadMedia={handleUploadMedia}
                 simulateGenFail={simulateGenFail}
                 simulateUnavailable={simulateUnavailable}
+                simulateSmallImage={simulateSmallImage}
               />
             </div>
 
             {/* Search engine listing */}
-            <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">
+            <div className="bg-white rounded-xl border border-gray-200 lb-card-pad">
+              <h3 className="text-sm font-semibold text-gray-800 lb-mb-heading">
                 {t('sectionBuilder:onlineStore.pageEditor.seoHeading', 'Search engine listing')}
               </h3>
               <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 mb-4">
@@ -717,7 +651,7 @@ export default function PageEditor() {
                 </div>
               </div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                * {t('sectionBuilder:onlineStore.pageEditor.metaTitle', 'Page title')}
+                {t('sectionBuilder:onlineStore.pageEditor.metaTitle', 'Page title')}
               </label>
               <input
                 type="text"
@@ -726,7 +660,7 @@ export default function PageEditor() {
                   if (isCreate) setMetaTitleTouched(true);
                   patchForm({ metaTitle: e.target.value });
                 }}
-                className="w-full h-10 rounded-lg border border-gray-300 px-3 text-sm text-gray-800 outline-none focus:border-[#006BFF] mb-3"
+                className="w-full h-10 rounded-lg border border-gray-300 px-3 text-sm text-gray-800 outline-none focus:border-[#006BFF] lb-mb-heading"
               />
               <label className="block text-xs font-medium text-gray-600 mb-1">
                 {t('sectionBuilder:onlineStore.pageEditor.metaDescription', 'Meta description')}
@@ -735,36 +669,32 @@ export default function PageEditor() {
                 rows={3}
                 value={form.metaDescription}
                 onChange={(e) => patchForm({ metaDescription: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#006BFF] resize-none mb-3"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#006BFF] resize-none lb-mb-heading"
               />
               {/* Shown in both create and edit mode now. In create mode it
                   auto-fills from Title (slugified) until the user edits it
-                  directly — see the urlHandleTouched effect above — so
-                  there's no real URL to copy yet and no prior handle to
-                  offer a redirect from; both of those stay edit-mode-only
-                  below. */}
+                  directly — see setName above — so there's no real URL to
+                  copy yet and no prior handle to offer a redirect from;
+                  both of those stay edit-mode-only below. */}
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-xs font-medium text-gray-600">
-                  * {t('sectionBuilder:onlineStore.pageEditor.urlHandle', 'URL handle')}
+                  {t('sectionBuilder:onlineStore.pageEditor.urlHandle', 'URL handle')}
                 </label>
                 {!isCreate && pageId && <CopyUrlButton url={pageUrlFor(existingPage, storeDomain)} size={13} />}
               </div>
-              <div
-                className={`flex items-center rounded-lg border focus-within:border-[#006BFF] overflow-hidden ${
-                  urlHandleError ? 'border-red-400' : 'border-gray-300'
-                }`}
-              >
+              <div className="flex items-center rounded-lg border border-gray-300 focus-within:border-[#006BFF] overflow-hidden">
                 <span className="pl-3 text-sm text-gray-400">/</span>
                 <input
                   type="text"
                   value={form.urlHandle}
+                  disabled={isLockedPolicy}
                   onChange={(e) => {
                     if (isCreate) setUrlHandleTouched(true);
                     patchForm({ urlHandle: e.target.value });
                     if (urlHandleError) setUrlHandleError(null);
                   }}
                   onBlur={(e) => patchForm({ urlHandle: slugify(e.target.value) })}
-                  className="flex-1 h-10 px-1.5 text-sm text-gray-800 outline-none"
+                  className="flex-1 h-10 px-1.5 text-sm text-gray-800 outline-none disabled:bg-gray-50 disabled:text-gray-500"
                 />
               </div>
               {urlHandleError && <p className="mt-1 text-xs text-red-600">{urlHandleError}</p>}
@@ -787,9 +717,9 @@ export default function PageEditor() {
           </div>
 
           {/* Side column */}
-          <div className="flex flex-col gap-5">
-            <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">
+          <div className="flex flex-col lb-stack-gap-md">
+            <div className="bg-white rounded-xl border border-gray-200 lb-card-pad">
+              <h3 className="text-sm font-semibold text-gray-800 lb-mb-heading">
                 {t('sectionBuilder:onlineStore.pageEditor.visibilityHeading', 'Visibility')}
               </h3>
               <div className="flex flex-col gap-3">
@@ -830,8 +760,8 @@ export default function PageEditor() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">
+            <div className="bg-white rounded-xl border border-gray-200 lb-card-pad">
+              <h3 className="text-sm font-semibold text-gray-800 lb-mb-heading">
                 {t('sectionBuilder:onlineStore.pageEditor.templateHeading', 'Template')}
               </h3>
               <Dropdown
@@ -873,16 +803,26 @@ export default function PageEditor() {
               onClick={openDuplicateModal}
             />
           )}
-          {/* Available in both create and edit mode, and doesn't require a
-              Save first — handlePreview hands the CURRENT (possibly
-              unsaved) form state to the preview tab directly, minting a
-              transient id for Add New Page rather than persisting one. */}
-          <MainBtn
-            variant="secondary"
-            size="lg"
-            label={t('sectionBuilder:onlineStore.pageEditor.preview', 'Preview')}
-            onClick={handlePreview}
-          />
+          {!isCreate && pageId && (
+            <MainBtn
+              variant="secondary"
+              size="lg"
+              label={t('sectionBuilder:onlineStore.pageEditor.preview', 'Preview')}
+              onClick={handlePreview}
+            />
+          )}
+          {/* Add New Page (no pageId yet) — Preview saves the page first,
+              then opens it, instead of only being available once you've
+              already saved once via the primary Save button. */}
+          {isCreate && !pageId && (
+            <MainBtn
+              variant="secondary"
+              size="lg"
+              label={t('sectionBuilder:onlineStore.pageEditor.preview', 'Preview')}
+              onClick={handleSaveThenPreview}
+              disabled={isSaving}
+            />
+          )}
           {!isCreate && pageId && (
             <MainBtn
               variant="secondary"
@@ -910,9 +850,9 @@ export default function PageEditor() {
         title={t('sectionBuilder:onlineStore.pageEditor.deleteConfirmTitle', 'Delete this page?')}
         description={t(
           'sectionBuilder:onlineStore.pageEditor.deleteConfirmDescription',
-          'This can’t be undone.'
+          'This page and its content will be permanently deleted.'
         )}
-        confirmLabel={t('sectionBuilder:onlineStore.pageEditor.delete', 'Delete page')}
+        confirmLabel={t('sectionBuilder:onlineStore.pageEditor.deleteConfirm', 'Yes, Delete')}
         danger
         onConfirm={handleDelete}
         onCancel={() => setConfirmDelete(false)}
@@ -934,7 +874,7 @@ export default function PageEditor() {
           onClick: closeDuplicateModal,
         }}
       >
-        <label className="mb-1.5 block text-xs font-medium text-lb-on-surface-2">
+        <label className="lb-mb-label block text-xs font-medium text-lb-on-surface-2">
           {t('sectionBuilder:onlineStore.pageEditor.duplicatePageTitleLabel', 'Page title')}
         </label>
         <input
@@ -990,9 +930,8 @@ export default function PageEditor() {
         )}
         platform="desktop"
         primaryAction={{
-          label: t('sectionBuilder:onlineStore.pageEditor.discardChangesConfirm', 'Discard changes'),
+          label: t('sectionBuilder:onlineStore.pageEditor.discardChangesConfirm', 'Yes, Discard'),
           onClick: handleConfirmDiscard,
-          destructive: true,
         }}
         secondaryAction={{
           label: t('sectionBuilder:onlineStore.pageEditor.keepEditing', 'Keep editing'),

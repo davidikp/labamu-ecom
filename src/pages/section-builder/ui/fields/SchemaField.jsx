@@ -6,6 +6,7 @@ import SelectField from './SelectField';
 import RangeField from './RangeField';
 import BooleanField from './BooleanField';
 import RepeaterField from './RepeaterField';
+import MenuReferenceField from './MenuReferenceField';
 import ResponsiveFieldWrapper from './ResponsiveFieldWrapper';
 
 const FIELD_COMPONENTS = {
@@ -18,6 +19,7 @@ const FIELD_COMPONENTS = {
   range: RangeField,
   boolean: BooleanField,
   repeater: RepeaterField,
+  menu_reference: MenuReferenceField,
 };
 
 /**
@@ -26,7 +28,7 @@ const FIELD_COMPONENTS = {
  * wrapped so the control edits/displays the value for whichever breakpoint
  * `viewport` (the canvas's current device) is showing.
  */
-export default function SchemaField({ field, value, onChange, palette, mediaLibrary, onAddMedia, onOpenLibrary, activePage, viewport }) {
+export default function SchemaField({ field, value, onChange, palette, mediaLibrary, onAddMedia, onOpenLibrary, activePage, viewport, menus }) {
   const Component = FIELD_COMPONENTS[field.type];
   if (!Component) return null;
 
@@ -43,6 +45,7 @@ export default function SchemaField({ field, value, onChange, palette, mediaLibr
             onAddMedia={onAddMedia}
             onOpenLibrary={onOpenLibrary}
             activePage={activePage}
+            menus={menus}
           />
         )}
       </ResponsiveFieldWrapper>
@@ -59,6 +62,7 @@ export default function SchemaField({ field, value, onChange, palette, mediaLibr
       onAddMedia={onAddMedia}
       onOpenLibrary={onOpenLibrary}
       activePage={activePage}
+      menus={menus}
     />
   );
 }

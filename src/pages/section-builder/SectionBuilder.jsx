@@ -584,6 +584,7 @@ export default function SectionBuilder() {
           onBlockInlineEdit={handleBlockInlineEdit}
           theme={state.theme}
           mediaLibrary={state.mediaLibrary}
+          menus={state.menus}
           currentPath={activePage?.slug}
         />
         {selectedId === THEME_PANEL_SELECTION ? (
@@ -643,6 +644,7 @@ export default function SectionBuilder() {
             onOpenLibrary={handleOpenLibraryPicker}
             activePage={activePage}
             viewport={viewport}
+            menus={state.menus}
             footer={
               selectedEntity && sectionSupportsBlocks(selectedEntity.type) ? (
                 <BlockList

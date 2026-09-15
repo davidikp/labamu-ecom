@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import {
   ExternalLink, Bell, Pencil,
   LayoutDashboard, BookOpen, Store, ShoppingCart, FileText, Calendar,
-  MessageSquare, Truck, Globe, UserCog, ChevronDown, ChevronLeft, ChevronRight, Check,
+  MessageSquare, Truck, Globe, UserCog, ChevronDown, ChevronLeft, ChevronRight, Check, Folder,
+  Settings,
 } from 'lucide-react';
 import Button from './ui/Button';
 import labamuMark from '../assets/labamu-mark.svg';
@@ -25,10 +26,17 @@ const MENU_ITEMS = [
     ],
   },
   {
+    id: 'content', icon: Folder, labelKey: 'dashboard:sidebar.content', label: 'Content',
+    children: [
+      { id: 'files', path: '/content/files', labelKey: 'dashboard:sidebar.files', label: 'Files' },
+      { id: 'menus', path: '/content/menus', labelKey: 'dashboard:sidebar.menus', label: 'Menus' },
+    ],
+  },
+  {
     id: 'website-studio', icon: Store, labelKey: 'dashboard:sidebar.websiteStudio', label: 'Website Studio',
     children: [
-      { id: 'site-builder', path: '/online-store/theme', labelKey: 'dashboard:sidebar.siteBuilder', label: 'Website Builder' },
-      { id: 'page-list', path: '/online-store/pages', labelKey: 'dashboard:sidebar.pageList', label: 'Page List' },
+      { id: 'site-builder', path: '/online-store/theme', labelKey: 'dashboard:sidebar.siteBuilder', label: 'Theme' },
+      { id: 'page-list', path: '/online-store/pages', labelKey: 'dashboard:sidebar.pageList', label: 'Pages' },
       { id: 'preferences', path: '/online-store/preferences', labelKey: 'dashboard:sidebar.preferences', label: 'Preferences' },
     ],
   },
@@ -45,6 +53,14 @@ const MENU_ITEMS = [
     ],
   },
   { id: 'role-management', path: '/role-management', icon: UserCog, labelKey: 'dashboard:sidebar.roleManagement', label: 'Role Management' },
+  {
+    // Settings hub (docs/plans/09-settings-policies.md) — deliberately
+    // minimal: Policies is the only child for now, matching SettingsIndex.jsx.
+    id: 'settings', icon: Settings, labelKey: 'dashboard:sidebar.settings', label: 'Settings',
+    children: [
+      { id: 'settings-policies', path: '/settings/policies', labelKey: 'settings:sidebar.policies', label: 'Policies' },
+    ],
+  },
 ];
 
 export default function Layout() {
@@ -55,9 +71,13 @@ export default function Layout() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState(() =>
-    MENU_ITEMS.filter((item) => item.children?.some((c) => location.pathname.startsWith(c.path))).map((item) => item.id)
-  );
+  // At most one entry — same accordion rule toggleGroup enforces below —
+  // so seeding this from whichever group contains the current route never
+  // starts with more than one group already open.
+  const [expandedGroups, setExpandedGroups] = useState(() => {
+    const match = MENU_ITEMS.find((item) => item.children?.some((c) => location.pathname.startsWith(c.path)));
+    return match ? [match.id] : [];
+  });
   const [hoveredMenuItemId, setHoveredMenuItemId] = useState(null);
   const [hoveredItemRect, setHoveredItemRect] = useState(null);
 
@@ -77,8 +97,12 @@ export default function Layout() {
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [isLanguageMenuOpen]);
 
+  // Accordion — only one top-level group open at a time, so expanding
+  // Website Studio while Content is already open closes Content instead of
+  // stacking both. Clicking the currently-open group still just collapses
+  // it (back to `[]`), same toggle-off behavior as before.
   const toggleGroup = (id) => {
-    setExpandedGroups((prev) => (prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]));
+    setExpandedGroups((prev) => (prev.includes(id) ? [] : [id]));
   };
 
   function handleLogout() {
@@ -124,6 +148,22 @@ export default function Layout() {
         zIndex: 200,
         overflowX: 'hidden',
       }}>
+        {/* Re-themes the nav item rows (top-level + children + the
+            collapsed-state flyout rows below) onto ce-ui SideTabs'
+            (src/ce-ui/ui/side-tabs.tsx) own active/hover tokens —
+            var(--lb-brand), var(--lb-brand-dark), var(--lb-on-surface),
+            var(--lb-surface-grey), the same tokens IconBtn/MainBtn/etc.
+            already use elsewhere — instead of this file's separate
+            feature-brand and neutral variables. Scoped to just the item
+            rows: the header, collapse toggle, and language footer below
+            keep their existing neutral/feature-brand styling.
+            A plain CSS rule (not inline style) since hover has no
+            per-row state to drive it otherwise. */}
+        <style>{`
+          .sidebar-nav-item:not(.sidebar-nav-item--active):hover {
+            background: var(--lb-surface-grey) !important;
+          }
+        `}</style>
         {/* Sidebar Header */}
         <div style={{
           height: '56px',
@@ -154,7 +194,7 @@ export default function Layout() {
             const isParentActive = hasChildren ? isChildActive : isActive(item.path);
             const isExpanded = hasChildren && !isSidebarCollapsed && expandedGroups.includes(item.id);
             const Icon = item.icon;
-            const rowColor = isParentActive ? 'var(--feature-brand-primary)' : 'var(--neutral-on-surface-primary)';
+            const rowColor = isParentActive ? 'var(--lb-brand)' : 'var(--lb-on-surface)';
 
             return (
               <div
@@ -172,16 +212,29 @@ export default function Layout() {
                 <div style={{ padding: isSidebarCollapsed ? '0' : '0 16px' }}>
                   <div style={{ position: 'relative', display: 'flex', justifyContent: isSidebarCollapsed ? 'center' : 'stretch' }}>
                     {isParentActive && (
-                      <div style={{ position: 'absolute', left: isSidebarCollapsed ? 0 : -16, top: '6px', bottom: '6px', width: '5px', borderRadius: '0 999px 999px 0', background: 'var(--feature-brand-primary)' }} />
+                      <div style={{ position: 'absolute', left: isSidebarCollapsed ? 0 : -16, top: '6px', bottom: '6px', width: '5px', borderRadius: '0 999px 999px 0', background: 'var(--lb-brand)' }} />
                     )}
                     <button
                       type="button"
+                      className={`sidebar-nav-item${isParentActive ? ' sidebar-nav-item--active' : ''}`}
                       onClick={() => {
                         if (isSidebarCollapsed) {
                           if (!hasChildren) navigate(item.path);
                           return;
                         }
-                        hasChildren ? toggleGroup(item.id) : navigate(item.path);
+                        if (!hasChildren) {
+                          navigate(item.path);
+                          return;
+                        }
+                        // Opening a still-collapsed group also navigates to
+                        // its first submenu — clicking "Website Studio"
+                        // lands on Theme rather than just revealing the
+                        // list with nothing selected yet. Collapsing an
+                        // already-open group (the toggle-off case) stays a
+                        // pure expand/collapse with no navigation.
+                        const wasExpanded = expandedGroups.includes(item.id);
+                        toggleGroup(item.id);
+                        if (!wasExpanded && item.children[0]) navigate(item.children[0].path);
                       }}
                       style={{
                         width: isSidebarCollapsed ? '44px' : '100%',
@@ -189,7 +242,16 @@ export default function Layout() {
                         padding: isSidebarCollapsed ? '0' : '0 16px',
                         border: 'none',
                         borderRadius: isParentActive ? '14px' : '12px',
-                        background: isParentActive ? 'var(--feature-brand-container-lighter)' : 'transparent',
+                        // A parent with children only ever counts as
+                        // "active" because one of its submenu rows is the
+                        // current route (see isParentActive above) — the
+                        // fill belongs on that actual active child row
+                        // (below), not here too, or both read as "active"
+                        // with no visual distinction between the group and
+                        // the specific page within it. The bold/brand-color
+                        // text and left accent bar still mark the parent as
+                        // "this group is open/current".
+                        background: isParentActive && !hasChildren ? 'var(--lb-brand-dark)' : 'transparent',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: isSidebarCollapsed ? 'center' : 'flex-start',
@@ -223,6 +285,7 @@ export default function Layout() {
                         <button
                           key={child.id}
                           type="button"
+                          className={`sidebar-nav-item${childActive ? ' sidebar-nav-item--active' : ''}`}
                           onClick={() => navigate(child.path)}
                           style={{
                             minHeight: '40px',
@@ -230,11 +293,11 @@ export default function Layout() {
                             margin: 0,
                             border: 'none',
                             borderRadius: '14px',
-                            background: childActive ? 'var(--feature-brand-container-lighter)' : 'transparent',
+                            background: childActive ? 'var(--lb-brand-dark)' : 'transparent',
                             display: 'flex',
                             alignItems: 'center',
                             cursor: 'pointer',
-                            color: childActive ? 'var(--feature-brand-primary)' : 'var(--neutral-on-surface-primary)',
+                            color: childActive ? 'var(--lb-brand)' : 'var(--lb-on-surface)',
                             fontSize: '14px',
                             fontWeight: childActive ? 700 : 500,
                             textAlign: 'left',
@@ -299,6 +362,7 @@ export default function Layout() {
                     <button
                       key={child.id}
                       type="button"
+                      className={`sidebar-nav-item${isActive(child.path) ? ' sidebar-nav-item--active' : ''}`}
                       onClick={() => {
                         navigate(child.path);
                         setHoveredMenuItemId(null);
@@ -306,8 +370,8 @@ export default function Layout() {
                       style={{
                         padding: '12px 16px',
                         border: 'none',
-                        background: isActive(child.path) ? 'var(--feature-brand-container-lighter)' : 'transparent',
-                        color: isActive(child.path) ? 'var(--feature-brand-primary)' : 'var(--neutral-on-surface-primary)',
+                        background: isActive(child.path) ? 'var(--lb-brand-dark)' : 'transparent',
+                        color: isActive(child.path) ? 'var(--lb-brand)' : 'var(--lb-on-surface)',
                         textAlign: 'left',
                         cursor: 'pointer',
                         fontSize: '14px',

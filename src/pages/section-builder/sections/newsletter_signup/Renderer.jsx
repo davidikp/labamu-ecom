@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { themedButtonStyle } from '../shared/themedButtonStyle';
+import { themedButtonStyle, useThemedButtonHover } from '../shared/themedButtonStyle';
 import BlockStream from '../../ui/BlockStream';
 import EditableText from '../../ui/EditableText';
 import { useSectionChrome } from '../../ui/SectionChromeContext';
@@ -16,6 +16,8 @@ function NewsletterSignupRenderer({ data, blocks = [], theme, mediaLibrary, onEd
   // importing resolveSectionScheme and recomputing it here.
   const { background: bg } = useSectionChrome();
   const isSplit = data.layout_style === 'split';
+  const restingButtonStyle = themedButtonStyle(theme.buttons, { primary: '#ffffff', primaryText: bg });
+  const { style: buttonStyle, hoverHandlers } = useThemedButtonHover(theme.buttons, restingButtonStyle, '#ffffff');
 
   return (
     <section className={`px-6 ${isSplit ? '' : 'text-center'}`}>
@@ -34,7 +36,7 @@ function NewsletterSignupRenderer({ data, blocks = [], theme, mediaLibrary, onEd
             placeholder={t('sectionBuilder:sections.newsletterSignup.emailPlaceholder')}
             className="flex-1 rounded-md border border-white/30 bg-white/10 px-3 py-2 text-sm placeholder:text-current/60"
           />
-          <span style={themedButtonStyle(theme.buttons, { primary: '#ffffff', primaryText: bg })}>
+          <span style={buttonStyle} {...hoverHandlers}>
             {onEdit ? (
               <EditableText
                 value={data.button_label}

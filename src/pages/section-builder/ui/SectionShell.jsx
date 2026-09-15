@@ -1,5 +1,6 @@
 import { resolveSectionScheme } from '../sections/shared/sectionChrome';
 import { resolveResponsiveValue } from '../state/resolveResponsive';
+import { resolveContainerWidth } from '../sections/shared/themedLayout';
 import { DEFAULT_BREAKPOINT } from '../themes/breakpoints';
 import { SectionChromeProvider } from './SectionChromeContext';
 
@@ -35,7 +36,10 @@ export default function SectionShell({ data = {}, theme, breakpoint = DEFAULT_BR
         paddingBottom: paddingBottom || undefined,
       }}
     >
-      <div className={fullWidth ? 'w-full' : 'mx-auto w-full max-w-[1200px]'}>
+      <div
+        className={fullWidth ? 'w-full' : 'mx-auto w-full'}
+        style={fullWidth ? undefined : { maxWidth: resolveContainerWidth(theme?.layout) }}
+      >
         <SectionChromeProvider value={scheme}>{children}</SectionChromeProvider>
       </div>
     </div>

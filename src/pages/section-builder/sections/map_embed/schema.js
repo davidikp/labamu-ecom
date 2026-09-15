@@ -11,6 +11,22 @@ export const schema = {
   map_height: { type: 'range', label: 'Map height', min: 200, max: 600, step: 50, default: 400, unit: 'px', group: 'layout' },
   map_height_mobile: { type: 'range', label: 'Map height (mobile)', min: 150, max: 500, step: 50, default: 250, unit: 'px', group: 'mobile' },
   zoom_level: { type: 'range', label: 'Zoom level', min: 10, max: 18, step: 1, default: 14, group: 'layout' },
+  // 'right' (map on the right, text on the left) is the original layout —
+  // unchanged default. 'left' matches the golden-reference Houzez
+  // composition (map first on desktop). Mobile always stacks text-above-map
+  // regardless of this choice — that ordering isn't part of the setting.
+  map_position: {
+    type: 'select', label: 'Map position', default: 'right', group: 'layout',
+    options: [{ value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }],
+  },
+  // 'default': the original generic block-sized heading — unchanged.
+  // 'prominent': a bold, larger content-section heading/subtitle pairing
+  // (see blocks/blockRenderers.jsx's `context: 'section'`), matching the
+  // golden reference's Location heading treatment.
+  heading_style: {
+    type: 'select', label: 'Heading style', default: 'default', group: 'layout',
+    options: [{ value: 'default', label: 'Default' }, { value: 'prominent', label: 'Prominent' }],
+  },
   ...SECTION_CHROME_FIELDS,
   padding_top: { ...SECTION_CHROME_FIELDS.padding_top, default: 40 },
   padding_bottom: { ...SECTION_CHROME_FIELDS.padding_bottom, default: 40 },

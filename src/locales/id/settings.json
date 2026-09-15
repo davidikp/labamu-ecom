@@ -1,0 +1,33 @@
+{
+  "title": "Pengaturan",
+  "sidebar": {
+    "policies": "Kebijakan"
+  },
+  "policies": {
+    "title": "Kebijakan",
+    "subtitle": "Aturan pengembalian dan kebijakan tertulis",
+    "rules": {
+      "title": "Aturan pengembalian dan pembatalan",
+      "subtitle": "Atur ketentuan dan biaya untuk permintaan pengembalian dan pembatalan",
+      "comingSoon": "Segera hadir"
+    },
+    "written": {
+      "title": "Kebijakan tertulis",
+      "subtitle": "Kebijakan ditautkan di footer checkout dan dapat ditambahkan ke menu toko online Anda",
+      "noPolicySet": "Belum ada kebijakan",
+      "set": "Tersedia",
+      "automated": "Otomatis",
+      "contact": "Informasi kontak",
+      "required": "Wajib diisi"
+    },
+    "modal": {
+      "cancel": "Batal",
+      "save": "Simpan",
+      "useAutomated": "Gunakan kebijakan otomatis",
+      "useAutomatedHelp": "Selaraskan konten kebijakan dengan pengaturan toko dan template terbaru",
+      "templateBanner": "Template bukan nasihat hukum. Dengan menggunakan template kebijakan, Anda setuju bahwa Anda telah membaca dan menyetujui",
+      "disclaimer": "disclaimer",
+      "insertTemplate": "Sisipkan template"
+    }
+  }
+}

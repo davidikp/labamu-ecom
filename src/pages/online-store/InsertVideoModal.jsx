@@ -18,6 +18,15 @@ export function extractIframeSrc(snippet) {
  * pipeline in this demo) and doubles as the edit surface when a video
  * already exists in the content: opened with `existingSrc` set, it offers
  * Replace (primary) / Remove (secondary) instead of Insert.
+ *
+ * A "pick one of your Content > Files videos" section briefly lived here
+ * (reusing `mediaType: 'video'` entries via videoUrlHelpers.js's
+ * `embedUrlFor`) but is deliberately pulled back out for now — embed
+ * snippet is the only supported way in again. `embedUrlFor` still exists in
+ * videoUrlHelpers.js and every Files-side video-picking bit (the detail
+ * preview, the video badge in SelectImageModal/MediaLibraryPanel) is
+ * unaffected, so reintroducing this is just wiring `mediaLibrary` back
+ * through, not rebuilding anything.
  */
 export default function InsertVideoModal({ open, existingSrc, onInsert, onRemove, onClose }) {
   const { t } = useTranslation();
@@ -72,7 +81,7 @@ export default function InsertVideoModal({ open, existingSrc, onInsert, onRemove
           : undefined
       }
     >
-      <label className="mb-1.5 block text-xs font-medium text-lb-on-surface-2">
+      <label className="lb-mb-label block text-xs font-medium text-lb-on-surface-2">
         {t('sectionBuilder:onlineStore.pageEditor.videoSnippetLabel', 'Embed snippet')}
       </label>
       <textarea

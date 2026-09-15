@@ -35,8 +35,12 @@ export default function SocialIcon({ platform, url }) {
   const src = ICONS[platform];
   if (!src) return null;
   return (
-    <a href={url || '#'} target="_blank" rel="noreferrer" aria-label={LABELS[platform] || platform}>
-      <img src={src} alt="" aria-hidden className="h-6 w-6" />
+    <a href={url || '#'} target="_blank" rel="noreferrer" aria-label={LABELS[platform] || platform} className="shrink-0">
+      {/* Fixed h-6 w-6 (not e.g. w-6 alone with an intrinsic aspect ratio)
+          keeps the mark square at every breakpoint; shrink-0 on the link
+          stops a squeezed tablet-width footer column's flex row from
+          compressing the icon instead of wrapping. */}
+      <img src={src} alt="" aria-hidden className="h-6 w-6 shrink-0" />
     </a>
   );
 }

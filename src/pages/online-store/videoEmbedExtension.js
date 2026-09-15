@@ -1,4 +1,6 @@
 import { Node, mergeAttributes } from '@tiptap/core';
+import { ReactNodeViewRenderer } from '@tiptap/react';
+import { VideoEmbedNodeView } from './richTextNodeViews';
 
 /**
  * Custom Tiptap node for Rich Text Editor — Insert Video. Renders as a
@@ -8,6 +10,12 @@ import { Node, mergeAttributes } from '@tiptap/core';
  * (width/height/allow attrs) is dropped in favor of a fixed, responsive
  * 16:9 frame, which is what actually needs to render sanely inside a page's
  * prose column regardless of what the original snippet specified.
+ *
+ * `renderHTML` below is still what `editor.getHTML()` serializes to (and
+ * what `parseHTML` reads back) — `addNodeView` only swaps in
+ * `VideoEmbedNodeView` for the *live* editing surface, so the saved content
+ * shape is unchanged; the node view just adds a hover-to-delete "X" that a
+ * plain HTML node has nowhere to attach interactive chrome to.
  */
 export const VideoEmbed = Node.create({
   name: 'videoEmbed',
@@ -52,6 +60,10 @@ export const VideoEmbed = Node.create({
         ({ commands }) =>
           commands.insertContent({ type: this.name, attrs }),
     };
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(VideoEmbedNodeView);
   },
 });
 

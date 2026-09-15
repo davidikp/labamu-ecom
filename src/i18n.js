@@ -9,6 +9,7 @@ import enDelivery from './locales/en/delivery.json';
 import enCatalog from './locales/en/catalog.json';
 import enSectionBuilder from './locales/en/sectionBuilder.json';
 import enOrders from './locales/en/orders.json';
+import enSettings from './locales/en/settings.json';
 
 import idAuth from './locales/id/auth.json';
 import idDashboard from './locales/id/dashboard.json';
@@ -18,6 +19,7 @@ import idDelivery from './locales/id/delivery.json';
 import idCatalog from './locales/id/catalog.json';
 import idSectionBuilder from './locales/id/sectionBuilder.json';
 import idOrders from './locales/id/orders.json';
+import idSettings from './locales/id/settings.json';
 
 const resources = {
   en: {
@@ -29,6 +31,7 @@ const resources = {
     catalog: enCatalog,
     sectionBuilder: enSectionBuilder,
     orders: enOrders,
+    settings: enSettings,
   },
   id: {
     auth: idAuth,
@@ -39,6 +42,7 @@ const resources = {
     catalog: idCatalog,
     sectionBuilder: idSectionBuilder,
     orders: idOrders,
+    settings: idSettings,
   }
 };
 

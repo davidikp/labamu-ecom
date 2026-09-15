@@ -27,7 +27,7 @@ function probeDimensions(src) {
  * product filters would need catalog + live-site data this demo doesn't
  * have wired up, so they're left out rather than faked.
  */
-export default function SelectImageModal({ open, mediaLibrary = [], onUpload, onPick, onClose }) {
+export default function SelectImageModal({ open, mediaLibrary = [], onUpload, onPick, onClose, simulateSmallImage = false }) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [urlValue, setUrlValue] = useState('');
@@ -36,7 +36,14 @@ export default function SelectImageModal({ open, mediaLibrary = [], onUpload, on
   const [selectedId, setSelectedId] = useState(null);
   const fileInputRef = useRef(null);
 
-  const visible = mediaLibrary.filter((item) => matchesSearch(item, query));
+  // This picker's own onPick hands its result straight to setImage({src}),
+  // so a video item (a YouTube/Vimeo watch URL, not an image) has no place
+  // here — filtered out before search, so the empty-library/no-results
+  // states below also read correctly when only videos exist. Content >
+  // Files' own detail preview and Rich Text Editor's *Insert Video* picker
+  // (InsertVideoModal.jsx) are where a video entry stays fully usable.
+  const imageLibrary = mediaLibrary.filter((item) => item.mediaType !== 'video');
+  const visible = imageLibrary.filter((item) => matchesSearch(item, query));
 
   const handleClose = () => {
     setQuery('');
@@ -61,6 +68,15 @@ export default function SelectImageModal({ open, mediaLibrary = [], onUpload, on
     }
     if (file.size > MAX_BYTES) {
       setUploadError(t('sectionBuilder:onlineStore.pageEditor.imageTooLarge', 'That image is too large (max 10MB).'));
+      return;
+    }
+    // Not a real-world check — the media library's own mock data stays
+    // above the 1KB floor on purpose (see siteTemplates.js), so this is
+    // only reachable via the Simulate panel's "Simulate image under 1KB"
+    // toggle, a demo hook for QA to see the error state on demand, same
+    // pattern as simulateSaveError/simulateGenFail elsewhere in this app.
+    if (simulateSmallImage) {
+      setUploadError(t('sectionBuilder:onlineStore.pageEditor.imageTooSmall', 'Image must be at least 1 KB'));
       return;
     }
     setUploadError(null);
@@ -108,7 +124,7 @@ export default function SelectImageModal({ open, mediaLibrary = [], onUpload, on
       title={t('sectionBuilder:onlineStore.pageEditor.selectImageHeading', 'Select image')}
       primaryAction={{
         label: t('sectionBuilder:onlineStore.pageEditor.imageDone', 'Done'),
-        onClick: () => handlePick(mediaLibrary.find((m) => m.id === selectedId)),
+        onClick: () => handlePick(imageLibrary.find((m) => m.id === selectedId)),
         disabled: !selectedId,
       }}
       secondaryAction={{
@@ -146,7 +162,7 @@ export default function SelectImageModal({ open, mediaLibrary = [], onUpload, on
       {uploadError && <p className="mt-2 text-xs text-red-600">{uploadError}</p>}
 
       <div className="mt-4 min-h-[220px]">
-        {mediaLibrary.length === 0 ? (
+        {imageLibrary.length === 0 ? (
           <p className="text-sm text-gray-500">
             {t('sectionBuilder:onlineStore.pageEditor.imageEmptyLibrary', 'No images in your library yet.')}
           </p>
@@ -175,7 +191,7 @@ export default function SelectImageModal({ open, mediaLibrary = [], onUpload, on
       </div>
 
       <div className="mt-4 border-t border-gray-100 pt-4">
-        <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-gray-600">
+        <label className="lb-mb-label flex items-center gap-1.5 text-xs font-medium text-gray-600">
           <LinkIcon size={12} />
           {t('sectionBuilder:onlineStore.pageEditor.imageAddFromUrl', 'Add from URL')}
         </label>

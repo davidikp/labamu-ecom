@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { resolveColor } from '../../ui/fields/colorValue';
-import { themedButtonStyle } from '../shared/themedButtonStyle';
+import { themedButtonStyle, useThemedButtonHover } from '../shared/themedButtonStyle';
 import catalog from '../../mocks/catalog.json';
 import EditableText from '../../ui/EditableText';
 
@@ -11,6 +11,9 @@ const disabledInputClass = 'w-full rounded-md border border-gray-300 px-3 py-2 t
 
 function CheckoutSummaryRenderer({ data, theme, onEdit }) {
   const total = DEMO_LINE_ITEMS.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
+  const primary = resolveColor({ slot: 'primary' }, theme.colors);
+  const restingStyle = themedButtonStyle(theme.buttons, { primary, primaryText: resolveColor({ slot: 'primary_text' }, theme.colors) });
+  const { style: buttonStyle, hoverHandlers } = useThemedButtonHover(theme.buttons, restingStyle, primary);
 
   return (
     <section className="px-6">
@@ -64,10 +67,7 @@ function CheckoutSummaryRenderer({ data, theme, onEdit }) {
         )}
       </div>
 
-      <span
-        style={themedButtonStyle(theme.buttons, { primary: resolveColor({ slot: 'primary' }, theme.colors), primaryText: resolveColor({ slot: 'primary_text' }, theme.colors) })}
-        className="mt-6 inline-block w-fit"
-      >
+      <span style={buttonStyle} className="mt-6 inline-block w-fit" {...hoverHandlers}>
         {onEdit ? (
           <EditableText value={data.button_label} placeholder="Place order" onCommit={(v) => onEdit('button_label', v)} />
         ) : (

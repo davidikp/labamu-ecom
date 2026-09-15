@@ -31,6 +31,7 @@ export default function SettingsPanel({
   removeLabel,
   activePage,
   viewport,
+  menus,
 }) {
   const { t } = useTranslation();
   if (!entity) {
@@ -63,12 +64,12 @@ export default function SettingsPanel({
           <ChevronLeft size={14} /> {t('sectionBuilder:editor.settingsPanel.backToSection', 'Back to section')}
         </button>
       )}
-      <h2 className="mb-3 text-sm font-semibold text-gray-900">{heading}</h2>
+      <h2 className="lb-mb-heading text-sm font-semibold text-gray-900">{heading}</h2>
 
       {groups.map((groupEntry, groupIndex) => (
         <div key={groupEntry.group}>
           {groupIndex > 0 && (
-            <div className="mb-3 mt-5 border-t border-gray-100 pt-4">
+            <div className="lb-mb-heading mt-5 border-t border-gray-100 pt-4">
               <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
                 {labelForGroup(groupEntry.group)}
               </span>
@@ -89,6 +90,7 @@ export default function SettingsPanel({
                     onOpenLibrary={onOpenLibrary}
                     activePage={activePage}
                     viewport={viewport}
+                    menus={menus}
                   />
                   {field.contrastCheck && (
                     <ContrastBadge

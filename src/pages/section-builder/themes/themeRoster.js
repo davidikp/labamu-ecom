@@ -19,7 +19,7 @@ import { themes } from './registry';
 export const THEME_ROSTER = [
   { id: 'xinear', name: 'Xinear', comingSoon: false, previewImage: '/assets/templates/xinear/xinear.png' },
   { id: 'houzez', name: 'Houzez', comingSoon: false, previewImage: '/assets/templates/houzez/houzez.png' },
-  { id: 'barger', name: 'Barger', comingSoon: true, previewImage: '/assets/templates/barger/barger.png' },
+  { id: 'barger', name: 'Barger', comingSoon: false, previewImage: '/assets/templates/barger/barger.png' },
   { id: 'napoli', name: 'Napoli', comingSoon: true, previewImage: '/assets/templates/napoli/napoli.png' },
   { id: 'local', name: 'Local', comingSoon: true, previewImage: '/assets/templates/local/local.png' },
   { id: 'photostoodio', name: 'PhotoStoodio', comingSoon: true, previewImage: '/assets/templates/photostoodio/photostoodio.png' },

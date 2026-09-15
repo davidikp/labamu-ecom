@@ -12,7 +12,7 @@ import SocialIcon from './SocialIcon';
  * the original single layout exactly, so existing drafts/tests without the
  * field are unaffected. Mirrors the pattern in `header/Renderer.jsx`.
  */
-function FooterRenderer({ data, onNavigate, theme, mediaLibrary }) {
+function FooterRenderer({ data, onNavigate, theme, mediaLibrary, isMobile }) {
   const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
   const columns = (data.link_columns ?? []).filter((c) => (c.links ?? []).length > 0);
@@ -42,11 +42,29 @@ function FooterRenderer({ data, onNavigate, theme, mediaLibrary }) {
 
   // Logo row — purely additive, renders nothing when both fields are
   // empty/absent (true for clothing/fnb/manufacture today).
+  //
+  // Two supported shapes, distinguished by whether `logo_text` is set
+  // alongside `logo_image` (existing convention, unchanged):
+  //  - icon + text (Xinear: a small square glyph beside a separate wordmark)
+  //    stays exactly as before — h-6 w-6, gap-2, mb-4.
+  //  - image-only (Houzez: `logo_image` is itself the full icon+wordmark
+  //    lockup, e.g. houzez-logo.png) renders at a taller height with the
+  //    image's own aspect ratio preserved (no more forced 24x24 square
+  //    crop) and skips the redundant text label — matches the golden
+  //    reference's `<img style={{ height: '42px', width: 'auto' }}>`.
   function renderLogoRow() {
     if (!data.logo_text && !logoImage) return null;
+    const isFullLockup = logoImage && !data.logo_text;
     return (
-      <div className="mb-4 flex items-center gap-2">
-        {logoImage && <img src={logoImage.url} alt="" aria-hidden className="h-6 w-6" />}
+      <div className={isFullLockup ? 'mb-8 flex items-center' : 'mb-4 flex items-center gap-2'}>
+        {logoImage && (
+          <img
+            src={logoImage.url}
+            alt=""
+            aria-hidden
+            className={isFullLockup ? 'h-[42px] w-auto object-contain' : 'h-6 w-6'}
+          />
+        )}
         {data.logo_text && <span className="text-lg font-semibold">{data.logo_text}</span>}
       </div>
     );
@@ -83,8 +101,11 @@ function FooterRenderer({ data, onNavigate, theme, mediaLibrary }) {
         <span className="flex gap-2">{t('sectionBuilder:sections.footer.socialPlaceholder')}</span>
       ) : null;
     }
+    // flex-wrap so a squeezed tablet-width column wraps to a second row
+    // instead of shrinking the (shrink-0) icons out of their square shape
+    // — see SocialIcon.jsx.
     return (
-      <span className="flex items-center gap-4">
+      <span className="flex flex-wrap items-center gap-4">
         {socialLinks.map((link, i) => <SocialIcon key={link.id ?? `${link.platform}-${i}`} platform={link.platform} url={link.url} />)}
       </span>
     );
@@ -125,6 +146,34 @@ function FooterRenderer({ data, onNavigate, theme, mediaLibrary }) {
     );
   }
 
+  // A titled social column (e.g. "Follow Us") only makes sense beside real
+  // link columns — same shape as golden reference's 3rd footer column.
+  // `show_social_icons` still gates whether social icons render at all;
+  // `social_heading` only decides *where* (column vs. bottom bar).
+  const socialAsColumn = Boolean(data.social_heading) && columns.length > 0 && data.show_social_icons !== false && socialLinks.length > 0;
+  const showCopyright = data.show_copyright !== false;
+
+  // Desktop-only balanced ratio: brand/contact column 1.5fr, link columns
+  // share 2fr evenly, a trailing social column (if rendered) gets 1fr —
+  // matches Houzez's ~1.5:2:1 golden reference. 'equal' (default) leaves the
+  // flex-wrap/flex-1 row exactly as before — see schema.js. Neither the grid
+  // ratio nor the equal-width `flex-1` row reliably wraps to one-per-row on
+  // its own (both just shrink columns to fit, matching Canvas.jsx's
+  // simulated device-width frame rather than the real browser viewport, so
+  // CSS media queries can't be relied on here — see header/Renderer.jsx's
+  // `isMobile`-prop convention for the same reason) — `isMobile` forces a
+  // true single-column stack, matching the golden reference's mobile layout,
+  // regardless of `column_ratio`.
+  const useBalancedRatio = !isMobile && data.column_ratio === 'balanced' && columns.length > 0;
+  const columnRowStyle = useBalancedRatio
+    ? {
+        display: 'grid',
+        gridTemplateColumns: `minmax(200px, 1.5fr) repeat(${columns.length}, ${2 / columns.length}fr)${socialAsColumn ? ' 1fr' : ''}`,
+      }
+    : undefined;
+  const columnRowClass = isMobile ? 'mb-6 flex flex-col gap-10' : useBalancedRatio ? 'mb-6 gap-8' : 'mb-6 flex flex-wrap gap-8';
+  const columnCellClass = isMobile || useBalancedRatio ? 'min-w-0' : 'flex-1';
+
   // 'columns' (default) — tagline, link columns, and a bottom bar. Original layout.
   return (
     <footer className={['px-6 py-8', topBorderClass].filter(Boolean).join(' ')} style={topBorderStyle}>
@@ -137,37 +186,73 @@ function FooterRenderer({ data, onNavigate, theme, mediaLibrary }) {
         // which is true for `xinear` only today — clothing/fnb/manufacture
         // never populate `link_columns`, so they keep the exact previous
         // full-width-stack-then-nothing-below rendering untouched.
-        <div className="mb-6 flex flex-wrap gap-8">
-          <div className="flex-1">
-            {renderTaglineOrAddress(hasStructuredAddress ? 'text-sm' : 'text-sm opacity-80')}
+        <div className={columnRowClass} style={columnRowStyle}>
+          <div className={columnCellClass}>
+            {/* Structured address (Houzez) gets its own width cap + smaller
+                type/looser leading — golden reference's equivalent brand-
+                column paragraph is 13px/line-height 1.6/max-width 300px, not
+                the column's full ~390px flex width, which is what was
+                causing it to wrap differently. Only applies when
+                hasStructuredAddress is true (Houzez today) — the plain
+                `tagline` branch (Xinear) is untouched. */}
+            {renderTaglineOrAddress(hasStructuredAddress ? 'max-w-[300px] text-[13px] leading-[1.6]' : 'text-sm opacity-80')}
           </div>
           {columns.map((col) => (
-            <div key={col.id} className="flex-1">
+            <div key={col.id} className={columnCellClass}>
               <p className="mb-2 text-sm font-semibold">{col.heading || t('sectionBuilder:sections.footer.linksHeading')}</p>
-              <ul className="space-y-1 text-sm opacity-80">
-                {(col.links ?? []).map((link) => (
-                  <li key={link.id ?? link.label}>{renderLink(link)}</li>
-                ))}
-              </ul>
+              {col.links_layout === '2-column' ? (
+                // Golden reference's "Category" column splits its links into
+                // two vertical groups (first half / second half), not an
+                // interleaved CSS grid — a plain `grid-cols-2` would fill
+                // row-major (item 1 & 2 side by side) instead of golden's
+                // top-to-bottom-then-wrap ordering, so the split is done here.
+                (() => {
+                  const linkList = col.links ?? [];
+                  const half = Math.ceil(linkList.length / 2);
+                  const groups = [linkList.slice(0, half), linkList.slice(half)].filter((g) => g.length > 0);
+                  return (
+                    <div className="flex gap-8">
+                      {groups.map((group, i) => (
+                        <ul key={i} className="space-y-1 text-sm opacity-80">
+                          {group.map((link) => <li key={link.id ?? link.label}>{renderLink(link)}</li>)}
+                        </ul>
+                      ))}
+                    </div>
+                  );
+                })()
+              ) : (
+                <ul className="space-y-1 text-sm opacity-80">
+                  {(col.links ?? []).map((link) => (
+                    <li key={link.id ?? link.label}>{renderLink(link)}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
+          {socialAsColumn && (
+            <div className={columnCellClass}>
+              <p className="mb-2 text-sm font-semibold">{data.social_heading}</p>
+              {renderSocialRow()}
+            </div>
+          )}
         </div>
       ) : (
         renderTaglineOrAddress(hasStructuredAddress ? 'mb-4 max-w-sm text-sm' : 'mb-4 max-w-sm text-sm opacity-80')
       )}
-      {socialLinks.length > 0 ? (
-        // New 3-part bottom bar: icons left, copyright centered, an
-        // invisible spacer right to visually balance the icon row's width
-        // (~5×24px icons + 4×16px gaps ≈ 184px).
+      {!showCopyright && socialAsColumn ? null : socialLinks.length > 0 ? (
+        // 3-part bottom bar: icons left, copyright centered, an invisible
+        // spacer right to visually balance the icon row's width
+        // (~5×24px icons + 4×16px gaps ≈ 184px). Icons only appear here
+        // when they haven't already been rendered as their own column above.
         <div className={['flex items-center text-xs opacity-70', barBorderClass].filter(Boolean).join(' ')} style={barBorderStyle}>
-          <span className="flex items-center gap-4">{renderSocialRow()}</span>
-          <span className="flex-1 text-center">{copyright}</span>
-          <span aria-hidden className="w-[184px]" />
+          {!socialAsColumn && <span className="flex items-center gap-4">{renderSocialRow()}</span>}
+          {showCopyright && <span className="flex-1 text-center">{copyright}</span>}
+          {!socialAsColumn && <span aria-hidden className="w-[184px]" />}
         </div>
       ) : (
         <div className={['flex items-center justify-between text-xs opacity-70', barBorderClass].filter(Boolean).join(' ')} style={barBorderStyle}>
-          <span>{copyright}</span>
-          {renderSocialRow()}
+          {showCopyright && <span>{copyright}</span>}
+          {!socialAsColumn && renderSocialRow()}
         </div>
       )}
     </footer>

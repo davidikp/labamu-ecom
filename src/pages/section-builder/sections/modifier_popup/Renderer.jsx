@@ -1,6 +1,6 @@
 import { memo, useState } from 'react';
 import { resolveColor } from '../../ui/fields/colorValue';
-import { themedButtonStyle } from '../shared/themedButtonStyle';
+import { themedButtonStyle, useThemedButtonHover } from '../shared/themedButtonStyle';
 import { calculateModifiersTotal, validateModifierSelection } from '../../mocks/modifierPricingMock.js';
 import EditableText from '../../ui/EditableText';
 
@@ -49,6 +49,9 @@ function ModifierPopupRenderer({ data, theme, onEdit }) {
   const modifiersTotal = calculateModifiersTotal(groups, selections);
   const requiredValidation = validateModifierSelection(requiredGroup, selections[requiredGroup.id]);
   const canAdd = requiredValidation.valid;
+  const primary = resolveColor({ slot: 'primary' }, theme.colors);
+  const restingAddButtonStyle = themedButtonStyle(theme.buttons, { primary, primaryText: resolveColor({ slot: 'primary_text' }, theme.colors) });
+  const { style: addButtonHoverStyle, hoverHandlers: addButtonHoverHandlers } = useThemedButtonHover(theme.buttons, restingAddButtonStyle, primary);
 
   const selectRequired = (optionId) => {
     setSelections((prev) => ({ ...prev, [requiredGroup.id]: [optionId] }));
@@ -121,11 +124,9 @@ function ModifierPopupRenderer({ data, theme, onEdit }) {
         <div className="flex items-center justify-between border-t border-gray-200 pt-3">
           <span className="text-sm opacity-60">Sticky footer</span>
           <span
-            style={{
-              ...themedButtonStyle(theme.buttons, { primary: resolveColor({ slot: 'primary' }, theme.colors), primaryText: resolveColor({ slot: 'primary_text' }, theme.colors) }),
-              opacity: canAdd ? 1 : 0.5,
-            }}
+            style={{ ...addButtonHoverStyle, opacity: canAdd ? 1 : 0.5 }}
             className="w-fit"
+            {...addButtonHoverHandlers}
           >
             Add to Order – IDR {(BASE_PRICE + modifiersTotal).toLocaleString('id-ID')}
           </span>

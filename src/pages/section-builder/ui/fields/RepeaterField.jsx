@@ -111,10 +111,15 @@ export default function RepeaterField({ field, value, onChange, palette, mediaLi
 
   const addItem = () => {
     const newItem = { id: crypto.randomUUID(), ...defaultsForItemSchema(field.itemSchema) };
-    // Nav-style repeaters (e.g. header.nav_links) default a new link's URL
-    // to whichever page is currently active in the builder — more useful
-    // than always defaulting to "/" regardless of what the merchant is
-    // looking at when they click "Add item".
+    // Nav-style repeaters used to default a new link's URL to whichever page
+    // is currently active in the builder — more useful than always
+    // defaulting to "/" regardless of what the merchant is looking at when
+    // they click "Add item". Content > Menus (US-Content.1) moved header/
+    // footer's own nav off this generic repeater entirely (see their
+    // schema.js's `nav_menu_ref`/`menu_reference` field instead), so no
+    // schema currently sets `autofillUrlFromActivePage` — this branch is
+    // kept, unexercised, as a generic capability any future repeater-backed
+    // nav-style field could still opt into, rather than deleted outright.
     if (field.autofillUrlFromActivePage && 'url' in newItem && activePage?.slug) {
       newItem.url = activePage.slug;
     }

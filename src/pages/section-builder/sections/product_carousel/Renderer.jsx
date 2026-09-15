@@ -3,35 +3,12 @@ import { useTranslation } from 'react-i18next';
 import catalog from '../../mocks/catalog.json';
 import EditableText from '../../ui/EditableText';
 import BlockStream from '../../ui/BlockStream';
+import ProductCard from '../shared/ProductCard';
 import { HEADING_SIZE_CLASS } from '../shared/headingSize';
+import { ASPECT_RATIO_CLASS } from '../shared/imageAspectRatio';
 import { useResponsiveMobile } from '../shared/useResponsiveMobile';
 
-// TODO(catalog integration): sourced from the static mock fixture, same
-// simplification as featured_products/Renderer.jsx.
-function CarouselCard({ product, showPrice, showAddToCart, widthStyle }) {
-  const { t } = useTranslation();
-  const soldOut = product.stock === 0;
-  return (
-    <div className="flex-shrink-0 text-left" style={widthStyle}>
-      <div className="mb-2 flex aspect-square items-center justify-center rounded-md bg-gray-100 text-gray-300">
-        {product.image ? <img src={product.image} alt={product.name} className="h-full w-full rounded-md object-cover" /> : t('sectionBuilder:sections.common.noImage')}
-      </div>
-      <p className="text-sm font-medium text-gray-900">{product.name}</p>
-      {showPrice !== false && <p className="text-sm text-gray-500">${product.price.toFixed(2)}</p>}
-      {showAddToCart && !soldOut && (
-        <button
-          type="button"
-          disabled
-          className="mt-2 w-full rounded-md bg-gray-900 px-3 py-1.5 text-xs font-medium text-white"
-        >
-          {t('sectionBuilder:sections.productCarousel.quickAdd', 'Add to cart')}
-        </button>
-      )}
-    </div>
-  );
-}
-
-function ProductCarouselRenderer({ data, blocks = [], theme, mediaLibrary, onEdit, blockCtx, isMobile }) {
+function ProductCarouselRenderer({ data, blocks = [], theme, mediaLibrary, onEdit, blockCtx, isMobile, onNavigate }) {
   const { t } = useTranslation();
   const mobile = useResponsiveMobile(isMobile);
   const count = data.products_to_show ?? 8;
@@ -40,7 +17,7 @@ function ProductCarouselRenderer({ data, blocks = [], theme, mediaLibrary, onEdi
   const visibleMobile = Number(data.cards_visible_mobile ?? 2);
   const visibleDesktop = Number(data.cards_visible_desktop ?? 4);
   const visible = mobile ? visibleMobile : visibleDesktop;
-  const cardWidthStyle = { width: `calc(${100 / visible}% - 12px)` };
+  const cardWidthStyle = { width: `calc(${100 / visible}% - 12px)`, flexShrink: 0 };
   const headingSizeClass = HEADING_SIZE_CLASS[data.heading_size] ?? HEADING_SIZE_CLASS.medium;
   const scrollRef = useRef(null);
 
@@ -91,7 +68,16 @@ function ProductCarouselRenderer({ data, blocks = [], theme, mediaLibrary, onEdi
         ) : (
           <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-2">
             {products.map((product, i) => (
-              <CarouselCard key={`${product.id}-${i}`} product={product} showPrice={data.show_price} showAddToCart={data.show_add_to_cart} widthStyle={cardWidthStyle} />
+              <ProductCard
+                key={`${product.id}-${i}`}
+                product={product}
+                theme={theme}
+                showPrice={data.show_price}
+                showQuickAdd={data.show_add_to_cart}
+                aspectClass={ASPECT_RATIO_CLASS.square}
+                widthStyle={cardWidthStyle}
+                onNavigate={onNavigate}
+              />
             ))}
           </div>
         )}

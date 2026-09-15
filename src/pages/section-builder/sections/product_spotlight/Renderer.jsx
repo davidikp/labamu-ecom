@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { resolveColor } from '../../ui/fields/colorValue';
-import { themedButtonStyle } from '../shared/themedButtonStyle';
+import { themedButtonStyle, useThemedButtonHover } from '../shared/themedButtonStyle';
 import catalog from '../../mocks/catalog.json';
 import EditableText from '../../ui/EditableText';
 import BlockStream from '../../ui/BlockStream';
@@ -16,6 +16,9 @@ function ProductSpotlightRenderer({ data, blocks = [], theme, mediaLibrary, onEd
   const imageFirst = mobile ? (data.image_position_mobile ?? 'top') === 'top' : data.image_position !== 'right';
   const imageOrder = imageFirst ? 'order-1' : 'order-2';
   const detailsOrder = imageFirst ? 'order-2' : 'order-1';
+  const primary = resolveColor({ slot: 'primary' }, theme.colors);
+  const restingButtonStyle = themedButtonStyle(theme.buttons, { primary, primaryText: resolveColor({ slot: 'primary_text' }, theme.colors) });
+  const { style: addToCartStyle, hoverHandlers } = useThemedButtonHover(theme.buttons, restingButtonStyle, primary);
 
   return (
     <section className="relative px-6">
@@ -70,10 +73,7 @@ function ProductSpotlightRenderer({ data, blocks = [], theme, mediaLibrary, onEd
             </div>
           )}
           {data.show_add_to_cart !== false && (
-            <span
-              style={themedButtonStyle(theme.buttons, { primary: resolveColor({ slot: 'primary' }, theme.colors), primaryText: resolveColor({ slot: 'primary_text' }, theme.colors) })}
-              className="w-fit"
-            >
+            <span style={addToCartStyle} className="w-fit" {...hoverHandlers}>
               {soldOut ? (
                 t('sectionBuilder:sections.productSpotlight.soldOut')
               ) : onEdit ? (

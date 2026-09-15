@@ -29,6 +29,10 @@ export const schema = {
     type: 'select', label: 'Columns on desktop', default: '8', group: 'layout',
     options: [{ value: '4', label: '4' }, { value: '6', label: '6' }, { value: '8', label: '8' }, { value: '10', label: '10' }],
   },
+  columns_tablet: {
+    type: 'select', label: 'Columns on tablet', default: '6', group: 'tablet',
+    options: [{ value: '3', label: '3' }, { value: '4', label: '4' }, { value: '6', label: '6' }],
+  },
   columns_mobile: {
     type: 'select', label: 'Columns on mobile', default: '4', group: 'mobile',
     options: [{ value: '3', label: '3' }, { value: '4', label: '4' }],

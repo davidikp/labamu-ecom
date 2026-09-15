@@ -1,0 +1,33 @@
+{
+  "title": "Settings",
+  "sidebar": {
+    "policies": "Policies"
+  },
+  "policies": {
+    "title": "Policies",
+    "subtitle": "Return rules and written policies",
+    "rules": {
+      "title": "Return and cancellation rules",
+      "subtitle": "Set conditions and fees for return and cancellation requests",
+      "comingSoon": "Coming soon"
+    },
+    "written": {
+      "title": "Written policies",
+      "subtitle": "Policies are linked in the footer of checkout and can be added to your online store menu",
+      "noPolicySet": "No policy set",
+      "set": "Set",
+      "automated": "Automated",
+      "contact": "Contact information",
+      "required": "Required"
+    },
+    "modal": {
+      "cancel": "Cancel",
+      "save": "Save",
+      "useAutomated": "Use automated policy",
+      "useAutomatedHelp": "Keep policy content in sync with store settings and latest templates",
+      "templateBanner": "Templates aren't legal advice. By using policy templates, you agree that you've read and agree to the",
+      "disclaimer": "disclaimer",
+      "insertTemplate": "Insert template"
+    }
+  }
+}

@@ -112,8 +112,8 @@ function DeliveryInfoTab({
   const toOptions = (items) => items.map((i) => ({ value: i.label, label: i.label }));
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 px-5 py-6 w-full">
-      <div className="border border-lb-line-1 rounded-xl p-6 flex flex-col gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 lb-stack-gap-md px-5 py-6 w-full">
+      <div className="border border-lb-line-1 rounded-xl lb-card-pad flex flex-col lb-stack-gap-lg">
         <div>
           <h3 className="font-lb font-lb-bold text-[16px] text-lb-on-surface m-0">{t('purchasability.title')}</h3>
           <p className="font-lb text-[14px] text-lb-on-surface-2 mt-1 mb-0">{t('purchasability.subtitle')}</p>
@@ -139,7 +139,7 @@ function DeliveryInfoTab({
         </div>
       </div>
 
-      <div className="border border-lb-line-1 rounded-xl p-6 flex flex-col gap-6">
+      <div className="border border-lb-line-1 rounded-xl lb-card-pad flex flex-col lb-stack-gap-lg">
         <div>
           <h3 className="font-lb font-lb-bold text-[16px] text-lb-on-surface m-0">{t('pickupInfo.title')}</h3>
           <p className="font-lb text-[14px] text-lb-on-surface-2 mt-1 mb-0">{t('pickupInfo.subtitle')}</p>
@@ -384,7 +384,7 @@ function CourierServiceTab({
   };
 
   return (
-    <div className="flex flex-row gap-5 px-5 py-6 w-full items-start">
+    <div className="flex flex-row lb-stack-gap-md px-5 py-6 w-full items-start">
       <div className="flex flex-col gap-4 w-[320px] shrink-0">
         <div className={`rounded-xl border p-4 flex flex-col gap-4 w-full bg-lb-surface ${lalamoveEnabled && !isOutOfCoverage ? 'border-lb-brand' : 'border-lb-line-1'}`}>
           <div className="flex items-center gap-2">
@@ -404,7 +404,7 @@ function CourierServiceTab({
         </div>
       </div>
 
-      <div className="flex-1 min-w-0 rounded-xl border border-lb-line-1 p-5 flex flex-col gap-4">
+      <div className="flex-1 min-w-0 rounded-xl border border-lb-line-1 lb-card-pad flex flex-col gap-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img src={lalamoveLogo} alt={t('courier.lalamoveName')} className="h-7 w-auto object-contain" />

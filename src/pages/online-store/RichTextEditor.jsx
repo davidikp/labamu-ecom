@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
 import { Extension } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -42,17 +42,30 @@ import {
 } from 'lucide-react';
 import { Tooltip } from '../../ce-ui';
 import { VideoEmbed } from './videoEmbedExtension';
+import { ImageNodeView } from './richTextNodeViews';
 import SelectImageModal from './SelectImageModal';
 import InsertVideoModal, { extractIframeSrc } from './InsertVideoModal';
 import InsertLinkModal from './InsertLinkModal';
 import GenerateTextModal from './GenerateTextModal';
 
-const PARAGRAPH_STYLES = [
-  { value: 'paragraph', label: 'Paragraph' },
-  { value: 'h1', label: 'Heading 1' },
-  { value: 'h2', label: 'Heading 2' },
-  { value: 'h3', label: 'Heading 3' },
-];
+// The stock extension has no hover-to-delete affordance of its own (see
+// richTextNodeViews.jsx's module doc) — `.extend` swaps in ImageNodeView
+// for the live editor only, `getHTML()`'s output (and re-parsing it) stay
+// exactly the stock extension's own, unchanged.
+const ImageWithDelete = Image.extend({
+  addNodeView() {
+    return ReactNodeViewRenderer(ImageNodeView);
+  },
+});
+
+function paragraphStyles(t) {
+  return [
+    { value: 'paragraph', label: t('sectionBuilder:onlineStore.pageEditor.richText.paragraph', 'Paragraph') },
+    { value: 'h1', label: t('sectionBuilder:onlineStore.pageEditor.richText.heading1', 'Heading 1') },
+    { value: 'h2', label: t('sectionBuilder:onlineStore.pageEditor.richText.heading2', 'Heading 2') },
+    { value: 'h3', label: t('sectionBuilder:onlineStore.pageEditor.richText.heading3', 'Heading 3') },
+  ];
+}
 
 const TEXT_COLORS = ['#282828', '#DA1E28', '#F1820C', '#0E8A00', '#006BFF', '#8A3FFC'];
 const BACKGROUND_COLORS = ['#FEF3C7', '#FCE7F3', '#DCFCE7', '#DBEAFE', '#EDE9FE', '#FEE2E2'];
@@ -155,15 +168,67 @@ function ToolbarButton({ active, disabled, title, onClick, children }) {
   );
 }
 
+/**
+ * A single toolbar button that opens a dropdown of related options — used to
+ * group several related buttons (alignment variants, list variants) behind
+ * one icon instead of spending a toolbar slot on each, so the toolbar stays
+ * narrow enough to fit on one row without needing a "More" overflow button.
+ * `icon` reflects the currently-active option (e.g. shows the AlignCenter
+ * glyph once center alignment is active) so the group still communicates
+ * current state at a glance.
+ */
+function DropdownMenuButton({ icon, title, items }) {
+  const Icon = icon;
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef(null);
+  useCloseOnOutsideClick(containerRef, open, () => setOpen(false));
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <ToolbarButton title={title} onClick={() => setOpen((o) => !o)}>
+        <Icon size={16} />
+      </ToolbarButton>
+      {open && (
+        <div className="absolute left-0 top-[calc(100%+4px)] z-20 min-w-[168px] bg-white border border-gray-200 rounded-md shadow-lg py-1">
+          {items.map((item) => (
+            <button
+              key={item.label}
+              type="button"
+              disabled={item.disabled}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => {
+                item.onClick();
+                setOpen(false);
+              }}
+              className={`w-full flex items-center gap-2 text-left px-3 py-1.5 text-sm ${
+                item.disabled
+                  ? 'text-gray-300 cursor-not-allowed'
+                  : item.active
+                  ? 'bg-[#E6F0FF] text-[#006BFF]'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <item.icon size={14} />
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ParagraphStyleDropdown({ editor }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
   useCloseOnOutsideClick(containerRef, open, () => setOpen(false));
   if (!editor) return null;
 
+  const styles = paragraphStyles(t);
   const current =
-    PARAGRAPH_STYLES.find((s) => s.value !== 'paragraph' && editor.isActive('heading', { level: Number(s.value[1]) }))
-      ?.label ?? 'Paragraph';
+    styles.find((s) => s.value !== 'paragraph' && editor.isActive('heading', { level: Number(s.value[1]) }))
+      ?.label ?? styles[0].label;
 
   const applyStyle = (value) => {
     if (value === 'paragraph') editor.chain().focus().setParagraph().run();
@@ -184,7 +249,7 @@ function ParagraphStyleDropdown({ editor }) {
       </button>
       {open && (
         <div className="absolute left-0 top-[calc(100%+4px)] z-20 min-w-[140px] bg-white border border-gray-200 rounded-md shadow-lg py-1">
-          {PARAGRAPH_STYLES.map((s) => (
+          {styles.map((s) => (
             <button
               key={s.value}
               type="button"
@@ -211,6 +276,7 @@ function normalizeHex(value) {
 }
 
 function ColorPicker({ editor }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState('text');
   const [hexInput, setHexInput] = useState('');
@@ -238,7 +304,7 @@ function ColorPicker({ editor }) {
 
   return (
     <div className="relative" ref={containerRef}>
-      <ToolbarButton title="Text color" onClick={() => setOpen((o) => !o)}>
+      <ToolbarButton title={t('sectionBuilder:onlineStore.pageEditor.richText.textColor', 'Text color')} onClick={() => setOpen((o) => !o)}>
         <Palette size={16} />
       </ToolbarButton>
       {open && (
@@ -253,7 +319,7 @@ function ColorPicker({ editor }) {
               }}
               className={`px-2 py-1 text-xs rounded ${tab === 'text' ? 'bg-[#E6F0FF] text-[#006BFF]' : 'text-gray-500 hover:bg-gray-100'}`}
             >
-              Text
+              {t('sectionBuilder:onlineStore.pageEditor.richText.colorTabText', 'Text')}
             </button>
             <button
               type="button"
@@ -264,7 +330,7 @@ function ColorPicker({ editor }) {
               }}
               className={`px-2 py-1 text-xs rounded ${tab === 'background' ? 'bg-[#E6F0FF] text-[#006BFF]' : 'text-gray-500 hover:bg-gray-100'}`}
             >
-              Background
+              {t('sectionBuilder:onlineStore.pageEditor.richText.colorTabBackground', 'Background')}
             </button>
           </div>
           <div className="flex flex-wrap gap-1.5 mb-2">
@@ -301,10 +367,14 @@ function ColorPicker({ editor }) {
               disabled={!hexInput.trim()}
               className="h-7 shrink-0 rounded bg-[#006BFF] px-2.5 text-xs font-medium text-white disabled:opacity-40"
             >
-              Apply
+              {t('sectionBuilder:onlineStore.pageEditor.richText.colorApply', 'Apply')}
             </button>
           </div>
-          {hexError && <p className="mt-1 text-[11px] text-red-600">Enter a valid hex color, e.g. #006BFF.</p>}
+          {hexError && (
+            <p className="mt-1 text-[11px] text-red-600">
+              {t('sectionBuilder:onlineStore.pageEditor.richText.colorHexError', 'Enter a valid hex color, e.g. #006BFF.')}
+            </p>
+          )}
         </div>
       )}
     </div>
@@ -314,39 +384,40 @@ function ColorPicker({ editor }) {
 // Shared by the toolbar's Table dropdown and the cell right-click context
 // menu (see TableContextMenu below) — one list so the two entry points can
 // never drift on which operations exist or what they do.
-function tableMenuItems(editor, insideTable) {
+function tableMenuItems(editor, insideTable, t) {
   return insideTable
     ? [
-        { label: 'Insert row above', run: () => editor.chain().focus().addRowBefore().run() },
-        { label: 'Insert row below', run: () => editor.chain().focus().addRowAfter().run() },
-        { label: 'Insert column before', run: () => editor.chain().focus().addColumnBefore().run() },
-        { label: 'Insert column after', run: () => editor.chain().focus().addColumnAfter().run() },
-        { label: 'Clear row', run: () => clearTableLine(editor, 'row') },
-        { label: 'Clear column', run: () => clearTableLine(editor, 'column') },
-        { label: 'Delete row', run: () => editor.chain().focus().deleteRow().run() },
-        { label: 'Delete column', run: () => editor.chain().focus().deleteColumn().run() },
-        { label: 'Delete table', run: () => editor.chain().focus().deleteTable().run() },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.insertRowAbove', 'Insert row above'), run: () => editor.chain().focus().addRowBefore().run() },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.insertRowBelow', 'Insert row below'), run: () => editor.chain().focus().addRowAfter().run() },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.insertColumnBefore', 'Insert column before'), run: () => editor.chain().focus().addColumnBefore().run() },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.insertColumnAfter', 'Insert column after'), run: () => editor.chain().focus().addColumnAfter().run() },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.clearRow', 'Clear row'), run: () => clearTableLine(editor, 'row') },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.clearColumn', 'Clear column'), run: () => clearTableLine(editor, 'column') },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.deleteRow', 'Delete row'), run: () => editor.chain().focus().deleteRow().run() },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.deleteColumn', 'Delete column'), run: () => editor.chain().focus().deleteColumn().run() },
+        { label: t('sectionBuilder:onlineStore.pageEditor.richText.deleteTable', 'Delete table'), run: () => editor.chain().focus().deleteTable().run() },
       ]
     : [
         {
-          label: 'Insert table',
+          label: t('sectionBuilder:onlineStore.pageEditor.richText.insertTable', 'Insert table'),
           run: () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
         },
       ];
 }
 
 function TableMenu({ editor }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
   useCloseOnOutsideClick(containerRef, open, () => setOpen(false));
   if (!editor) return null;
 
   const insideTable = editor.isActive('table');
-  const items = tableMenuItems(editor, insideTable);
+  const items = tableMenuItems(editor, insideTable, t);
 
   return (
     <div className="relative" ref={containerRef}>
-      <ToolbarButton title="Table" active={insideTable} onClick={() => setOpen((o) => !o)}>
+      <ToolbarButton title={t('sectionBuilder:onlineStore.pageEditor.richText.table', 'Table')} active={insideTable} onClick={() => setOpen((o) => !o)}>
         <TableIcon size={16} />
       </ToolbarButton>
       {open && (
@@ -394,6 +465,7 @@ function tableDepthAt($pos) {
 const TABLE_CONTEXT_MENU_WIDTH = 200;
 
 function TableContextMenu({ editor }) {
+  const { t } = useTranslation();
   const [menu, setMenu] = useState(null); // { x, y } in viewport coords, or null
   const menuRef = useRef(null);
   useCloseOnOutsideClick(menuRef, Boolean(menu), () => setMenu(null));
@@ -423,7 +495,7 @@ function TableContextMenu({ editor }) {
   }, [editor]);
 
   if (!menu) return null;
-  const items = tableMenuItems(editor, true);
+  const items = tableMenuItems(editor, true, t);
 
   return (
     <div
@@ -513,8 +585,14 @@ export default function RichTextEditor({
   placeholder,
   mediaLibrary = [],
   onUploadMedia,
-  simulateGenFail = false,
-  simulateUnavailable = false,
+  simulateGenFail,
+  simulateUnavailable,
+  simulateSmallImage,
+  // View-only mode (e.g. Settings > Policies' automated Privacy policy,
+  // PolicyEditorModal.jsx) — content is still rendered through the real
+  // Tiptap editor (so it looks/scrolls identically to the editable case),
+  // just non-editable with the toolbar visually disabled.
+  editable = true,
 }) {
   const { t } = useTranslation();
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -542,7 +620,7 @@ export default function RichTextEditor({
       Color,
       Highlight.configure({ multicolor: true }),
       Link.configure({ openOnClick: false, autolink: true }),
-      Image,
+      ImageWithDelete,
       VideoEmbed,
       Table.configure({ resizable: true }),
       TableRow,
@@ -552,25 +630,39 @@ export default function RichTextEditor({
       CellFocusHighlight,
     ],
     content: value || '',
+    editable,
     editorProps: {
       attributes: {
-        class: 'rich-text-editor-content prose prose-sm max-w-none min-h-[220px] px-4 py-3 outline-none',
+        class: 'rich-text-editor-content prose prose-sm max-w-none min-h-[160px] px-4 py-3 outline-none',
         'data-placeholder': placeholder || '',
       },
     },
     onUpdate: ({ editor: ed }) => onChange?.(ed.getHTML()),
   });
 
-  // Keep the editor in sync when `value` is replaced from outside (e.g. a
-  // fresh page load) without fighting the user's own typing.
+  // Keep the editor in sync when `value` is replaced from outside — either
+  // a fresh page load, or a programmatic replace like "Insert template"
+  // (PolicyEditorModal.jsx) / toggling Privacy's automated content off —
+  // without fighting the user's own typing. `value` is in the dependency
+  // list (not just `editor`) so those later external replacements actually
+  // reach the editor; this is safe against feedback loops because when the
+  // change *originated* from the editor itself (via onUpdate -> onChange),
+  // editor.getHTML() already equals the new `value` by the time this runs,
+  // so the condition below is false and setContent is skipped.
   useEffect(() => {
     if (!editor) return;
     const current = editor.getHTML();
     if (value !== current && (value || '') !== current) {
       editor.commands.setContent(value || '', { emitUpdate: false });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor]);
+  }, [editor, value]);
+
+  // useEditor's `editable` option is only read on creation — flip it
+  // imperatively so toggling the prop (e.g. the automated-policy toggle)
+  // doesn't require recreating the whole editor instance.
+  useEffect(() => {
+    editor?.setEditable(editable);
+  }, [editor, editable]);
 
   const existingLinkUrl = editor?.isActive('link') ? editor.getAttributes('link').href : null;
 
@@ -642,95 +734,125 @@ export default function RichTextEditor({
           autoFocus
           value={htmlDraft}
           onChange={(e) => setHtmlDraft(e.target.value)}
-          className="min-h-[220px] w-full resize-y px-4 py-3 font-mono text-xs text-gray-800 outline-none"
+          className="min-h-[160px] w-full resize-y px-4 py-3 font-mono text-xs text-gray-800 outline-none"
         />
       </div>
     );
   }
 
+  // Alignment and list are collapsed behind one dropdown button each (rather
+  // than one toolbar slot per variant) so the toolbar comfortably fits on one
+  // row without needing an overflow/"More" mechanism — each button's icon
+  // reflects whichever variant is currently active. Indent/outdent stay as
+  // their own direct buttons since they aren't list "variants", just nesting
+  // controls. Generate-with-AI leads the toolbar (left of the font/paragraph
+  // options) rather than trailing it, per the Page Editor's Content field.
+  const alignIcon = editor?.isActive({ textAlign: 'center' })
+    ? AlignCenter
+    : editor?.isActive({ textAlign: 'right' })
+    ? AlignRight
+    : editor?.isActive({ textAlign: 'justify' })
+    ? AlignJustify
+    : AlignLeft;
+
+  const listIcon = editor?.isActive('orderedList') ? ListOrdered : List;
+
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-gray-200 px-2 py-1.5 bg-gray-50">
+    <div className={`border border-gray-200 rounded-lg overflow-hidden bg-white ${editable ? '' : 'opacity-60'}`}>
+      <div
+        className="flex flex-wrap items-center gap-0.5 border-b border-gray-200 px-2 py-1.5 bg-gray-50"
+        style={editable ? undefined : { pointerEvents: 'none' }}
+      >
+        <ToolbarButton title={t('sectionBuilder:onlineStore.pageEditor.richText.generateText', 'Generate text with Labamu AI')} onClick={() => setGenerateOpen(true)}>
+          <Sparkles size={16} className="text-[#8A3FFC]" />
+        </ToolbarButton>
+        <div className="w-px h-5 bg-gray-200 mx-1" />
         <ParagraphStyleDropdown editor={editor} />
         <div className="w-px h-5 bg-gray-200 mx-1" />
         <ToolbarButton
-          title="Bold"
+          title={t('sectionBuilder:onlineStore.pageEditor.richText.bold', 'Bold')}
           active={editor?.isActive('bold')}
           onClick={() => editor?.chain().focus().toggleBold().run()}
         >
           <Bold size={16} />
         </ToolbarButton>
         <ToolbarButton
-          title="Italic"
+          title={t('sectionBuilder:onlineStore.pageEditor.richText.italic', 'Italic')}
           active={editor?.isActive('italic')}
           onClick={() => editor?.chain().focus().toggleItalic().run()}
         >
           <Italic size={16} />
         </ToolbarButton>
         <ToolbarButton
-          title="Underline"
+          title={t('sectionBuilder:onlineStore.pageEditor.richText.underline', 'Underline')}
           active={editor?.isActive('underline')}
           onClick={() => editor?.chain().focus().toggleUnderline().run()}
         >
           <UnderlineIcon size={16} />
         </ToolbarButton>
         <ColorPicker editor={editor} />
-        <ToolbarButton title="Clear formatting" onClick={clearFormatting}>
+        <ToolbarButton title={t('sectionBuilder:onlineStore.pageEditor.richText.clearFormatting', 'Clear formatting')} onClick={clearFormatting}>
           <Eraser size={16} />
         </ToolbarButton>
         <div className="w-px h-5 bg-gray-200 mx-1" />
-        <ToolbarButton
-          title="Align left"
-          active={editor?.isActive({ textAlign: 'left' })}
-          onClick={() => editor?.chain().focus().setTextAlign('left').run()}
-        >
-          <AlignLeft size={16} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Align center"
-          active={editor?.isActive({ textAlign: 'center' })}
-          onClick={() => editor?.chain().focus().setTextAlign('center').run()}
-        >
-          <AlignCenter size={16} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Align right"
-          active={editor?.isActive({ textAlign: 'right' })}
-          onClick={() => editor?.chain().focus().setTextAlign('right').run()}
-        >
-          <AlignRight size={16} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Justify"
-          active={editor?.isActive({ textAlign: 'justify' })}
-          onClick={() => editor?.chain().focus().setTextAlign('justify').run()}
-        >
-          <AlignJustify size={16} />
-        </ToolbarButton>
+        <DropdownMenuButton
+          icon={alignIcon}
+          title={t('sectionBuilder:onlineStore.pageEditor.richText.alignment', 'Alignment')}
+          items={[
+            {
+              icon: AlignLeft,
+              label: t('sectionBuilder:onlineStore.pageEditor.richText.alignLeft', 'Align left'),
+              active: editor?.isActive({ textAlign: 'left' }),
+              onClick: () => editor?.chain().focus().setTextAlign('left').run(),
+            },
+            {
+              icon: AlignCenter,
+              label: t('sectionBuilder:onlineStore.pageEditor.richText.alignCenter', 'Align center'),
+              active: editor?.isActive({ textAlign: 'center' }),
+              onClick: () => editor?.chain().focus().setTextAlign('center').run(),
+            },
+            {
+              icon: AlignRight,
+              label: t('sectionBuilder:onlineStore.pageEditor.richText.alignRight', 'Align right'),
+              active: editor?.isActive({ textAlign: 'right' }),
+              onClick: () => editor?.chain().focus().setTextAlign('right').run(),
+            },
+            {
+              icon: AlignJustify,
+              label: t('sectionBuilder:onlineStore.pageEditor.richText.alignJustify', 'Justify'),
+              active: editor?.isActive({ textAlign: 'justify' }),
+              onClick: () => editor?.chain().focus().setTextAlign('justify').run(),
+            },
+          ]}
+        />
         <div className="w-px h-5 bg-gray-200 mx-1" />
+        <DropdownMenuButton
+          icon={listIcon}
+          title={t('sectionBuilder:onlineStore.pageEditor.richText.list', 'List')}
+          items={[
+            {
+              icon: List,
+              label: t('sectionBuilder:onlineStore.pageEditor.richText.bulletedList', 'Bulleted list'),
+              active: editor?.isActive('bulletList'),
+              onClick: () => editor?.chain().focus().toggleBulletList().run(),
+            },
+            {
+              icon: ListOrdered,
+              label: t('sectionBuilder:onlineStore.pageEditor.richText.numberedList', 'Numbered list'),
+              active: editor?.isActive('orderedList'),
+              onClick: () => editor?.chain().focus().toggleOrderedList().run(),
+            },
+          ]}
+        />
         <ToolbarButton
-          title="Bulleted list"
-          active={editor?.isActive('bulletList')}
-          onClick={() => editor?.chain().focus().toggleBulletList().run()}
-        >
-          <List size={16} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Numbered list"
-          active={editor?.isActive('orderedList')}
-          onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-        >
-          <ListOrdered size={16} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Indent"
+          title={t('sectionBuilder:onlineStore.pageEditor.richText.indent', 'Indent')}
           disabled={!editor?.can().sinkListItem('listItem')}
           onClick={() => editor?.chain().focus().sinkListItem('listItem').run()}
         >
           <IndentIncrease size={16} />
         </ToolbarButton>
         <ToolbarButton
-          title="Outdent"
+          title={t('sectionBuilder:onlineStore.pageEditor.richText.outdent', 'Outdent')}
           disabled={!editor?.can().liftListItem('listItem')}
           onClick={() => editor?.chain().focus().liftListItem('listItem').run()}
         >
@@ -738,33 +860,33 @@ export default function RichTextEditor({
         </ToolbarButton>
         <div className="w-px h-5 bg-gray-200 mx-1" />
         <ToolbarButton
-          title={editor?.state.selection.empty ? 'Select text first to add a link' : 'Link'}
+          title={
+            editor?.state.selection.empty
+              ? t('sectionBuilder:onlineStore.pageEditor.richText.selectTextFirst', 'Select text first to add a link')
+              : t('sectionBuilder:onlineStore.pageEditor.richText.link', 'Link')
+          }
           disabled={editor?.state.selection.empty && !editor?.isActive('link')}
           active={editor?.isActive('link')}
           onClick={() => setLinkModalOpen(true)}
         >
           <LinkIcon size={16} />
         </ToolbarButton>
-        <ToolbarButton title="Image" onClick={() => setImageModalOpen(true)}>
+        <ToolbarButton title={t('sectionBuilder:onlineStore.pageEditor.richText.image', 'Image')} onClick={() => setImageModalOpen(true)}>
           <ImageIcon size={16} />
         </ToolbarButton>
-        <ToolbarButton title="Video" active={editor?.isActive('videoEmbed')} onClick={() => setVideoModalOpen(true)}>
+        <ToolbarButton title={t('sectionBuilder:onlineStore.pageEditor.richText.video', 'Video')} active={editor?.isActive('videoEmbed')} onClick={() => setVideoModalOpen(true)}>
           <Video size={16} />
         </ToolbarButton>
         <TableMenu editor={editor} />
         <ToolbarButton
-          title="Code block"
+          title={t('sectionBuilder:onlineStore.pageEditor.richText.codeBlock', 'Code block')}
           active={editor?.isActive('codeBlock')}
           onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
         >
           <Code size={16} />
         </ToolbarButton>
-        <ToolbarButton title="HTML view" onClick={enterHtmlMode}>
+        <ToolbarButton title={t('sectionBuilder:onlineStore.pageEditor.richText.htmlView', 'HTML view')} onClick={enterHtmlMode}>
           <Code2 size={16} />
-        </ToolbarButton>
-        <div className="w-px h-5 bg-gray-200 mx-1" />
-        <ToolbarButton title="Generate text with Labamu AI" onClick={() => setGenerateOpen(true)}>
-          <Sparkles size={16} className="text-[#8A3FFC]" />
         </ToolbarButton>
       </div>
       <EditorContent editor={editor} />
@@ -822,6 +944,7 @@ export default function RichTextEditor({
         onUpload={(item) => onUploadMedia?.(item)}
         onPick={(url) => editor?.chain().focus().setImage({ src: url }).run()}
         onClose={() => setImageModalOpen(false)}
+        simulateSmallImage={simulateSmallImage}
       />
 
       <InsertLinkModal
