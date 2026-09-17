@@ -2,15 +2,17 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { Trash2, Plus, GripVertical, Pencil, ChevronDown, ChevronRight } from 'lucide-react';
+import { Trash2, Plus, GripVertical, Pencil, ChevronDown, ChevronRight, Info, RotateCcw } from 'lucide-react';
 import { Table, MainBtn, TextField, Popup, IconBtn, Tooltip } from '../../ce-ui';
 import { loadOrSeedDemoDraft } from '../section-builder/state/demoBootstrap';
 import { runDraftAction } from '../section-builder/state/runDraftAction';
-import { ACTIONS, PROTECTED_MENU_IDS } from '../section-builder/state/builderReducer';
+import { ACTIONS, PROTECTED_MENU_IDS, DEFAULT_MENU_ITEMS } from '../section-builder/state/builderReducer';
 import { slugify } from '../section-builder/sections/pageHelpers';
 import PageLinkCombobox from '../section-builder/ui/fields/PageLinkCombobox';
 import ConfirmDialog from '../section-builder/ui/ConfirmDialog';
 import { useSnackbar } from '../../contexts/SnackbarContext';
+import SimulateTrigger from './SimulateTrigger';
+import { THEME_ROSTER } from '../section-builder/themes/themeRoster';
 import {
   MAX_DEPTH,
   INDENT_WIDTH,
@@ -29,6 +31,7 @@ import {
 // exists — matches the hardcoded id used by Layout.jsx's builder entry and
 // PagesManagement.jsx/FilesManagement.jsx.
 const STORE_ID = 'demo';
+const MENU_NAME_MAX_LENGTH = 40;
 
 /**
  * A horizontal insertion-point marker (circle + line), shown just above the
@@ -235,6 +238,10 @@ function MenuItemRow({ item, pages, error, depth, nextDepth, isDragging, expande
  */
 function MenuFormDrawer({ menu, isNew, pages, onSave, onClose }) {
   const { t } = useTranslation();
+  // Save is faked as a brief network round-trip — a fixed 800ms spinner on
+  // the primary button before onSave (which may itself fail/conflict, see
+  // MenusManagement's handleSaveExisting/handleSaveNew) actually runs.
+  const [saving, setSaving] = useState(false);
   const [name, setName] = useState(menu?.name ?? '');
   const [items, setItems] = useState(() => (menu?.items ?? []).map((item) => ({ ...item })));
   // Keyed by item id — `{ label: bool, url: bool }`. Once a row exists (added
@@ -280,6 +287,19 @@ function MenuFormDrawer({ menu, isNew, pages, onSave, onClose }) {
     // SAVE_MENU/render paths (header/footer Renderer.jsx) already treat an
     // empty url as just another free-text value, so no fallback is needed.
     setItems((prev) => [...prev, { id: crypto.randomUUID(), label: '', url: '' }]);
+  };
+
+  // "Restore to Default" — only offered for the two protected menus
+  // (main-menu/footer-menu), each of which has a canonical factory item list
+  // in builderReducer.js's DEFAULT_MENU_ITEMS. Wholesale-replaces the
+  // in-progress items (not merged/appended) and clears any stale per-item
+  // validation errors, mirroring how loading an existing menu into this
+  // drawer seeds `items` in the first place.
+  const canRestoreDefault = menu && PROTECTED_MENU_IDS.includes(menu.id);
+  const restoreDefaultItems = () => {
+    const defaults = DEFAULT_MENU_ITEMS[menu.id] ?? [];
+    setItems(defaults.map((item) => ({ ...item })));
+    setItemErrors({});
   };
 
   // Adds a brand-new child under `parentId` (at any depth up to MAX_DEPTH -
@@ -335,7 +355,14 @@ function MenuFormDrawer({ menu, isNew, pages, onSave, onClose }) {
     setItemErrors(errors);
 
     if (nameBad || Object.keys(errors).length > 0) return;
-    onSave({ name: name.trim(), items });
+    setSaving(true);
+    // Fake the round-trip — nothing here is actually async (runDraftAction
+    // is synchronous local-storage state), so a fixed delay is what makes
+    // the Save button's loading state visible at all.
+    setTimeout(() => {
+      setSaving(false);
+      onSave({ name: name.trim(), items });
+    }, 800);
   };
 
   // Pointer/touch only (same activation constraints as
@@ -516,6 +543,8 @@ function MenuFormDrawer({ menu, isNew, pages, onSave, onClose }) {
           ? t('sectionBuilder:onlineStore.menus.save', 'Save')
           : t('sectionBuilder:onlineStore.menus.saveChanges', 'Save Changes'),
         onClick: handleSaveClick,
+        loading: saving,
+        disabled: saving,
       }}
     >
       <div className="flex flex-col gap-4">
@@ -527,14 +556,19 @@ function MenuFormDrawer({ menu, isNew, pages, onSave, onClose }) {
             autoFocus={isNew}
             value={name}
             onChange={(e) => {
-              setName(e.target.value);
+              setName(e.target.value.slice(0, MENU_NAME_MAX_LENGTH));
               if (nameError) setNameError(null);
             }}
             placeholder={t('sectionBuilder:onlineStore.menus.namePlaceholder', 'e.g. Main menu')}
             errorText={nameError}
+            maxLength={MENU_NAME_MAX_LENGTH}
+            showCount
           />
-          <p className="mt-1 text-xs text-gray-400">
-            {t('sectionBuilder:onlineStore.menus.handlePrefix', 'Handle: {{handle}}', { handle: handle || '—' })}
+          <p className="mt-1 flex items-center gap-1 text-xs text-gray-400">
+            <span>{t('sectionBuilder:onlineStore.menus.handlePrefix', 'Handle: {{handle}}', { handle: handle || '—' })}</span>
+            <Tooltip content={t('sectionBuilder:onlineStore.menus.handleHelpTooltip', 'Handle is the unique id used to reference this menu in code')}>
+              <Info size={12} className="shrink-0 text-gray-400" aria-hidden="true" />
+            </Tooltip>
           </p>
         </div>
 
@@ -548,25 +582,43 @@ function MenuFormDrawer({ menu, isNew, pages, onSave, onClose }) {
               there's still no reason to clip anything else in this column. */}
           <div>
             {items.length === 0 ? (
-              <div className="flex items-center justify-center rounded-lb-card border-2 border-dashed border-lb-line-2 bg-lb-surface px-4 py-10 font-lb text-[14px] text-lb-on-surface-3">
-                {t('sectionBuilder:onlineStore.menus.noItems', 'No menu items yet.')}
-              </div>
+              <>
+                {canRestoreDefault && (
+                  <div className="mb-2 flex justify-end">
+                    <MainBtn
+                      variant="tertiary"
+                      size="sm"
+                      leftIcon={<RotateCcw size={14} />}
+                      label={t('sectionBuilder:onlineStore.menus.restoreDefault', 'Restore to Default')}
+                      onClick={restoreDefaultItems}
+                    />
+                  </div>
+                )}
+                <div className="flex items-center justify-center rounded-lb-card border-2 border-dashed border-lb-line-2 bg-lb-surface px-4 py-10 font-lb text-[14px] text-lb-on-surface-3">
+                  {t('sectionBuilder:onlineStore.menus.noItems', 'No menu items yet.')}
+                </div>
+              </>
             ) : (
               <>
                 {/* Header row classnames copied from Table's own <thead>/<th> (ce-ui/ui/table.tsx)
                     so this hand-rolled header is visually indistinguishable from a real Table
-                    instance: h-[49px]/px-4 cell box, bg-lb-surface header background,
+                    instance: h-[49px]/pl-4 cell box, bg-lb-surface header background,
                     border-lb-line-2 divider, font-lb/font-lb-bold text-lb-on-surface typography.
-                    Hidden entirely in the empty state above — a header with nothing under it
-                    reads oddly next to the dashed placeholder box. */}
-                <div className="flex h-[49px] items-center gap-2 border-b border-lb-line-2 bg-lb-surface px-4">
+                    No right padding (`pr-0`, unlike Table's own `px-4`) — "Restore to
+                    Default" sits flush against the row's right edge instead of leaving a
+                    gap. Hidden entirely in the empty state above — a header with nothing
+                    under it reads oddly next to the dashed placeholder box. */}
+                <div className="relative flex h-[49px] items-center gap-2 border-b border-lb-line-2 bg-lb-surface pl-4 pr-0">
                   {/* Mirrors MenuItemRow's own top-level widths exactly — a
                       w-1/2 cluster holding the drag-handle (w-5) + chevron
                       (w-6) spacers ahead of the "Menu Item" label, then a
                       second w-1/2 for "Link" — so the Link column stays
                       aligned under this header at every nesting depth (only
                       the cluster's *inside* indents per row, never this
-                      header or the Link column itself). */}
+                      header or the Link column itself). "Restore to Default"
+                      is absolutely positioned over this same row (rather than
+                      taking up flex space) so it doesn't shrink either w-1/2
+                      column out of alignment with the cell widths below. */}
                   <div className="flex w-1/2 items-center gap-2">
                     <span className="w-5 shrink-0" aria-hidden="true" />
                     <span className="w-6 shrink-0" aria-hidden="true" />
@@ -578,6 +630,16 @@ function MenuFormDrawer({ menu, isNew, pages, onSave, onClose }) {
                     {t('sectionBuilder:onlineStore.menus.itemLinkField', 'Link')}
                   </span>
                   <span className="w-5 shrink-0" aria-hidden="true" />
+                  {canRestoreDefault && (
+                    <MainBtn
+                      variant="tertiary"
+                      size="sm"
+                      leftIcon={<RotateCcw size={14} />}
+                      label={t('sectionBuilder:onlineStore.menus.restoreDefault', 'Restore to Default')}
+                      onClick={restoreDefaultItems}
+                      className="absolute right-0 top-1/2 -translate-y-1/2"
+                    />
+                  )}
                 </div>
                 <DndContext
                   sensors={sensors}
@@ -642,23 +704,85 @@ export default function MenusManagement() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(25);
+  const [sortKey, setSortKey] = useState(null);
+  const [sortDirection, setSortDirection] = useState(null);
 
+  // ── Simulate panel state — no real backend to fail/conflict/delay
+  // against, so these are local toggles exercising the negative/edge
+  // states on demand (see PagesManagement.jsx / ThemeGallery.jsx for the
+  // same convention). All default "off" so normal usage is unaffected.
+  const [simulateLoadError, setSimulateLoadError] = useState(false);
+  const [simulateSaveFailure, setSimulateSaveFailure] = useState(false);
+  const [simulateSaveConflict, setSimulateSaveConflict] = useState(false);
+  const [simulateManyItems, setSimulateManyItems] = useState(false);
+  const [simulateDeletedElsewhere, setSimulateDeletedElsewhere] = useState(false);
+  const [simulateInUseByTheme, setSimulateInUseByTheme] = useState(false);
+  const [simulateDeleteError, setSimulateDeleteError] = useState(false);
+
+  // Which menu the "deleted elsewhere" / "in use by a theme" simulations
+  // apply to — the first non-protected menu, resolved lazily below (the
+  // menus list itself isn't available yet at this point in the module).
   const menus = useMemo(() => Object.values(draft.menus ?? {}), [draft.menus]);
   const pages = draft.pages ?? [];
   const editingMenu = editingMenuId ? draft.menus?.[editingMenuId] : null;
 
+  const simulateTargetMenu = useMemo(
+    () => menus.find((menu) => !PROTECTED_MENU_IDS.includes(menu.id)) ?? null,
+    [menus]
+  );
+  const simulatedInUseThemeNames = useMemo(() => {
+    // Mock connection — references real theme names from the roster (not a
+    // made-up name) so the blocking modal reads as plausible.
+    const names = THEME_ROSTER.filter((theme) => !theme.comingSoon).slice(0, 1).map((theme) => theme.name);
+    return names.length ? names : ['Xinear'];
+  }, []);
+
+  // Bulks the list out past 25 rows (real menus + fake extras) so the
+  // table's pagination controls actually have something to page through.
+  const listMenus = useMemo(() => {
+    if (!simulateManyItems) return menus;
+    const extra = Array.from({ length: Math.max(0, 30 - menus.length) }).map((_, i) => ({
+      id: `__simulated-menu-${i}`,
+      name: `Simulated menu ${i + 1}`,
+      items: [],
+    }));
+    return [...menus, ...extra];
+  }, [menus, simulateManyItems]);
+
   const filteredMenus = useMemo(() => {
-    if (!search.trim()) return menus;
+    if (!search.trim()) return listMenus;
     const needle = search.trim().toLowerCase();
-    return menus.filter((menu) => (menu.name ?? '').toLowerCase().includes(needle));
-  }, [menus, search]);
+    return listMenus.filter((menu) => (menu.name ?? '').toLowerCase().includes(needle));
+  }, [listMenus, search]);
+
+  const sortedMenus = useMemo(() => {
+    if (!sortKey || !sortDirection) return filteredMenus;
+    const factor = sortDirection === 'asc' ? 1 : -1;
+    return [...filteredMenus].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '') * factor);
+  }, [filteredMenus, sortKey, sortDirection]);
 
   const pagedMenus = useMemo(() => {
     const start = (page - 1) * perPage;
-    return filteredMenus.slice(start, start + perPage);
-  }, [filteredMenus, page, perPage]);
+    return sortedMenus.slice(start, start + perPage);
+  }, [sortedMenus, page, perPage]);
+
+  const isSimulatedDeletedElsewhere = (menuId) => simulateDeletedElsewhere && menuId === simulateTargetMenu?.id;
+  const isSimulatedInUseByTheme = (menuId) => simulateInUseByTheme && menuId === simulateTargetMenu?.id;
 
   const handleSaveExisting = ({ name, items }) => {
+    if (isSimulatedDeletedElsewhere(editingMenuId)) {
+      showSnackbar(t('sectionBuilder:onlineStore.menus.deletedElsewhereSnackbar', 'This menu no longer exists'), 'red');
+      setEditingMenuId(null);
+      return;
+    }
+    if (simulateSaveFailure) {
+      showSnackbar(t('sectionBuilder:onlineStore.menus.saveFailedSnackbar', 'Failed to save menu'), 'red');
+      return;
+    }
+    if (simulateSaveConflict) {
+      showSnackbar(t('sectionBuilder:onlineStore.menus.saveConflictSnackbar', 'Menu updated elsewhere. Reload to continue'), 'red');
+      return;
+    }
     const next = runDraftAction(STORE_ID, { type: ACTIONS.SAVE_MENU, id: editingMenuId, name, items });
     setDraft(next);
     setEditingMenuId(null);
@@ -666,6 +790,14 @@ export default function MenusManagement() {
   };
 
   const handleSaveNew = ({ name, items }) => {
+    if (simulateSaveFailure) {
+      showSnackbar(t('sectionBuilder:onlineStore.menus.saveFailedSnackbar', 'Failed to save menu'), 'red');
+      return;
+    }
+    if (simulateSaveConflict) {
+      showSnackbar(t('sectionBuilder:onlineStore.menus.saveConflictSnackbar', 'Menu updated elsewhere. Reload to continue'), 'red');
+      return;
+    }
     const id = createMenuId(name, draft.menus ?? {});
     const next = runDraftAction(STORE_ID, { type: ACTIONS.SAVE_MENU, id, name, items });
     setDraft(next);
@@ -673,10 +805,40 @@ export default function MenusManagement() {
     showSnackbar(t('sectionBuilder:onlineStore.menus.savedSnackbar', 'Menu successfully saved'), 'green');
   };
 
+  // Row-level Edit click — refuses up front for a menu simulated as
+  // "deleted elsewhere" instead of opening the (now-stale) form.
+  const handleEditClick = (menuId) => {
+    if (isSimulatedDeletedElsewhere(menuId)) {
+      showSnackbar(t('sectionBuilder:onlineStore.menus.deletedElsewhereSnackbar', 'This menu no longer exists'), 'red');
+      return;
+    }
+    setEditingMenuId(menuId);
+  };
+
+  // Row-level Delete click — routes to whichever of the three delete states
+  // applies: deleted-elsewhere refusal, the blocking "used in a theme"
+  // modal, or (for every other menu) the normal ConfirmDialog.
+  const handleDeleteClick = (menuId) => {
+    if (isSimulatedDeletedElsewhere(menuId)) {
+      showSnackbar(t('sectionBuilder:onlineStore.menus.deletedElsewhereSnackbar', 'This menu no longer exists'), 'red');
+      return;
+    }
+    if (isSimulatedInUseByTheme(menuId)) {
+      setInUseMenuId(menuId);
+      return;
+    }
+    setDeletingMenuId(menuId);
+  };
+
   // Confirming ConfirmDialog closes both the confirm dialog AND the edit
   // drawer (there's nothing left to edit once the menu is gone) and
   // refreshes the list from the just-persisted draft.
   const handleConfirmDelete = () => {
+    if (simulateDeleteError) {
+      showSnackbar(t('sectionBuilder:onlineStore.menus.deleteFailedSnackbar', 'Failed to delete menu'), 'red');
+      setDeletingMenuId(null);
+      return;
+    }
     const next = runDraftAction(STORE_ID, { type: ACTIONS.DELETE_MENU, id: deletingMenuId });
     setDraft(next);
     showSnackbar(t('sectionBuilder:onlineStore.menus.deletedSnackbar', 'Menu successfully deleted'), 'grey');
@@ -686,10 +848,62 @@ export default function MenusManagement() {
 
   const deletingMenu = deletingMenuId ? draft.menus?.[deletingMenuId] : null;
 
+  // Blocking "can't delete — used in a theme" modal state — the id of the
+  // menu it's currently naming, or null when closed.
+  const [inUseMenuId, setInUseMenuId] = useState(null);
+  const inUseMenu = inUseMenuId ? (draft.menus?.[inUseMenuId] ?? listMenus.find((m) => m.id === inUseMenuId)) : null;
+
+  const simulateOptions = [
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.menus.simulateLoadError', 'Simulate load error'),
+      checked: simulateLoadError,
+      onChange: setSimulateLoadError,
+    },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.menus.simulateSaveFailure', 'Simulate save failure'),
+      checked: simulateSaveFailure,
+      onChange: setSimulateSaveFailure,
+    },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.menus.simulateSaveConflict', 'Simulate save conflict'),
+      checked: simulateSaveConflict,
+      onChange: setSimulateSaveConflict,
+    },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.menus.simulateManyItems', 'Simulate many menus (pagination)'),
+      checked: simulateManyItems,
+      onChange: setSimulateManyItems,
+    },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.menus.simulateDeletedElsewhere', 'Mark a menu as deleted elsewhere'),
+      checked: simulateDeletedElsewhere,
+      onChange: setSimulateDeletedElsewhere,
+    },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.menus.simulateInUseByTheme', 'Mark a menu as used by a theme'),
+      checked: simulateInUseByTheme,
+      onChange: setSimulateInUseByTheme,
+    },
+    {
+      type: 'checkbox',
+      label: t('sectionBuilder:onlineStore.menus.simulateDeleteError', 'Simulate delete error'),
+      checked: simulateDeleteError,
+      onChange: setSimulateDeleteError,
+    },
+  ];
+
   const columns = [
     {
       key: 'name',
       header: t('sectionBuilder:onlineStore.menus.columnName', 'Name'),
+      width: 360,
+      sortable: true,
       render: (value) => <span style={{ color: '#282828' }}>{value}</span>,
     },
     {
@@ -712,7 +926,8 @@ export default function MenusManagement() {
     },
     {
       key: 'actions',
-      width: 160,
+      width: 100,
+      align: 'right',
       header: t('sectionBuilder:onlineStore.menus.columnActions', 'Actions'),
       // Row click no longer opens the edit modal — Edit/Delete are the only
       // way into a menu now, so this column carries both as tertiary
@@ -720,14 +935,14 @@ export default function MenusManagement() {
       render: (_value, row) => {
         const isProtected = PROTECTED_MENU_IDS.includes(row.id);
         return (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center justify-end gap-1">
             <Tooltip content={t('sectionBuilder:onlineStore.menus.editTooltip', 'Edit')}>
               <IconBtn
                 variant="ghost"
                 size="sm"
                 icon={<Pencil size={16} />}
                 aria-label={t('sectionBuilder:onlineStore.menus.editTooltip', 'Edit')}
-                onClick={() => setEditingMenuId(row.id)}
+                onClick={() => handleEditClick(row.id)}
               />
             </Tooltip>
             <Tooltip
@@ -743,7 +958,7 @@ export default function MenusManagement() {
                 icon={<Trash2 size={16} />}
                 disabled={isProtected}
                 aria-label={t('sectionBuilder:onlineStore.menus.deleteTooltip', 'Delete')}
-                onClick={() => setDeletingMenuId(row.id)}
+                onClick={() => handleDeleteClick(row.id)}
               />
             </Tooltip>
           </div>
@@ -751,6 +966,30 @@ export default function MenusManagement() {
       },
     },
   ];
+
+  // Sticky, whole-screen error state (same convention as PagesManagement's
+  // own simulateLoadError) — takes over in place of the header + table.
+  if (simulateLoadError) {
+    return (
+      <div style={{ background: '#F4F4F4', minHeight: 'calc(100vh - 56px)', fontFamily: "'Lato', sans-serif" }}>
+        <div className="flex h-full min-h-[calc(100vh-56px)] flex-col items-center justify-center px-6 text-center">
+          <h1 className="mb-1 text-xl font-bold text-gray-800">
+            {t('sectionBuilder:onlineStore.pageEditor.loadErrorTitle', 'Couldn’t load this page')}
+          </h1>
+          <p className="mb-4 text-sm text-gray-500">
+            {t('sectionBuilder:onlineStore.pageEditor.loadErrorDescription', 'Something went wrong while loading the page. Please try again.')}
+          </p>
+          <MainBtn
+            variant="secondary"
+            size="sm"
+            label={t('sectionBuilder:onlineStore.pageEditor.loadErrorReload', 'Reload Page')}
+            onClick={() => setDraft(loadOrSeedDemoDraft(STORE_ID))}
+          />
+        </div>
+        <SimulateTrigger options={simulateOptions} />
+      </div>
+    );
+  }
 
   return (
     <div style={{ background: '#F4F4F4', minHeight: 'calc(100vh - 56px)', fontFamily: "'Lato', sans-serif" }}>
@@ -780,14 +1019,26 @@ export default function MenusManagement() {
             either — Edit/Delete in the Actions column are the only way
             into a row now, so the row itself carries no click/hover
             affordance (Table only adds its built-in hover-bg/cursor-pointer
-            when onRowClick is passed). */}
-        <Table
-          columns={columns}
+            when onRowClick is passed). `maxHeight` (not a stretched `flex-1`)
+            is what makes this hug its content when there are only a few
+            rows and only cap + scroll internally (Table's own sticky thead
+            + overflow-auto region) once the row count would otherwise push
+            past the available viewport space. */}
+        <div style={{ maxHeight: 'calc(100vh - 240px)', display: 'flex', flexDirection: 'column' }}>
+          <Table
+            columns={columns}
           data={pagedMenus}
           totalRows={filteredMenus.length}
           page={page}
           perPage={perPage}
           onPageChange={setPage}
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onSortChange={(key, direction) => {
+            setSortKey(key);
+            setSortDirection(direction);
+            setPage(1);
+          }}
           hidePaginationOnSinglePage
           filters={{
             search: {
@@ -805,9 +1056,21 @@ export default function MenusManagement() {
               },
             },
           }}
-          emptyStateTitle={t('sectionBuilder:onlineStore.menus.noMenus', 'No menus yet')}
-        />
+          emptyStateTitle={
+            search.trim()
+              ? t('sectionBuilder:onlineStore.menus.noSearchResultsTitle', 'No Search Results Found')
+              : t('sectionBuilder:onlineStore.menus.noMenus', 'No menus yet')
+          }
+          emptyStateDescription={
+            search.trim()
+              ? t('sectionBuilder:onlineStore.menus.noSearchResultsDescription', 'Try searching with a different term, okay?')
+              : undefined
+          }
+          />
+        </div>
       </div>
+
+      <SimulateTrigger options={simulateOptions} />
 
       {editingMenu && (
         <MenuFormDrawer
@@ -836,6 +1099,25 @@ export default function MenusManagement() {
         confirmLabel={t('sectionBuilder:onlineStore.menus.deleteConfirm', 'Yes, Delete')}
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeletingMenuId(null)}
+      />
+
+      {/* Blocking "can't delete" explainer — a single-action Popup (not
+          ConfirmDialog, which is a confirm/cancel pair) since there's
+          nothing to confirm here, just an explanation + acknowledgement. */}
+      <Popup
+        open={Boolean(inUseMenu)}
+        onClose={() => setInUseMenuId(null)}
+        title={t('sectionBuilder:onlineStore.menus.cantDeleteInUseTitle', "Can't delete this menu")}
+        description={t(
+          'sectionBuilder:onlineStore.menus.cantDeleteInUseDescription',
+          '"{{name}}" can\'t be deleted because it\'s currently used by {{themes}}. Remove it from that theme first, then try again.',
+          { name: inUseMenu?.name ?? '', themes: simulatedInUseThemeNames.join(', ') }
+        )}
+        platform="desktop"
+        primaryAction={{
+          label: t('sectionBuilder:onlineStore.menus.cantDeleteInUseClose', 'Got it'),
+          onClick: () => setInUseMenuId(null),
+        }}
       />
     </div>
   );

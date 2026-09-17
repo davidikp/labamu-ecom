@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Home, Search, Tag, ShoppingBag, FileText, ScrollText, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Home, Search, Tag, ShoppingBag, FileText, ScrollText, ChevronRight, ArrowLeft, Link2 } from 'lucide-react';
 import { POLICY_SYSTEM_TYPES } from '../../state/defaultTheme';
 
 /**
@@ -52,6 +52,21 @@ const MOCK_PRODUCTS = [
   { id: 'prod-wool-scarf', name: 'Wool scarf', url: '/products/wool-scarf' },
 ];
 
+// Anchor links to homepage sections — same static-placeholder-catalog
+// pattern as Collections/Products above (see module doc), matching
+// builderReducer.js's DEFAULT_MENU_ITEMS anchors 1:1 so the menu item this
+// picker feeds always resolves to the same in-page section the canonical
+// default/"Restore to Default" list already points at.
+const MOCK_HOMEPAGE_SECTIONS = [
+  { id: 'section-appointment', name: 'Make an Appoinment', url: '#appointment' },
+  { id: 'section-reservation', name: 'Reservation', url: '#reservation' },
+  { id: 'section-waitlist', name: 'Waitlist', url: '#waitlist' },
+  { id: 'section-reviews', name: 'Reviews', url: '#review' },
+  { id: 'section-contact', name: 'Contact Us', url: '#contact' },
+  { id: 'section-location', name: 'Location', url: '#location' },
+  { id: 'section-quote', name: 'Request Quote', url: '#quote' },
+];
+
 // Real data — Shopify's own fixed set (five written policies), authored from
 // Settings > Policies and seeded into `pages` as reserved system pages (see
 // POLICY_SYSTEM_TYPES / createDefaultPages in state/defaultTheme.js), so
@@ -88,6 +103,10 @@ export default function PageLinkCombobox({ value, onChange, pages, placeholder, 
       // InsertVideoModal.jsx's own "From your Files" pull-back: nothing
       // deleted, just not offered as a category for now.
       { key: 'policies', label: 'Policies', icon: ScrollText, entries: policyEntries },
+      // Rendered right under "Home Page" (not in top-level CATEGORIES.map's
+      // usual order below Search) — see the top-level view's JSX, which
+      // pulls this one out of the loop and renders it right after Home Page.
+      { key: 'homepage-sections', label: 'Home Page Sections', icon: Link2, entries: MOCK_HOMEPAGE_SECTIONS },
     ],
     [pageEntries, policyEntries]
   );
@@ -102,7 +121,7 @@ export default function PageLinkCombobox({ value, onChange, pages, placeholder, 
     const q = query.trim().toLowerCase();
     if (!q) return null;
     const staticMatches = [
-      { id: 'home', name: 'Home page', url: '/' },
+      { id: 'home', name: 'Home Page', url: '/' },
       { id: 'search', name: 'Search', url: '/search' },
     ].filter((entry) => entry.name.toLowerCase().includes(q));
     const groups = [];
@@ -202,9 +221,18 @@ export default function PageLinkCombobox({ value, onChange, pages, placeholder, 
             ) : (
               <div>
                 <p className="px-3 pb-1 pt-2 text-xs font-semibold text-gray-400">Online store</p>
-                <SuggestionRow icon={Home} label="Home page" onSelect={() => selectEntry({ url: '/' })} />
+                <SuggestionRow icon={Home} label="Home Page" onSelect={() => selectEntry({ url: '/' })} />
+                {/* Pulled out of the CATEGORIES.map loop below so it renders
+                    directly under Home Page instead of at its usual
+                    alphabetical-ish spot after Policies. */}
+                <SuggestionRow
+                  icon={Link2}
+                  label="Home Page Sections"
+                  trailing={<ChevronRight size={14} aria-hidden className="text-gray-400" />}
+                  onSelect={() => setActiveCategoryKey('homepage-sections')}
+                />
                 <SuggestionRow icon={Search} label="Search" onSelect={() => selectEntry({ url: '/search' })} />
-                {CATEGORIES.map((cat) => (
+                {CATEGORIES.filter((cat) => cat.key !== 'homepage-sections').map((cat) => (
                   <SuggestionRow
                     key={cat.key}
                     icon={cat.icon}

@@ -389,7 +389,19 @@ export function Table<T extends { id: string | number }>({
       )}
 
       <div ref={scrollRef} onScroll={handleScroll} className="flex-1 min-h-0 overflow-auto">
-        <table className="w-full border-collapse">
+        {/* table-fixed so a `width` given to some columns (applied to both
+            th below AND td further down — previously only th had it, so an
+            unusually long value in a still-unwidthed column, e.g. a long
+            comma-joined list, could grow that column past the table's own
+            width instead of respecting the widths already set elsewhere,
+            forcing this whole scroll container to scroll horizontally
+            instead of just this one column truncating. Column(s) left
+            without an explicit `width` (the intentional "let this one fill
+            whatever's left" column per existing callers) still get an even
+            share of remaining space under fixed layout, same as before this
+            existed for any table whose columns were already all matched to
+            the table's width. */}
+        <table className="w-full table-fixed border-collapse">
           <thead className="bg-lb-surface">
             <tr>
               {selectable && (
@@ -521,8 +533,9 @@ export function Table<T extends { id: string | number }>({
                     {columns.map((col) => (
                       <td
                         key={col.columnId ?? String(col.key)}
+                        style={col.width ? { width: col.width } : undefined}
                         className={cn(
-                          "h-[49px] px-4 font-lb text-[14px]",
+                          "h-[49px] px-4 font-lb text-[14px] overflow-hidden",
                           "text-lb-on-surface leading-[20px]",
                           isSelected ? "bg-lb-brand-light" : "bg-lb-surface",
                           "border-b border-lb-line-1",

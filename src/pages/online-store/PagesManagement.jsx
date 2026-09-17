@@ -261,6 +261,7 @@ export default function PagesManagement() {
     {
       key: 'visibility',
       header: t('sectionBuilder:onlineStore.pages.columnVisibility', 'Visibility'),
+      width: 140,
       render: (_value, row) => visibilityBadge(row, t),
     },
     {

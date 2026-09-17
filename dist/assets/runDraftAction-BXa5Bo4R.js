@@ -1,0 +1,1 @@
+import{n as e,s as t}from"./storage-OMhLYY8e.js";import{d as n,i as r,u as i}from"./builderReducer-Op2gu_nB.js";import{t as a}from"./useSectionBuilder-Q6j71Acc.js";function o(o,s){let c=e(o)??a(o),l={...c,pages:i(c.pages,n())},u=r(l,s);return t(o,u),u}export{o as t};

@@ -1,7 +1,8 @@
-import { loadDraft } from './storage';
+import { loadDraft, saveDraft } from './storage';
 import { createFreshState } from './useSectionBuilder';
 import { applySiteTemplate } from './siteTemplateApply';
 import { SITE_TEMPLATES } from './siteTemplates';
+import { DEFAULT_MENU_ITEMS } from './builderReducer';
 
 /**
  * @module section-builder/state/demoBootstrap
@@ -28,5 +29,30 @@ export function loadOrSeedDemoDraft(storeId) {
   if (existing) return existing;
   if (storeId !== 'demo') return createFreshState(storeId);
   const clothing = SITE_TEMPLATES.find((template) => template.id === 'clothing') ?? SITE_TEMPLATES[0];
-  return applySiteTemplate(storeId, clothing, 'seed');
+  const seeded = applySiteTemplate(storeId, clothing, 'seed');
+  // The Clothing template has no `menus` override of its own, so
+  // applySiteTemplate falls back to createDefaultGlobals' page-roster-
+  // derived nav — just Home/About/Contact, since that's all Clothing's page
+  // list has. Content > Menus' "Header Menu" is meant to always start from
+  // the same canonical item set "Restore to Default" resets to (see
+  // builderReducer.js's DEFAULT_MENU_ITEMS), regardless of which pages the
+  // seeded theme happens to ship, so it's applied here too rather than only
+  // on demand.
+  const overridden = {
+    ...seeded,
+    menus: {
+      ...seeded.menus,
+      'main-menu': {
+        ...seeded.menus['main-menu'],
+        items: DEFAULT_MENU_ITEMS['main-menu'].map((item) => ({ ...item })),
+      },
+    },
+  };
+  // applySiteTemplate already persisted `seeded` (its un-overridden 3-item
+  // menu) via its own runDraftAction call — re-save here with the corrected
+  // `overridden` copy so the *next* read (loadDraft, e.g. from
+  // runDraftAction when Menus/Files dispatches its first Create/Save/Delete)
+  // doesn't silently revert back to the un-overridden version.
+  saveDraft(storeId, overridden);
+  return overridden;
 }

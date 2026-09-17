@@ -1,0 +1,1 @@
+function e(e,t){return!t||e.filename.toLowerCase().includes(t.trim().toLowerCase())}function t(e,t){return!!(e?.data&&Object.values(e.data).some(e=>e?.mediaId===t))}function n(e,n){let r=[];t(e.header,n)&&r.push(`header`),t(e.footer,n)&&r.push(`footer`);for(let i of e.pages)for(let e of i.sections)t(e,n)&&r.push(e.type);return r}export{e as n,n as t};

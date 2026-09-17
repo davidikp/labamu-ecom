@@ -252,7 +252,7 @@ export function createDefaultGlobals(pages = []) {
     header: { id: 'header', type: 'header', hidden: false, data: defaultsForSchema(headerSchema) },
     footer: { id: 'footer', type: 'footer', hidden: false, data: defaultsForSchema(footerSchema) },
     menus: {
-      'main-menu': { id: 'main-menu', name: 'Main menu', items: navLinks },
+      'main-menu': { id: 'main-menu', name: 'Header Menu', items: navLinks },
       'footer-menu': { id: 'footer-menu', name: 'Footer menu', items: [] },
     },
   };

@@ -35,7 +35,7 @@ const MENU_ITEMS = [
   {
     id: 'website-studio', icon: Store, labelKey: 'dashboard:sidebar.websiteStudio', label: 'Website Studio',
     children: [
-      { id: 'site-builder', path: '/online-store/theme', labelKey: 'dashboard:sidebar.siteBuilder', label: 'Theme' },
+      { id: 'site-builder', path: '/online-store/theme', labelKey: 'dashboard:sidebar.siteBuilder', label: 'Themes' },
       { id: 'page-list', path: '/online-store/pages', labelKey: 'dashboard:sidebar.pageList', label: 'Pages' },
       { id: 'preferences', path: '/online-store/preferences', labelKey: 'dashboard:sidebar.preferences', label: 'Preferences' },
     ],
@@ -540,7 +540,7 @@ export default function Layout() {
             leftIcon={<Pencil size={16} />}
             onClick={() => navigate('/section-builder/demo')}
           >
-            {t('dashboard:header.editWebsite', 'Edit website')}
+            {t('dashboard:header.editWebsite', 'Edit Website')}
           </Button>
 
           {/* View Website Button */}
